@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Usuario {
+public class Passageiro {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,7 +22,9 @@ public class Usuario {
 
     public String cpf;
 
-    public String senha;
+    public String passaporte;
+
+    public String telefone;
 
     public String email;
 }

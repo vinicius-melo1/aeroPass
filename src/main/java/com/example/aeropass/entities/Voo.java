@@ -8,21 +8,33 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Usuario {
+public class Voo {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Long id;
 
-    public String nome;
+    public Long idAviao;
 
-    public String cpf;
+    public String codigoVoo;
 
-    public String senha;
+    public Long capacidade;
 
-    public String email;
+    public Long assentosDisponiveis;
+
+    public String cidadeOrigem;
+
+    public String cidadeDestino;
+
+    public LocalDateTime dataHoraSaida;
+
+    public LocalDateTime dataHoraChegada;
+
+    public String status;
 }

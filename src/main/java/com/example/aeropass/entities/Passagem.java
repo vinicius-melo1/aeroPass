@@ -8,21 +8,29 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Usuario {
+public class Passagem {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Long id;
 
-    public String nome;
+    public Long idVoo;
 
-    public String cpf;
+    public Long idPassageiro;
 
-    public String senha;
+    public String codigoAssento;
 
-    public String email;
+    public LocalDateTime dataCompra;
+
+    public String status;
+
+    public Double valor;
+
+    public String formaPagamento;
 }

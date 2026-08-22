@@ -1,8 +1,10 @@
 package com.example.aeropass.controllers;
 
 import com.example.aeropass.DTOs.LoginRequest;
+import com.example.aeropass.services.TokenService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,14 +13,17 @@ import java.net.HttpURLConnection;
 
 @RestController
 @RequestMapping("/auth")
-@Tag(description = "Conmtroller de autenticação!", name="Autenticação")
+@Tag(description = "Controller de autenticação!", name="Autenticação")
 public class AuthController {
+    @Autowired
+    private TokenService tokenService;
 
     @PostMapping("/login")
     @Operation(summary = "Autenticação de usuários", description = "Método de login")
     public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest){
         if(loginRequest.email().equals("string")&& loginRequest.senha().equals("string")) {
-            // Gerar o token
+            var token = tokenService.gerarToken(loginRequest.email());
+
             return ResponseEntity.ok("");
         }
         return ResponseEntity.status(HttpURLConnection.HTTP_UNAUTHORIZED).build();

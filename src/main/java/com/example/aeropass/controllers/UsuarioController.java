@@ -19,7 +19,7 @@ public class UsuarioController {
     private UsuarioRepository usuarioRepository;
 
     @GetMapping
-    @Operation(summary = "Método de consulta de lista de usuários!", description = "Método responsável em efetuar a consulta de todos os usuários sem filtro!")
+    @Operation(summary = "Método de consulta de lista de usuários.", description = "Método responsável em efetuar a consulta de todos os usuários, sem filtro.")
     public ResponseEntity<?> listarTodos(){
 
         return  ResponseEntity.ok(usuarioRepository.findAll());
@@ -27,7 +27,7 @@ public class UsuarioController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    @Operation(summary = "Método de criação de usuários!", description = "Método responsável em efetuar a criação de novos usuários!")
+    @Operation(summary = "Método de criação de usuários.", description = "Método responsável em efetuar a criação de novos usuários.")
     public ResponseEntity<Usuario> criar(@RequestBody Usuario usuario){
 
         var usuarioBanco = usuarioRepository.save(usuario);

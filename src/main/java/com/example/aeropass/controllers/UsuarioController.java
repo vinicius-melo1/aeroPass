@@ -1,5 +1,6 @@
 package com.example.aeropass.controllers;
 
+import com.example.aeropass.DTOs.CadastroRequest;
 import com.example.aeropass.entities.Usuario;
 import com.example.aeropass.repository.UsuarioRepository;
 import io.swagger.v3.oas.annotations.Operation;
@@ -18,17 +19,33 @@ public class UsuarioController {
     @Autowired // Injeção de dependencia
     private UsuarioRepository usuarioRepository;
 
-    @GetMapping
+    @GetMapping("/listar")
     @Operation(summary = "Método de consulta de lista de usuários.", description = "Método responsável em efetuar a consulta de todos os usuários, sem filtro.")
     public ResponseEntity<?> listarTodos(){
 
         return  ResponseEntity.ok(usuarioRepository.findAll());
     }
 
-    @PostMapping
+    @PostMapping("/cadastro")
+    @ResponseStatus(HttpStatus.CREATED)
+    @Operation(summary = "Método de criação de usuários pelo administrador.", description = "Método responsável em efetuar a criação de novos usuários pelo administrador.")
+    public ResponseEntity<Usuario> criar(@RequestBody Usuario usuario){
+
+        var usuarioBanco = usuarioRepository.save(usuario);
+        return ResponseEntity.ok(usuarioBanco);
+
+    }
+
+    @PostMapping("/cadastrar-se")
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "Método de criação de usuários.", description = "Método responsável em efetuar a criação de novos usuários.")
-    public ResponseEntity<Usuario> criar(@RequestBody Usuario usuario){
+    public ResponseEntity<Usuario> criar(@RequestBody CadastroRequest cadastroRequest){
+
+        Usuario usuario = new Usuario();
+        usuario.setNome(cadastroRequest.nome());
+        usuario.setCpf(cadastroRequest.cpf());
+        usuario.setEmail(cadastroRequest.email());
+        usuario.setSenha(cadastroRequest.senha());
 
         var usuarioBanco = usuarioRepository.save(usuario);
         return ResponseEntity.ok(usuarioBanco);

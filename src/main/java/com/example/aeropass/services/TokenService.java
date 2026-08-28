@@ -1,6 +1,10 @@
 package com.example.aeropass.services;
 
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.exceptions.JWTVerificationException;
+import com.auth0.jwt.interfaces.DecodedJWT;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -22,21 +26,29 @@ public class TokenService {
     private String emissor;
 
     public String gerarToken(String subject) {
-        String token;
         try {
             Algorithm algorithm = Algorithm.HMAC256(secret);
 
-            token = com.auth0.jwt.JWT.create()
+            String token = com.auth0.jwt.JWT.create()
                     .withIssuer(emissor)
                     .withSubject(subject)
                     .withExpiresAt(getDataExpiracao())
                     .sign(algorithm);
 
+            return token;
         } catch (RuntimeException e) {
             throw new RuntimeException(e);
         }
 
-        return token;
+
+    }
+
+    public DecodedJWT verificarToken(String token) throws JWTVerificationException {
+        Algorithm algorithm = Algorithm.HMAC256(secret);
+
+        JWTVerifier verificador = JWT.require(algorithm).withIssuer(emissor).build();
+
+        return verificador.verify(token);
     }
 
     private Instant getDataExpiracao() {

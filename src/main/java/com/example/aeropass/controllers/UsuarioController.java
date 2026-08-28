@@ -15,7 +15,7 @@ import java.util.List;
 @RequestMapping("/usuarios")
 @Tag(name = "Usuários", description = "Grupo de API responsável por controlar a estrutura de criação e consulta de usuários do sistema!")
 public class UsuarioController {
-    @Autowired
+    @Autowired // Injeção de dependencia
     private UsuarioRepository usuarioRepository;
 
     @GetMapping
@@ -34,5 +34,6 @@ public class UsuarioController {
         return ResponseEntity.ok(usuarioBanco);
 
     }
+
 
 }

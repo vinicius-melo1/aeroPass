@@ -28,9 +28,9 @@ public class Passagem {
 
     public LocalDateTime dataCompra;
 
-    public String status;
-
     public Double valor;
 
     public String formaPagamento;
+
+    private EnumStatusPassagem status = EnumStatusPassagem.ATIVO;
 }

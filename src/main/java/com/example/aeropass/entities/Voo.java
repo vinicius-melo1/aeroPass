@@ -36,5 +36,5 @@ public class Voo {
 
     public LocalDateTime dataHoraChegada;
 
-    public String status;
+    private EnumStatusVoo status = EnumStatusVoo.ATIVO;
 }

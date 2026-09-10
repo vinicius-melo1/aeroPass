@@ -1,6 +1,11 @@
 package com.example.aeropass.controllers;
 
+import com.example.aeropass.DTOs.AtualizarStatusPassageiroRequest;
+import com.example.aeropass.DTOs.AtualizarStatusPassagemRequest;
+import com.example.aeropass.entities.EnumStatusPassageiro;
+import com.example.aeropass.entities.EnumStatusPassagem;
 import com.example.aeropass.entities.Passageiro;
+import com.example.aeropass.entities.Passagem;
 import com.example.aeropass.repository.PassageiroRepository;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -23,6 +28,15 @@ public class PassageiroController {
         return  ResponseEntity.ok(passageiroRepository.findAll());
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<Passageiro> buscarPorId(@PathVariable Long id) {
+        Passageiro passageiroBanco = passageiroRepository.findById(id).orElse(null);
+        if(passageiroBanco != null) {
+            return ResponseEntity.ok(passageiroBanco);
+        }
+        return ResponseEntity.notFound().build();
+    }
+
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "Método de criação de passageiros.", description = "Método responsável em efetuar a criação de novos passageiros.")
@@ -31,5 +45,43 @@ public class PassageiroController {
         var passageiroBanco = passageiroRepository.save(passageiro);
         return ResponseEntity.ok(passageiroBanco);
 
+    }
+
+    @PatchMapping("/{id}/status")
+    public ResponseEntity<Void> atualizarStatus(@PathVariable Long id, @RequestBody AtualizarStatusPassageiroRequest statusRequest) {
+        Passageiro passageiroBanco = passageiroRepository.findById(id).orElse(null);
+        if(passageiroBanco != null) {
+            passageiroBanco.setStatus(statusRequest.status());
+            passageiroRepository.save(passageiroBanco);
+            return ResponseEntity.ok().build();
+        }
+        return ResponseEntity.notFound().build();
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Passagem> atualizar(@PathVariable Long id, @RequestBody Passageiro passageiro) {
+        try{
+            Passageiro passageiroBanco = passageiroRepository.findById(id).orElse(null);
+            if(passageiroBanco != null) {
+                passageiroBanco.setStatus(passageiro.getStatus());
+                passageiroBanco.setTelefone(passageiro.getTelefone());
+                passageiroBanco.setEmail(passageiro.getEmail());
+                return ResponseEntity.ok().build();
+            }
+            return ResponseEntity.notFound().build();
+
+        }catch (RuntimeException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    @DeleteMapping("/{id}/excluir")
+    public ResponseEntity<Void> excluir(@PathVariable Long id) {
+        Passageiro passageiroBanco = passageiroRepository.findById(id).orElse(null);
+        if(passageiroBanco != null) {
+            passageiroBanco.setStatus(EnumStatusPassageiro.EXCLUIDO);
+            passageiroRepository.save(passageiroBanco);
+            return ResponseEntity.ok().build();
+        }
+        return ResponseEntity.notFound().build();
     }
 }

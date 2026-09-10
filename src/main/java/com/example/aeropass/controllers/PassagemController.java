@@ -1,5 +1,7 @@
 package com.example.aeropass.controllers;
 
+import com.example.aeropass.DTOs.AtualizarStatusPassagemRequest;
+import com.example.aeropass.entities.EnumStatusPassagem;
 import com.example.aeropass.entities.Passagem;
 import com.example.aeropass.repository.PassagemRepository;
 import io.swagger.v3.oas.annotations.Operation;
@@ -23,13 +25,60 @@ public class PassagemController {
         return  ResponseEntity.ok(passagemRepository.findAll());
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<Passagem> buscarPorId(@PathVariable Long id) {
+        Passagem passagemBanco = passagemRepository.findById(id).orElse(null);
+        if(passagemBanco != null) {
+            return ResponseEntity.ok(passagemBanco);
+        }
+        return ResponseEntity.notFound().build();
+    }
+
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    @Operation(summary = "Método de para gerar passagens.", description = "Método responsável por gerar novas passagens.")
+    @Operation(summary = "Método de criação para gerar passagens.", description = "Método responsável por gerar novas passagens.")
     public ResponseEntity<Passagem> criar(@RequestBody Passagem passagem){
 
         var passagemBanco = passagemRepository.save(passagem);
         return ResponseEntity.ok(passagemBanco);
+    }
 
+    @PatchMapping("/{id}/status")
+    public ResponseEntity<Void> atualizarStatus(@PathVariable Long id, @RequestBody AtualizarStatusPassagemRequest statusRequest) {
+        Passagem passagemBanco = passagemRepository.findById(id).orElse(null);
+        if(passagemBanco != null) {
+            passagemBanco.setStatus(statusRequest.status());
+            passagemRepository.save(passagemBanco);
+            return ResponseEntity.ok().build();
+        }
+        return ResponseEntity.notFound().build();
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Passagem> atualizar(@PathVariable Long id, @RequestBody Passagem passagem) {
+        try{
+            Passagem passagemBanco = passagemRepository.findById(id).orElse(null);
+            if(passagemBanco != null) {
+                passagemBanco.setStatus(passagem.getStatus());
+                passagemBanco.setCodigoAssento(passagem.getCodigoAssento());
+                passagemBanco.setValor(passagem.getValor());
+                passagem.setFormaPagamento(passagem.getFormaPagamento());
+                return ResponseEntity.ok().build();
+            }
+            return ResponseEntity.notFound().build();
+
+        }catch (RuntimeException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    @DeleteMapping("/{id}/excluir")
+    public ResponseEntity<Void> excluir(@PathVariable Long id) {
+        Passagem passagemBanco = passagemRepository.findById(id).orElse(null);
+        if(passagemBanco != null) {
+            passagemBanco.setStatus(EnumStatusPassagem.EXCLUIDO);
+            passagemRepository.save(passagemBanco);
+            return ResponseEntity.ok().build();
+        }
+        return ResponseEntity.notFound().build();
     }
 }

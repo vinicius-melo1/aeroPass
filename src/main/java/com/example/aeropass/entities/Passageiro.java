@@ -27,4 +27,6 @@ public class Passageiro {
     public String telefone;
 
     public String email;
+
+    private EnumStatusPassageiro status = EnumStatusPassageiro.ATIVO;
 }

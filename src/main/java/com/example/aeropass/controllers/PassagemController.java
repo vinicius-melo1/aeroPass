@@ -18,7 +18,7 @@ public class PassagemController {
     @Autowired
     private PassagemRepository passagemRepository;
 
-    @GetMapping
+    @GetMapping("/listar")
     @Operation(summary = "Método de consulta de lista de passagens.", description = "Método responsável em efetuar a consulta de todos as passagens, sem filtro.")
     public ResponseEntity<?> listarTodos(){
 

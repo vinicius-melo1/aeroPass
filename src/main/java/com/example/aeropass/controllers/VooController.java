@@ -17,7 +17,7 @@ public class VooController {
     @Autowired
     private VooRepository vooRepository;
 
-    @GetMapping
+    @GetMapping("/listar")
     @Operation(summary = "Método de consulta de lista de vôos.", description = "Método responsável em efetuar a consulta de todos os vôos, sem filtro.")
     public ResponseEntity<?> listarTodos(){
 

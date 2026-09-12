@@ -21,7 +21,7 @@ public class PassageiroController {
     @Autowired
     private PassageiroRepository passageiroRepository;
 
-    @GetMapping
+    @GetMapping("/listar")
     @Operation(summary = "Método de consulta de lista de passageiros.", description = "Método responsável em efetuar a consulta de todos os passageiros, sem filtro.")
     public ResponseEntity<?> listarTodos(){
 

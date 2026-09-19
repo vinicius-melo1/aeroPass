@@ -22,7 +22,7 @@ export default function Voos() {
     }
 
     return (<>
-        <div className="min-h-screen bg-blue-50 px-4 py-8">
+        <div className="bg-blue-50 px-4 py-8">
             <div className="max-w-6xl mx-auto flex items-center justify-between mb-6">
                 <h1 className="text-2xl font-bold text-blue-900">
                     Gestão de vôos
@@ -43,6 +43,7 @@ export default function Voos() {
                                 <th className="px-6 py-3 text-sm text-nowrap font-semibold text-blue-900">Data e hora de saída</th>
                                 <th className="px-6 py-3 text-sm text-nowrap font-semibold text-blue-900">Data e hora de chegada</th>
                                 <th className="px-6 py-3 text-sm text-nowrap font-semibold text-blue-900">Status</th>
+                                <th className="px-6 py-3 text-sm text-nowrap font-semibold text-blue-900">Ações</th>
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-blue-50">
@@ -57,6 +58,7 @@ export default function Voos() {
                                     <td className="px-6 py-3 text-blue-800">{voo.dataHoraSaida}</td>
                                     <td className="px-6 py-3 text-blue-800">{voo.dataHoraChegada}</td>
                                     <td className="px-6 py-3 text-blue-800">{voo.status}</td>
+                                    <td className="px-6 py-3 text-blue-800"><Link href={`/voos/${voo.id}/editar`} className="text-gray-50 font-semibold bg-yellow-500 p-2 rounded-sm fs-12px">Editar</Link></td>
                                 </tr>
                             ))}
                             {

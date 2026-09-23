@@ -26,6 +26,7 @@ public class PassagemController {
     }
 
     @GetMapping("/{id}")
+    @Operation(summary = "Método de consulta de uma passagem pelo id.", description = "Método responsável em efetuar a consulta uma passagem, com filtro pelo id.")
     public ResponseEntity<Passagem> buscarPorId(@PathVariable Long id) {
         Passagem passagemBanco = passagemRepository.findById(id).orElse(null);
         if(passagemBanco != null) {
@@ -62,7 +63,7 @@ public class PassagemController {
                 passagemBanco.setStatus(passagem.getStatus());
                 passagemBanco.setCodigoAssento(passagem.getCodigoAssento());
                 passagemBanco.setValor(passagem.getValor());
-                passagem.setFormaPagamento(passagem.getFormaPagamento());
+                passagemBanco.setFormaPagamento(passagem.getFormaPagamento());
                 return ResponseEntity.ok().build();
             }
             return ResponseEntity.notFound().build();

@@ -1,5 +1,10 @@
 package com.example.aeropass.controllers;
 
+import com.example.aeropass.DTOs.AtualizarStatusPassagemRequest;
+import com.example.aeropass.DTOs.AtualizarStatusVooRequest;
+import com.example.aeropass.entities.EnumStatusPassagem;
+import com.example.aeropass.entities.EnumStatusVoo;
+import com.example.aeropass.entities.Passagem;
 import com.example.aeropass.entities.Voo;
 import com.example.aeropass.repository.UsuarioRepository;
 import com.example.aeropass.repository.VooRepository;
@@ -24,6 +29,15 @@ public class VooController {
         return  ResponseEntity.ok(vooRepository.findAll());
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<Voo> buscarPorId(@PathVariable Long id) {
+        Voo vooBanco = vooRepository.findById(id).orElse(null);
+        if(vooBanco != null) {
+            return ResponseEntity.ok(vooBanco);
+        }
+        return ResponseEntity.notFound().build();
+    }
+
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "Método de criação de vôos no sistema.", description = "Método responsável em efetuar a criação de vôos.")
@@ -32,5 +46,48 @@ public class VooController {
         var vooBanco = vooRepository.save(voo);
         return ResponseEntity.ok(vooBanco);
 
+    }
+
+    @PatchMapping("/{id}/status")
+    public ResponseEntity<Void> atualizarStatus(@PathVariable Long id, @RequestBody AtualizarStatusVooRequest statusRequest) {
+        Voo vooBanco = vooRepository.findById(id).orElse(null);
+        if(vooBanco != null) {
+            vooBanco.setStatus(statusRequest.status());
+            vooRepository.save(vooBanco);
+            return ResponseEntity.ok().build();
+        }
+        return ResponseEntity.notFound().build();
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Voo> atualizar(@PathVariable Long id, @RequestBody Voo voo) {
+        try{
+            Voo vooBanco = vooRepository.findById(id).orElse(null);
+            if(vooBanco != null) {
+                vooBanco.setStatus(voo.getStatus());
+                vooBanco.setCodigoVoo(voo.getCodigoVoo());
+                vooBanco.setCapacidade(voo.getCapacidade());
+                vooBanco.setAssentosDisponiveis(voo.getAssentosDisponiveis());
+                vooBanco.setCidadeOrigem(voo.getCidadeOrigem());
+                vooBanco.setCidadeOrigem(voo.getCidadeDestino());
+                vooBanco.setDataHoraSaida(voo.getDataHoraSaida());
+                vooBanco.setDataHoraChegada(voo.getDataHoraChegada());
+                return ResponseEntity.ok().build();
+            }
+            return ResponseEntity.notFound().build();
+
+        }catch (RuntimeException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    @DeleteMapping("/{id}/excluir")
+    public ResponseEntity<Void> excluir(@PathVariable Long id) {
+        Voo vooBanco = vooRepository.findById(id).orElse(null);
+        if(vooBanco != null) {
+            vooBanco.setStatus(EnumStatusVoo.EXCLUIDO);
+            vooRepository.save(vooBanco);
+            return ResponseEntity.ok().build();
+        }
+        return ResponseEntity.notFound().build();
     }
 }

@@ -6,20 +6,32 @@ export default function VooForm(){
         <form className="bg-white rounded-2xl shadow-lg border border-blue-100 p-8 max-w-lg mx-auto">
             <div className="flex flex-col gap-5">
                 <div className="flex flex-col gap-1">
-                    <label className="text-sm font-medium text-blue-800">Nome Completo:</label>
-                    <input name="nome" className="w-full rounded-lg border border-blue-200 px-4 py-2 text-blue-900 placeholder-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"/>
+                    <label className="text-sm font-medium text-blue-800">Código do Vôo:</label>
+                    <input name="codigoVoo" className="w-full rounded-lg border border-blue-200 px-4 py-2 text-blue-900 placeholder-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"/>
                 </div>
                 <div className="flex flex-col gap-1">
-                    <label className="text-sm font-medium text-blue-800">CPF:</label>
-                    <input name="cpf" className="w-full rounded-lg border border-blue-200 px-4 py-2 text-blue-900 placeholder-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"/>
+                    <label className="text-sm font-medium text-blue-800">Capacidade:</label>
+                    <input name="capacidade" className="w-full rounded-lg border border-blue-200 px-4 py-2 text-blue-900 placeholder-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"/>
                 </div>
                 <div className="flex flex-col gap-1">
-                    <label className="text-sm font-medium text-blue-800">E-mail:</label>
-                    <input name="email" className="w-full rounded-lg border border-blue-200 px-4 py-2 text-blue-900 placeholder-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"/>
+                    <label className="text-sm font-medium text-blue-800">Assentos Disponíveis:</label>
+                    <input name="assentosDisponiveis" className="w-full rounded-lg border border-blue-200 px-4 py-2 text-blue-900 placeholder-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"/>
                 </div>
                 <div className="flex flex-col gap-1">
-                    <label className="text-sm font-medium text-blue-800">Senha:</label>
-                    <input name="senha" type="password" className="w-full rounded-lg border border-blue-200 px-4 py-2 text-blue-900 placeholder-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"/>
+                    <label className="text-sm font-medium text-blue-800">Cidade de origem:</label>
+                    <input name="cidadeOrigem" className="w-full rounded-lg border border-blue-200 px-4 py-2 text-blue-900 placeholder-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"/>
+                </div>
+                <div className="flex flex-col gap-1">
+                    <label className="text-sm font-medium text-blue-800">Cidade de destino:</label>
+                    <input name="cidadeDestino" className="w-full rounded-lg border border-blue-200 px-4 py-2 text-blue-900 placeholder-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"/>
+                </div>
+                <div className="flex flex-col gap-1">
+                    <label className="text-sm font-medium text-blue-800">Data hora saída:</label>
+                    <input name="dataSaida" className="w-full rounded-lg border border-blue-200 px-4 py-2 text-blue-900 placeholder-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"/>
+                </div>
+                <div className="flex flex-col gap-1">
+                    <label className="text-sm font-medium text-blue-800">Data hora entrada:</label>
+                    <input name="dataEntrada" className="w-full rounded-lg border border-blue-200 px-4 py-2 text-blue-900 placeholder-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"/>
                 </div>
 
                 <div className="flex items-center justify-end gap-3 pt-2">

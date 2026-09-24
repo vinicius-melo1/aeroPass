@@ -1,27 +1,84 @@
 package com.example.aeropass.controllers;
 
+import com.example.aeropass.DTOs.AtualizarStatusAviaoRequest;
+import com.example.aeropass.DTOs.AtualizarStatusVooRequest;
+import com.example.aeropass.entities.*;
 import com.example.aeropass.repository.AviaoRepository;
-import com.example.aeropass.repository.VooRepository;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/passagens")
-@Tag(name = "Passagens", description = "Grupo de API responsável por controlar a estrutura de criação e consulta de passagens do sistema!")
+@RequestMapping("/avioes")
+@Tag(name = "Aviões", description = "Grupo de API responsável por controlar a estrutura de criação e consulta de aviões do sistema!")
 public class AviaoController {
     @Autowired
     private AviaoRepository aviaoRepository;
-    @Autowired
-    private VooRepository vooRepository;
 
     @GetMapping("/listar")
     @Operation(summary = "Método de consulta de lista de aviões.", description = "Método responsável em efetuar a consulta de todos os aviões, sem filtro.")
     public ResponseEntity<?> listarTodos(){
-        return  ResponseEntity.ok(vooRepository.findAll());
+        return  ResponseEntity.ok(aviaoRepository.findAll());
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Aviao> buscarPorId(@PathVariable Long id) {
+        Aviao aviaoBanco = aviaoRepository.findById(id).orElse(null);
+        if(aviaoBanco != null) {
+            return ResponseEntity.ok(aviaoBanco);
+        }
+        return ResponseEntity.notFound().build();
+    }
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    @Operation(summary = "Método de criação de aviões.", description = "Método responsável em efetuar a criação de novos aviões.")
+    public ResponseEntity<Aviao> criar(@RequestBody Aviao aviao){
+
+        var aviaoBanco = aviaoRepository.save(aviao);
+        return ResponseEntity.ok(aviaoBanco);
+
+    }
+
+    @PatchMapping("/{id}/status")
+    public ResponseEntity<Void> atualizarStatus(@PathVariable Long id, @RequestBody AtualizarStatusAviaoRequest statusRequest) {
+        Aviao aviaoBanco = aviaoRepository.findById(id).orElse(null);
+        if(aviaoBanco != null) {
+            aviaoBanco.setStatus(statusRequest.status());
+            aviaoRepository.save(aviaoBanco);
+            return ResponseEntity.ok().build();
+        }
+        return ResponseEntity.notFound().build();
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Aviao> atualizar(@PathVariable Long id, @RequestBody Aviao aviao) {
+        try{
+            Aviao aviaoBanco = aviaoRepository.findById(id).orElse(null);
+            if(aviaoBanco != null) {
+                aviaoBanco.setStatus(aviao.getStatus());
+                aviaoBanco.setFabricante(aviao.getFabricante());
+                aviaoBanco.setNumeroSerie(aviao.getNumeroSerie());
+                aviaoBanco.setModelo(aviao.getModelo());
+                return ResponseEntity.ok().build();
+            }
+            return ResponseEntity.notFound().build();
+
+        }catch (RuntimeException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @DeleteMapping("/{id}/excluir")
+    public ResponseEntity<Void> excluir(@PathVariable Long id) {
+        Aviao aviaoBanco = aviaoRepository.findById(id).orElse(null);
+        if(aviaoBanco != null) {
+            aviaoBanco.setStatus(EnumStatusAviao.EXCLUIDO);
+            aviaoRepository.save(aviaoBanco);
+            return ResponseEntity.ok().build();
+        }
+        return ResponseEntity.notFound().build();
     }
 }

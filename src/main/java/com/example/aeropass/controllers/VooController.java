@@ -30,6 +30,7 @@ public class VooController {
     }
 
     @GetMapping("/{id}")
+    @Operation(summary = "Método de consulta de vôo por ID.", description = "Método responsável por efetuar a consulta de vôo por ID.")
     public ResponseEntity<Voo> buscarPorId(@PathVariable Long id) {
         Voo vooBanco = vooRepository.findById(id).orElse(null);
         if(vooBanco != null) {
@@ -49,6 +50,7 @@ public class VooController {
     }
 
     @PatchMapping("/{id}/status")
+    @Operation(summary = "Método de atualização de status de um vôo através do ID pelo administrador.", description = "Método responsável por efetuar a atualização de status de um vôo através do ID pelo administrador.")
     public ResponseEntity<Void> atualizarStatus(@PathVariable Long id, @RequestBody AtualizarStatusVooRequest statusRequest) {
         Voo vooBanco = vooRepository.findById(id).orElse(null);
         if(vooBanco != null) {
@@ -60,6 +62,7 @@ public class VooController {
     }
 
     @PutMapping("/{id}")
+    @Operation(summary = "Método de atualização de atributos de vôos através do ID pelo administrador.", description = "Método responsável por efetuar a atualização de atributos de vôos através do ID pelo administrador.")
     public ResponseEntity<Voo> atualizar(@PathVariable Long id, @RequestBody Voo voo) {
         try{
             Voo vooBanco = vooRepository.findById(id).orElse(null);
@@ -81,6 +84,7 @@ public class VooController {
         }
     }
     @DeleteMapping("/{id}/excluir")
+    @Operation(summary = "Método de exclusão (atualização de status para excluído) de vôos através do ID pelo administrador.", description = "Método de exclusão (atualização de status para excluído) de vôos através do ID pelo administrador.")
     public ResponseEntity<Void> excluir(@PathVariable Long id) {
         Voo vooBanco = vooRepository.findById(id).orElse(null);
         if(vooBanco != null) {

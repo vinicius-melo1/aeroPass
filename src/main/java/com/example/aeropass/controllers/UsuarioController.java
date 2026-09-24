@@ -28,6 +28,7 @@ public class UsuarioController {
     }
 
     @GetMapping("/{id}")
+    @Operation(summary = "Método de consulta de usuários por ID.", description = "Método responsável por efetuar a consulta de usuários por ID.")
     public ResponseEntity<Usuario> buscarPorId(@PathVariable Long id) {
         Usuario usuarioBanco = usuarioRepository.findById(id).orElse(null);
         if(usuarioBanco != null) {
@@ -45,6 +46,7 @@ public class UsuarioController {
     }
 
     @PatchMapping("/{id}/status")
+    @Operation(summary = "Método de atualização de status de usuários através do ID pelo administrador.", description = "Método responsável por efetuar a atualização de status de usuários através do ID pelo administrador.")
     public ResponseEntity<Void> atualizarStatus(@PathVariable Long id, @RequestBody AtualizarStatusRequest statusRequest) {
         Usuario usuarioBanco = usuarioRepository.findById(id).orElse(null);
         if(usuarioBanco != null) {
@@ -56,6 +58,7 @@ public class UsuarioController {
     }
 
     @PutMapping("/{id}")
+    @Operation(summary = "Método de atualização de atributos de usuários através do ID pelo administrador.", description = "Método responsável por efetuar a atualização de atributos de usuários através do ID pelo administrador.")
     public ResponseEntity<Usuario> atualizar(@PathVariable Long id, @RequestBody Usuario usuario) {
         try{
             Usuario usuarioBanco = usuarioRepository.findById(id).orElse(null);
@@ -91,6 +94,7 @@ public class UsuarioController {
     }
 
     @DeleteMapping("/{id}/excluir")
+    @Operation(summary = "Método de exclusão (atualização de status para excluído) de usuários através do ID pelo administrador.", description = "Método de exclusão (atualização de status para excluído) de usuários através do ID pelo administrador.")
     public ResponseEntity<Void> excluir(@PathVariable Long id) {
 //        usuarioRepository.deleteById(id);
 //        return ResponseEntity.ok().build();

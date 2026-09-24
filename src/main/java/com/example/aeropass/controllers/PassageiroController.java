@@ -29,6 +29,7 @@ public class PassageiroController {
     }
 
     @GetMapping("/{id}")
+    @Operation(summary = "Método de consulta de um passageiro pelo id.", description = "Método responsável em efetuar a consulta um passageiro, com filtro pelo id.")
     public ResponseEntity<Passageiro> buscarPorId(@PathVariable Long id) {
         Passageiro passageiroBanco = passageiroRepository.findById(id).orElse(null);
         if(passageiroBanco != null) {
@@ -48,6 +49,7 @@ public class PassageiroController {
     }
 
     @PatchMapping("/{id}/status")
+    @Operation(summary = "Método de atualização de status de passageiros através do ID pelo administrador.", description = "Método responsável por efetuar a atualização de status de passageiros através do ID pelo administrador.")
     public ResponseEntity<Void> atualizarStatus(@PathVariable Long id, @RequestBody AtualizarStatusPassageiroRequest statusRequest) {
         Passageiro passageiroBanco = passageiroRepository.findById(id).orElse(null);
         if(passageiroBanco != null) {
@@ -59,6 +61,7 @@ public class PassageiroController {
     }
 
     @PutMapping("/{id}")
+    @Operation(summary = "Método de atualização de atributos de passageiros através do ID pelo administrador.", description = "Método responsável por efetuar a atualização de atributos de passageiros através do ID pelo administrador.")
     public ResponseEntity<Passagem> atualizar(@PathVariable Long id, @RequestBody Passageiro passageiro) {
         try{
             Passageiro passageiroBanco = passageiroRepository.findById(id).orElse(null);
@@ -75,6 +78,7 @@ public class PassageiroController {
         }
     }
     @DeleteMapping("/{id}/excluir")
+    @Operation(summary = "Método de exclusão (atualização de status para excluído) de passageiros através do ID pelo administrador.", description = "Método de exclusão (atualização de status para excluído) de passageiros através do ID pelo administrador.")
     public ResponseEntity<Void> excluir(@PathVariable Long id) {
         Passageiro passageiroBanco = passageiroRepository.findById(id).orElse(null);
         if(passageiroBanco != null) {

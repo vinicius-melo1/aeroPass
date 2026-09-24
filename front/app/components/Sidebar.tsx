@@ -14,6 +14,7 @@ export default function Sidebar() {
                 <Link href="/voos" className="px-3 py-2 rounded-lg text-sm font-medium text-blue-800 hover:bg-blue-50 transition-colors">Vôos</Link>
                 <Link href="/passageiros" className="px-3 py-2 rounded-lg text-sm font-medium text-blue-800 hover:bg-blue-50 transition-colors">Passageiros</Link>
                 <Link href="/passagens" className="px-3 py-2 rounded-lg text-sm font-medium text-blue-800 hover:bg-blue-50 transition-colors">Passagens</Link>
+                <Link href="/avioes" className="px-3 py-2 rounded-lg text-sm font-medium text-blue-800 hover:bg-blue-50 transition-colors">Aviões</Link>
             </nav>
         </aside>
     );

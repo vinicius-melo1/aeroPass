@@ -45,6 +45,7 @@ public class PassagemController {
     }
 
     @PatchMapping("/{id}/status")
+    @Operation(summary = "Método de atualização de status de passagens através do ID pelo administrador.", description = "Método responsável por efetuar a atualização de status de passagens através do ID pelo administrador.")
     public ResponseEntity<Void> atualizarStatus(@PathVariable Long id, @RequestBody AtualizarStatusPassagemRequest statusRequest) {
         Passagem passagemBanco = passagemRepository.findById(id).orElse(null);
         if(passagemBanco != null) {
@@ -56,6 +57,7 @@ public class PassagemController {
     }
 
     @PutMapping("/{id}")
+    @Operation(summary = "Método de atualização de atributos de passagens através do ID pelo administrador.", description = "Método responsável por efetuar a atualização de atributos de passagens através do ID pelo administrador.")
     public ResponseEntity<Passagem> atualizar(@PathVariable Long id, @RequestBody Passagem passagem) {
         try{
             Passagem passagemBanco = passagemRepository.findById(id).orElse(null);
@@ -73,6 +75,7 @@ public class PassagemController {
         }
     }
     @DeleteMapping("/{id}/excluir")
+    @Operation(summary = "Método de exclusão (atualização de status para excluído) de passagens através do ID pelo administrador.", description = "Método de exclusão (atualização de status para excluído) de passagens através do ID pelo administrador.")
     public ResponseEntity<Void> excluir(@PathVariable Long id) {
         Passagem passagemBanco = passagemRepository.findById(id).orElse(null);
         if(passagemBanco != null) {

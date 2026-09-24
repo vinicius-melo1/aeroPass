@@ -1,9 +1,18 @@
+"use client"
+
+import { Usuario } from "@/app/types/usuario";
 import Link from "next/link";
+import { useState } from "react";
 
 
 export default function UsuarioForm(){ 
+    const handlerChange = (campo: 'nome' | 'cpf' | 'email' | 'senha')
+
+    const handlerSalvar = async (formData : FormData) =>{
+        const [ usuario,setUsuario ] = useState<Usuario>(new Usuario(null,"","","","ATIVO"));
+    }
     return(
-        <form className="bg-white rounded-2xl shadow-lg border border-blue-100 p-8 max-w-lg mx-auto">
+        <form action={handlerSalvar} className="bg-white rounded-2xl shadow-lg border border-blue-100 p-8 max-w-lg mx-auto">
             <div className="flex flex-col gap-5">
                 <div className="flex flex-col gap-1">
                     <label className="text-sm font-medium text-blue-800">Nome Completo:</label>

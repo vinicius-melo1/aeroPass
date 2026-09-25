@@ -7,3 +7,7 @@ export class Aviao{
         public status:string,
     ){}
 }
+
+export interface AviaoFormProps{
+    aviaoExistente?:Aviao
+}

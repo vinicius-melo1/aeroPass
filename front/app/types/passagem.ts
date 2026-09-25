@@ -8,3 +8,7 @@ export class Passagem{
         public status:string
     ){}
 }
+
+export interface PassagemFormProps{
+    passagemExistente?:Passagem
+}

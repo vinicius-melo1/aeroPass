@@ -14,10 +14,43 @@ export default function Usuarios() {
     const carregarDados = async () => {
         try {
             const dados = await axios.get<Usuario[]>("http://localhost:8080/usuarios/listar");
-            setUsuarios( dados.data);
+            setUsuarios(dados.data);
         } catch {
             alert("Erro ao carregar dados");
         }
+    }
+
+    const handlerDeletarUsuario = async(usuario:Usuario) => {
+        var dadosRetorno = await axios.delete<number>('http://localhost:8080/usuarios/'+usuario.id+'/excluir');
+
+        if(dadosRetorno.status == 200) {
+            alert("Usuário foi deletado com sucesso!");
+        } else {
+            alert(dadosRetorno.data);
+            return;
+        }
+
+        carregarDados();
+    }
+
+    const handlerAlterarUsuario = async(usuario:Usuario) => {
+        var novoStatus = {};
+        if(usuario.status === "ATIVO") {
+            novoStatus = {status:"BLOQUEADO"}
+        } else {
+            novoStatus = {status:"ATIVO"}
+        }
+
+        var dadosRetorno = await axios.patch<number>('http://localhost:8080/usuarios/'+usuario.id+'/status',novoStatus);
+
+        if(dadosRetorno.status == 200) {
+            alert("Status foi atualizado com sucesso!");
+        } else {
+            alert(dadosRetorno.data);
+            return;
+        }
+
+        carregarDados();
     }
 
     return (
@@ -49,7 +82,15 @@ export default function Usuarios() {
                                     <td className="px-6 py-3 text-blue-800">{usuario.cpf}</td>
                                     <td className="px-6 py-3 text-blue-800">{usuario.email}</td>
                                     <td className="px-6 py-3 text-blue-800">{usuario.status }</td>
-                                    <td className="px-6 py-3 text-blue-800"><Link href={`/usuarios/${usuario.id}/editar`} className="text-gray-50 font-semibold bg-yellow-500 p-2 rounded-sm fs-12px">Editar</Link></td>
+                                    <td className="flex gap-4 px-6 py-3 text-blue-800">
+                                        <Link href={`/usuarios/${usuario.id}/editar`} className="text-gray-50 font-semibold bg-yellow-500 hover:bg-yellow-600 p-2 rounded-sm fs-12px">EDITAR</Link>
+                                        <button onClick= {()=> handlerDeletarUsuario(usuario)} className="text-gray-50 font-semibold bg-red-500 hover:bg-red-600 transition-color p-2 rounded-sm fs-12px">DELETAR</button>    
+                                        <button onClick= {()=> handlerAlterarUsuario(usuario)} 
+                                        className= {`text-gray-50 font-semibold font-semibold transition-colors p-2 rounded-sm fs-12px ${usuario.status ==='BLOQUEADO'
+                                        ?'bg-orange-600 hover:bg-orange-800' 
+                                        :' bg-green-600 hover:bg-green-800' }`
+                                        }>{usuario.status}</button>    
+                                    </td>
                                 </tr>
                             ))}
                             {

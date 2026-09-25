@@ -1,13 +1,35 @@
 "use client"
 
 import Link from "next/link";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import VooForm from "../../components/VooForm";
+import { Voo } from "@/app/types/voo";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
 export default function EditarVoo(){
 
     const parametro = useParams();
     const codigo = Number(parametro.codigo);
+    const [voo,setVoo] = useState<Voo|null>(null)
+    const router = useRouter();
+    useEffect(()=>{
+        buscarDados();
+    },[]);
+
+    const buscarDados = async() => {
+        const valorUsuarioBack = await axios.get<Voo>('http://localhost:8080/voos/'+codigo);
+
+        if(valorUsuarioBack.status == 200){
+            setVoo(valorUsuarioBack.data);
+        } else {
+            router.push("/voos");
+            return
+        }
+    }
+
+    if(!voo) return(<div className="p-8"> Carregando dados...</div>)
+    
     return(
         <div className="min-h-screen bg-blue-50 px-4 py-8">
             <div className="max-w-lg mx-auto">

@@ -9,3 +9,7 @@ export class Passageiro{
         public status:string
     ){}
 }
+
+export interface PassageiroFormProps{
+    passageiroExistente?:Passageiro
+}

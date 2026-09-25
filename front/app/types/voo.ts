@@ -11,3 +11,7 @@ export class Voo{
         public status:string
     ){}
 }
+
+export interface VooFormProps{
+    vooExistente?:Voo
+}

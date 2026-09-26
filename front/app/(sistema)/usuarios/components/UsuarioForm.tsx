@@ -54,7 +54,8 @@ export default function UsuarioForm({usuarioExistente}:UsuarioFormProps){
             <div className="flex flex-col gap-5">
                 <div className="flex flex-col gap-1">
                     <label className="text-sm font-medium text-blue-800">Nome Completo:</label>
-                    <input name="nome" value={usuario.nome}
+                    <input name="nome" 
+                        value={usuario.nome}
                         onChange={(e)=>handlerChange('nome',e.target.value)}
                         placeholder="João da Silva"
                         required
@@ -63,7 +64,8 @@ export default function UsuarioForm({usuarioExistente}:UsuarioFormProps){
                 </div>
                 <div className="flex flex-col gap-1">
                     <label className="text-sm font-medium text-blue-800">CPF:</label>
-                    <input name="cpf" value={usuario.cpf}
+                    <input name="cpf" 
+                        value={usuario.cpf}
                         onChange={(e)=>handlerChange('cpf',e.target.value)}
                         placeholder="000.000.000-00"
                         required
@@ -72,7 +74,8 @@ export default function UsuarioForm({usuarioExistente}:UsuarioFormProps){
                 </div>
                 <div className="flex flex-col gap-1">
                     <label className="text-sm font-medium text-blue-800">E-mail:</label>
-                    <input name="email" value={usuario.email}
+                    <input name="email" 
+                        value={usuario.email}
                         onChange={(e)=>handlerChange('email',e.target.value)}
                         placeholder="email@gmail.com"
                         required
@@ -81,7 +84,8 @@ export default function UsuarioForm({usuarioExistente}:UsuarioFormProps){
                 </div>
                 <div className="flex flex-col gap-1">
                     <label className="text-sm font-medium text-blue-800">Senha:</label>
-                    <input name="senha" value={usuario.senha} 
+                    <input name="senha" 
+                        value={usuario.senha} 
                         type="password" 
                         onChange={(e)=>handlerChange('senha',e.target.value)}
                         placeholder="sua melhor senha"

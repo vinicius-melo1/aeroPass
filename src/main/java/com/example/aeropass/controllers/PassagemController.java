@@ -66,6 +66,7 @@ public class PassagemController {
                 passagemBanco.setCodigoAssento(passagem.getCodigoAssento());
                 passagemBanco.setValor(passagem.getValor());
                 passagemBanco.setFormaPagamento(passagem.getFormaPagamento());
+                passagemRepository.save(passagemBanco);
                 return ResponseEntity.ok().build();
             }
             return ResponseEntity.notFound().build();

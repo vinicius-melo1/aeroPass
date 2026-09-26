@@ -20,7 +20,7 @@ public class Voo {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Long id;
 
-    public Long idAviao;
+    // public Long idAviao;
 
     public String codigoVoo;
 

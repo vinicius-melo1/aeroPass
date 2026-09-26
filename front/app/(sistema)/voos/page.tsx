@@ -12,13 +12,45 @@ export default function Voos() {
     },[]);
 
     const carregarDados = async () => {
-        debugger
         try {
             const dados = await axios.get<Voo[]>("http://localhost:8080/voos/listar");
             setVoos(dados.data);
         } catch {
             alert("Erro ao carregar dados");
         }
+    }
+
+    const handlerDeletarVoo = async(voo:Voo) => {
+        var dadosRetorno = await axios.delete<number>('http://localhost:8080/voos/'+voo.id+'/excluir');
+
+        if(dadosRetorno.status == 200) {
+            alert("Vôo foi deletado com sucesso!");
+        } else {
+            alert(dadosRetorno.data);
+            return;
+        }
+
+        carregarDados();
+    }
+
+    const handlerAlterarVoo = async(voo:Voo) => {
+        var novoStatus = {};
+        if(voo.status === "ATIVO") {
+            novoStatus = {status:"BLOQUEADO"}
+        } else {
+            novoStatus = {status:"ATIVO"}
+        }
+
+        var dadosRetorno = await axios.patch<number>('http://localhost:8080/voos/'+voo.id+'/status',novoStatus);
+
+        if(dadosRetorno.status == 200) {
+            alert("Status foi atualizado com sucesso!");
+        } else {
+            alert(dadosRetorno.data);
+            return;
+        }
+
+        carregarDados();
     }
 
     return (<>
@@ -58,7 +90,16 @@ export default function Voos() {
                                     <td className="px-6 py-3 text-blue-800">{voo.dataHoraSaida}</td>
                                     <td className="px-6 py-3 text-blue-800">{voo.dataHoraChegada}</td>
                                     <td className="px-6 py-3 text-blue-800">{voo.status}</td>
-                                    <td className="px-6 py-3 text-blue-800"><Link href={`/voos/${voo.id}/editar`} className="text-gray-50 font-semibold bg-yellow-500 p-2 rounded-sm fs-12px">Editar</Link></td>
+                                    <td className="flex gap-4 px-6 py-3 text-blue-800">
+                                        <Link href={`/voos/${voo.id}/editar`} className="text-gray-50 font-semibold bg-yellow-500 p-2 rounded-sm fs-12px">Editar</Link>
+                                        <button onClick= {()=> handlerDeletarVoo(voo)} className="text-gray-50 font-semibold bg-red-500 hover:bg-red-600 transition-color p-2 rounded-sm fs-12px">DELETAR</button>    
+                                        <button onClick= {()=> handlerAlterarVoo(voo)} 
+                                            className= {`text-gray-50 font-semibold font-semibold transition-colors p-2 rounded-sm fs-12px ${voo.status ==='BLOQUEADO'
+                                            ?'bg-orange-600 hover:bg-orange-800' 
+                                            :' bg-green-600 hover:bg-green-800' }`
+                                            }>{voo.status}
+                                        </button>
+                                    </td>
                                 </tr>
                             ))}
                             {

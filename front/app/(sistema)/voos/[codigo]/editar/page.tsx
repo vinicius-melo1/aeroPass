@@ -18,10 +18,10 @@ export default function EditarVoo(){
     },[]);
 
     const buscarDados = async() => {
-        const valorUsuarioBack = await axios.get<Voo>('http://localhost:8080/voos/'+codigo);
+        const valorVooBack = await axios.get<Voo>('http://localhost:8080/voos/'+codigo);
 
-        if(valorUsuarioBack.status == 200){
-            setVoo(valorUsuarioBack.data);
+        if(valorVooBack.status == 200){
+            setVoo(valorVooBack.data);
         } else {
             router.push("/voos");
             return
@@ -41,7 +41,7 @@ export default function EditarVoo(){
                     </div>
                 </div>
                 <div>
-                    <VooForm></VooForm>
+                    <VooForm vooExistente={voo}></VooForm>
                 </div>
             </div>
         </div>

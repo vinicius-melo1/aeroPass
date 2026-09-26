@@ -20,6 +20,39 @@ export default function passagens() {
         }
     }
 
+    const handlerDeletarPassagem = async(passagem:Passagem) => {
+        var dadosRetorno = await axios.delete<number>('http://localhost:8080/passagens/'+passagem.id+'/excluir');
+
+        if(dadosRetorno.status == 200) {
+            alert("A passagem foi deletada com sucesso!");
+        } else {
+            alert(dadosRetorno.data);
+            return;
+        }
+
+        carregarDados();
+    }
+
+    const handlerAlterarPassagem = async(passagem:Passagem) => {
+        var novoStatus = {};
+        if(passagem.status === "ATIVO") {
+            novoStatus = {status:"BLOQUEADO"}
+        } else {
+            novoStatus = {status:"ATIVO"}
+        }
+
+        var dadosRetorno = await axios.patch<number>('http://localhost:8080/passagens/'+passagem.id+'/status',novoStatus);
+
+        if(dadosRetorno.status == 200) {
+            alert("Status foi atualizado com sucesso!");
+        } else {
+            alert(dadosRetorno.data);
+            return;
+        }
+
+        carregarDados();
+    }
+
     return(
         <div className="bg-blue-50 px-4 py-8">
             <div className="max-w-6xl mx-auto flex items-center justify-between mb-6">
@@ -51,7 +84,16 @@ export default function passagens() {
                                     <td className="px-6 py-3 text-blue-800">{passagem.valor}</td>
                                     <td className="px-6 py-3 text-blue-800">{passagem.formaPagamento }</td>
                                     <td className="px-6 py-3 text-blue-800">{passagem.status }</td>
-                                    <td className="px-6 py-3 text-blue-800"><Link href={`/passagens/${passagem.id}/editar`} className="text-gray-50 font-semibold bg-yellow-500 p-2 rounded-sm fs-12px">Editar</Link></td>
+                                    <td className="px-6 py-3 text-blue-800">
+                                        <Link href={`/passagens/${passagem.id}/editar`} className="text-gray-50 font-semibold bg-yellow-500 p-2 rounded-sm fs-12px">Editar</Link>
+                                        <button onClick= {()=> handlerDeletarPassagem(passagem)} className="text-gray-50 font-semibold bg-red-500 hover:bg-red-600 transition-color p-2 rounded-sm fs-12px">DELETAR</button>    
+                                        <button onClick= {()=> handlerAlterarPassagem(passagem)} 
+                                            className= {`text-gray-50 font-semibold font-semibold transition-colors p-2 rounded-sm fs-12px ${passagem.status ==='BLOQUEADO'
+                                            ?'bg-orange-600 hover:bg-orange-800' 
+                                            :' bg-green-600 hover:bg-green-800' }`
+                                            }>{passagem.status}
+                                        </button>    
+                                    </td>
                                 </tr>
                             ))}
                             {

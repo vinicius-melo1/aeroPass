@@ -86,10 +86,11 @@ export default function Usuarios() {
                                         <Link href={`/usuarios/${usuario.id}/editar`} className="text-gray-50 font-semibold bg-yellow-500 hover:bg-yellow-600 p-2 rounded-sm fs-12px">EDITAR</Link>
                                         <button onClick= {()=> handlerDeletarUsuario(usuario)} className="text-gray-50 font-semibold bg-red-500 hover:bg-red-600 transition-color p-2 rounded-sm fs-12px">DELETAR</button>    
                                         <button onClick= {()=> handlerAlterarUsuario(usuario)} 
-                                        className= {`text-gray-50 font-semibold font-semibold transition-colors p-2 rounded-sm fs-12px ${usuario.status ==='BLOQUEADO'
-                                        ?'bg-orange-600 hover:bg-orange-800' 
-                                        :' bg-green-600 hover:bg-green-800' }`
-                                        }>{usuario.status}</button>    
+                                            className= {`text-gray-50 font-semibold font-semibold transition-colors p-2 rounded-sm fs-12px ${usuario.status ==='BLOQUEADO'
+                                            ?'bg-orange-600 hover:bg-orange-800' 
+                                            :' bg-green-600 hover:bg-green-800' }`
+                                            }>{usuario.status}
+                                        </button>    
                                     </td>
                                 </tr>
                             ))}

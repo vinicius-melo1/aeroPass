@@ -69,6 +69,7 @@ public class PassageiroController {
                 passageiroBanco.setStatus(passageiro.getStatus());
                 passageiroBanco.setTelefone(passageiro.getTelefone());
                 passageiroBanco.setEmail(passageiro.getEmail());
+                passageiroRepository.save(passageiroBanco);
                 return ResponseEntity.ok().build();
             }
             return ResponseEntity.notFound().build();

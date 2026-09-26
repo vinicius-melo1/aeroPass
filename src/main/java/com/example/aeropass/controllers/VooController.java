@@ -75,6 +75,9 @@ public class VooController {
                 vooBanco.setCidadeOrigem(voo.getCidadeDestino());
                 vooBanco.setDataHoraSaida(voo.getDataHoraSaida());
                 vooBanco.setDataHoraChegada(voo.getDataHoraChegada());
+
+
+                vooRepository.save(vooBanco);
                 return ResponseEntity.ok().build();
             }
             return ResponseEntity.notFound().build();

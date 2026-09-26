@@ -65,6 +65,7 @@ public class AviaoController {
                 aviaoBanco.setFabricante(aviao.getFabricante());
                 aviaoBanco.setNumeroSerie(aviao.getNumeroSerie());
                 aviaoBanco.setModelo(aviao.getModelo());
+                aviaoRepository.save(aviaoBanco);
                 return ResponseEntity.ok().build();
             }
             return ResponseEntity.notFound().build();

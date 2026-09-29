@@ -20,6 +20,39 @@ export default function avioes() {
         }
     }
 
+    const handlerDeletarAviao = async(aviao:Aviao) => {
+        var dadosRetorno = await axios.delete<number>('http://localhost:8080/avioes/'+aviao.id+'/excluir');
+
+        if(dadosRetorno.status == 200) {
+            alert("Avião foi deletado com sucesso!");
+        } else {
+            alert(dadosRetorno.data);
+            return;
+        }
+
+        carregarDados();
+    }
+
+    const handlerAlterarAviao = async(aviao:Aviao) => {
+        var novoStatus = {};
+        if(aviao.status === "ATIVO") {
+            novoStatus = {status:"BLOQUEADO"}
+        } else {
+            novoStatus = {status:"ATIVO"}
+        }
+
+        var dadosRetorno = await axios.patch<number>('http://localhost:8080/avioes/'+aviao.id+'/status',novoStatus);
+
+        if(dadosRetorno.status == 200) {
+            alert("Status foi atualizado com sucesso!");
+        } else {
+            alert(dadosRetorno.data);
+            return;
+        }
+
+        carregarDados();
+    }
+
     return(
         <div className="bg-blue-50 px-4 py-8">
             <div className="max-w-6xl mx-auto flex items-center justify-between mb-6">
@@ -49,7 +82,16 @@ export default function avioes() {
                                     <td className="px-6 py-3 text-blue-800">{aviao.fabricante}</td>
                                     <td className="px-6 py-3 text-blue-800">{aviao.numeroSerie}</td>
                                     <td className="px-6 py-3 text-blue-800">{aviao.status }</td>
-                                    <td className="px-6 py-3 text-blue-800"><Link href={`/avioes/${aviao.id}/editar`} className="text-gray-50 font-semibold bg-yellow-500 p-2 rounded-sm fs-12px">Editar</Link></td>
+                                    <td className="flex gap-4 px-6 py-3 text-blue-800">
+                                        <Link href={`/avioes/${aviao.id}/editar`} className="text-gray-50 font-semibold bg-yellow-500 p-2 rounded-sm fs-12px">Editar</Link>
+                                        <button onClick= {()=> handlerDeletarAviao(aviao)} className="text-gray-50 font-semibold bg-red-500 hover:bg-red-600 transition-color p-2 rounded-sm fs-12px">DELETAR</button>    
+                                        <button onClick= {()=> handlerAlterarAviao(aviao)} 
+                                            className= {`text-gray-50 font-semibold font-semibold transition-colors p-2 rounded-sm fs-12px ${aviao.status ==='BLOQUEADO'
+                                            ?'bg-orange-600 hover:bg-orange-800' 
+                                            :' bg-green-600 hover:bg-green-800' }`
+                                            }>{aviao.status}
+                                        </button>    
+                                    </td>
                                 </tr>
                             ))}
                             {

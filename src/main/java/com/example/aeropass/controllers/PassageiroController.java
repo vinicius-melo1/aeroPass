@@ -67,6 +67,9 @@ public class PassageiroController {
             Passageiro passageiroBanco = passageiroRepository.findById(id).orElse(null);
             if(passageiroBanco != null) {
                 passageiroBanco.setStatus(passageiro.getStatus());
+                passageiroBanco.setNome(passageiro.getNome());
+                passageiroBanco.setCpf(passageiro.getCpf());
+                passageiroBanco.setPassaporte(passageiro.getPassaporte());
                 passageiroBanco.setTelefone(passageiro.getTelefone());
                 passageiroBanco.setEmail(passageiro.getEmail());
                 passageiroRepository.save(passageiroBanco);

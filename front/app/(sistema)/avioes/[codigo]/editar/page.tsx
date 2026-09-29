@@ -1,13 +1,35 @@
 "use client"
 
 import Link from "next/link";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import AvioesForm from "../../components/AvioesForm";
+import { Aviao } from "@/app/types/aviao";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
 export default function EditarAviao(){
 
     const parametro = useParams();
     const codigo = Number(parametro.codigo);
+    const [aviao,setAviao] = useState<Aviao|null>(null)
+    const router = useRouter();
+    useEffect(()=>{
+        buscarDados();
+    },[]);
+
+    const buscarDados = async() => {
+        const valorAviaoBack = await axios.get<Aviao>('http://localhost:8080/avioes/'+codigo);
+
+        if(valorAviaoBack.status == 200){
+            setAviao(valorAviaoBack.data);
+        } else {
+            router.push("/avioes");
+            return
+        }
+    }
+
+    if(!aviao) return(<div className="p-8"> Carregando dados...</div>)
+
     return(
         <div className="min-h-screen bg-blue-50 px-4 py-8">
             <div className="max-w-lg mx-auto">
@@ -19,7 +41,7 @@ export default function EditarAviao(){
                     </div>
                 </div>
                 <div>
-                    <AvioesForm></AvioesForm>
+                    <AvioesForm aviaoExistente={aviao}></AvioesForm>
                 </div>
             </div>
         </div>

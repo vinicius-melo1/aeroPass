@@ -20,6 +20,39 @@ export default function passageiros() {
         }
     }
 
+    const handlerDeletarPassageiro = async(passageiro:Passageiro) => {
+        var dadosRetorno = await axios.delete<number>('http://localhost:8080/passageiros/'+passageiro.id+'/excluir');
+
+        if(dadosRetorno.status == 200) {
+            alert("Passageiro foi deletado com sucesso!");
+        } else {
+            alert(dadosRetorno.data);
+            return;
+        }
+
+        carregarDados();
+    }
+
+    const handlerAlterarPassageiro = async(passageiro:Passageiro) => {
+        var novoStatus = {};
+        if(passageiro.status === "ATIVO") {
+            novoStatus = {status:"BLOQUEADO"}
+        } else {
+            novoStatus = {status:"ATIVO"}
+        }
+
+        var dadosRetorno = await axios.patch<number>('http://localhost:8080/passageiros/'+passageiro.id+'/status',novoStatus);
+
+        if(dadosRetorno.status == 200) {
+            alert("Status foi atualizado com sucesso!");
+        } else {
+            alert(dadosRetorno.data);
+            return;
+        }
+
+        carregarDados();
+    }
+
     return(
         <div className="bg-blue-50 px-4 py-8">
             <div className="max-w-6xl mx-auto flex items-center justify-between mb-6">
@@ -53,7 +86,16 @@ export default function passageiros() {
                                     <td className="px-6 py-3 text-blue-800">{passageiro.telefone}</td>
                                     <td className="px-6 py-3 text-blue-800">{passageiro.email}</td>
                                     <td className="px-6 py-3 text-blue-800">{passageiro.status }</td>
-                                    <td className="px-6 py-3 text-blue-800"><Link href={`/passageiros/${passageiro.id}/editar`} className="text-gray-50 font-semibold bg-yellow-500 p-2 rounded-sm fs-12px">Editar</Link></td>
+                                    <td className="flex gap-4 px-6 py-3 text-blue-800">
+                                        <Link href={`/passageiros/${passageiro.id}/editar`} className="text-gray-50 font-semibold bg-yellow-500 p-2 rounded-sm fs-12px">Editar</Link>
+                                        <button onClick= {()=> handlerDeletarPassageiro(passageiro)} className="text-gray-50 font-semibold bg-red-500 hover:bg-red-600 transition-color p-2 rounded-sm fs-12px">DELETAR</button>    
+                                        <button onClick= {()=> handlerAlterarPassageiro(passageiro)} 
+                                            className= {`text-gray-50 font-semibold font-semibold transition-colors p-2 rounded-sm fs-12px ${passageiro.status ==='BLOQUEADO'
+                                            ?'bg-orange-600 hover:bg-orange-800' 
+                                            :' bg-green-600 hover:bg-green-800' }`
+                                            }>{passageiro.status}
+                                        </button>    
+                                    </td>
                                 </tr>
                             ))}
                             {

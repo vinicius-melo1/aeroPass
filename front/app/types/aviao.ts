@@ -3,7 +3,7 @@ export class Aviao{
         public id:number | null,
         public modelo:string,
         public fabricante:string,
-        public numeroSerie:number,
+        public numeroSerie:string,
         public status:string,
     ){}
 }

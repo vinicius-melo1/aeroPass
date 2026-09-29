@@ -18,11 +18,11 @@ public class Aviao {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    public Long modelo;
+    public String modelo;
 
-    public Long fabricante;
+    public String fabricante;
 
-    public Long numeroSerie;
+    public String numeroSerie;
 
     private EnumStatusAviao status = EnumStatusAviao.ATIVO;
 }

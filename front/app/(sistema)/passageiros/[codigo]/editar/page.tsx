@@ -1,13 +1,35 @@
 "use client"
 
 import Link from "next/link";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import PassageirosForm from "../../components/PassageirosForm";
+import { Passageiro } from "@/app/types/passageiro";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
 export default function EditarPassagem(){
 
     const parametro = useParams();
     const codigo = Number(parametro.codigo);
+    const [passageiro,setPassageiro] = useState<Passageiro|null>(null)
+    const router = useRouter();
+    useEffect(()=>{
+        buscarDados();
+    },[]);
+
+    const buscarDados = async() => {
+        const valorPassageiroBack = await axios.get<Passageiro>('http://localhost:8080/passageiros/'+codigo);
+
+        if(valorPassageiroBack.status == 200){
+            setPassageiro(valorPassageiroBack.data);
+        } else {
+            router.push("/passageiros");
+            return
+        }
+    }
+
+    if(!passageiro) return(<div className="p-8"> Carregando dados...</div>)
+
     return(
         <div className="min-h-screen bg-blue-50 px-4 py-8">
             <div className="max-w-lg mx-auto">
@@ -19,7 +41,7 @@ export default function EditarPassagem(){
                     </div>
                 </div>
                 <div>
-                    <PassageirosForm></PassageirosForm>
+                    <PassageirosForm passageiroExistente={passageiro}></PassageirosForm>
                 </div>
             </div>
         </div>

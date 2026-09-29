@@ -4,6 +4,7 @@ import { Passagem, PassagemFormProps } from "@/app/types/passagem";
 import axios from "axios";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+
 import { useState } from "react";
 
 
@@ -30,7 +31,7 @@ export default function PassagemForm({passagemExistente}:PassagemFormProps){
     const handlerSalvar = async (formData : FormData) =>{
 
         if(passagemExistente) {
-            var dadosRetorno = await axios.put<number>('http://localhost:8080/passagens'+passagem.id,passagem);
+            var dadosRetorno = await axios.put<number>('http://localhost:8080/passagens/'+passagem.id,passagem);
 
             if(dadosRetorno.status == 200) {
                 alert("Passagem foi salva com sucesso!");
@@ -38,7 +39,7 @@ export default function PassagemForm({passagemExistente}:PassagemFormProps){
                 alert(dadosRetorno.data);
             }
         } else {
-            var dadosRetorno = await axios.post<number>('http://localhost:8080/passagens/cadastro',passagem);
+            var dadosRetorno = await axios.post<number>('http://localhost:8080/passagens',passagem);
 
             if(dadosRetorno.status == 200) {
                 alert("Passagem foi salva com sucesso!");
@@ -79,7 +80,7 @@ export default function PassagemForm({passagemExistente}:PassagemFormProps){
                     <input name="formaPagamento" 
                     value={passagem.formaPagamento}
                     onChange={(e)=>handlerChange('formaPagamento',e.target.value)} 
-                    type="password" 
+                    type="text"
                     className="w-full rounded-lg border border-blue-200 px-4 py-2 text-blue-900 placeholder-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"/>
                 </div>
 

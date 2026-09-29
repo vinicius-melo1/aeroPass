@@ -67,6 +67,7 @@ public class VooController {
         try{
             Voo vooBanco = vooRepository.findById(id).orElse(null);
             if(vooBanco != null) {
+
                 vooBanco.setStatus(voo.getStatus());
                 vooBanco.setCodigoVoo(voo.getCodigoVoo());
                 vooBanco.setCapacidade(voo.getCapacidade());

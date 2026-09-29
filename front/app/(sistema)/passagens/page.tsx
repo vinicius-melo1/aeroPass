@@ -84,7 +84,7 @@ export default function passagens() {
                                     <td className="px-6 py-3 text-blue-800">{passagem.valor}</td>
                                     <td className="px-6 py-3 text-blue-800">{passagem.formaPagamento }</td>
                                     <td className="px-6 py-3 text-blue-800">{passagem.status }</td>
-                                    <td className="px-6 py-3 text-blue-800">
+                                    <td className="flex gap-4 px-6 py-3 text-blue-800">
                                         <Link href={`/passagens/${passagem.id}/editar`} className="text-gray-50 font-semibold bg-yellow-500 p-2 rounded-sm fs-12px">Editar</Link>
                                         <button onClick= {()=> handlerDeletarPassagem(passagem)} className="text-gray-50 font-semibold bg-red-500 hover:bg-red-600 transition-color p-2 rounded-sm fs-12px">DELETAR</button>    
                                         <button onClick= {()=> handlerAlterarPassagem(passagem)} 

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.example.back.FormaPagamentoController"
+            prefHeight="400.0" prefWidth="600.0">
+
+    <children>
+        <Button layoutX="41.0" layoutY="352.0" mnemonicParsing="false" onAction="#voltarAoMenu" text="Voltar" />
+        <Button layoutX="137.0" layoutY="255.0" mnemonicParsing="false" onAction="#salvarFormaPagamento" text="Salvar" />
+        <TextField fx:id="txtTipoPagamento" layoutX="89.0" layoutY="57.0" />
+    </children>
+</AnchorPane>

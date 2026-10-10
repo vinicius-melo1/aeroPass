@@ -1,8 +1,6 @@
 package com.example.aeropass.presentation;
 
-import com.example.aeropass.application.DTOs.AtualizarStatusRequest;
-import com.example.aeropass.application.DTOs.CadastroRequest;
-import com.example.aeropass.application.DTOs.UsuarioResponse;
+import com.example.aeropass.application.DTOs.*;
 import com.example.aeropass.application.services.UsuarioService;
 import com.example.aeropass.domain.entities.EnumStatusUsuario;
 import com.example.aeropass.domain.entities.Usuario;
@@ -42,6 +40,16 @@ public class UsuarioController {
             return ResponseEntity.ok(usuarioBanco);
         }
         return ResponseEntity.notFound().build();
+    }
+
+    @PostMapping("/admin")
+    public ResponseEntity<CriarAdminResponse> criarAdmin(@RequestBody CriarAdminRequest criarAdminRequest) {
+        try {
+            CriarAdminResponse respostaSalvar = usuarioService.criarAdmin(criarAdminRequest);
+            return ResponseEntity.ok(respostaSalvar);
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().build();
+        }
     }
 
     @PostMapping("/cadastro")

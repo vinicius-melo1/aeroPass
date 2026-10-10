@@ -6,6 +6,7 @@
 <AnchorPane prefHeight="260.0" prefWidth="390.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.back.MenuController">
    <children>
       <Button layoutX="56.0" layoutY="39.0" mnemonicParsing="false" onAction="#abrirCadastro" text="Cadastro Admin" />
+      <Button layoutX="175.0" layoutY="39.0" mnemonicParsing="false" onAction="#abrirFormaPagamento" text="Formula de Pagamento" />
       <Button layoutX="20.0" layoutY="212.0" mnemonicParsing="false" onAction="#sair" text="Sair" />
    </children>
 </AnchorPane>

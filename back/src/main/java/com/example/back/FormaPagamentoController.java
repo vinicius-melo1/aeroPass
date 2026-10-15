@@ -24,7 +24,8 @@ public class FormaPagamentoController {
         // Validar Dados
         String jsonRequest = String.format("{\n" +
                 "  \"tipoPagamento\": \"%s\",\n" +
-                "}", txtTipoPagamento.getText());
+                "  \"secretKey\": \"%s\"\n" +
+                "}", txtTipoPagamento.getText(), "f9e08ur903werwi9di90za");
 
         int respostaAPI = executaMetodoAPI("http://localhost:8080/forma-pagamento/cadastro", jsonRequest, "POST");
 

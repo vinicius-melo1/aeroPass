@@ -5,6 +5,7 @@ import com.example.aeropass.application.services.UsuarioService;
 import com.example.aeropass.domain.entities.EnumStatusUsuario;
 import com.example.aeropass.domain.entities.Usuario;
 import com.example.aeropass.domain.repository.UsuarioRepository;
+import com.example.aeropass.domain.valueObject.CPF;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -100,7 +101,7 @@ public class UsuarioController {
 
         Usuario usuario = new Usuario();
         usuario.setNome(cadastroRequest.nome());
-        usuario.setCpf(cadastroRequest.cpf());
+        usuario.setCpf(new CPF(cadastroRequest.cpf()));
         usuario.setEmail(cadastroRequest.email());
         usuario.setSenha(cadastroRequest.senha());
 

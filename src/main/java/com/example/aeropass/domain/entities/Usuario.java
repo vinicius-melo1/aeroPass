@@ -1,10 +1,8 @@
 package com.example.aeropass.domain.entities;
 
 import com.example.aeropass.application.DTOs.CriarAdminRequest;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.example.aeropass.domain.valueObject.CPF;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -21,7 +19,8 @@ public class Usuario {
 
     private String nome;
 
-    private String cpf;
+    @Embedded
+    private CPF cpf;
 
     private String senha;
 
@@ -32,7 +31,7 @@ public class Usuario {
     private EnumStatusUsuario status = EnumStatusUsuario.ATIVO;
 
     public Usuario(CriarAdminRequest criarAdminRequest) {
-        this.setCpf(criarAdminRequest.cpf());
+        this.setCpf(new CPF(criarAdminRequest.cpf()));
         this.setNome(criarAdminRequest.nome());
         this.setSenha(criarAdminRequest.senha());
         this.setEmail(criarAdminRequest.email());

@@ -1,15 +1,14 @@
 package com.example.aeropass.application.services;
 
 import com.example.aeropass.application.DTOs.*;
+import com.example.aeropass.application.DTOs.EnumStatusUsuario;
 import com.example.aeropass.domain.entities.Usuario;
 import com.example.aeropass.domain.repository.UsuarioRepository;
+import com.example.aeropass.domain.valueObject.CPF;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
 
-import java.net.HttpURLConnection;
 import java.util.List;
 
 @Service
@@ -50,5 +49,53 @@ public class UsuarioService {
         usuarioRepository.save(usuarioAdminSalvar);
 
         return new CriarAdminResponse(usuarioAdminSalvar.getId(), "Usuário salvo com sucesso");
+    }
+
+    public UsuarioResponse salvarUsuario(UsuarioRequest usuario, Long id) {
+
+        if (id == 0L) {
+
+            Usuario usuarioBanco = new Usuario(usuario);
+            usuarioRepository.save(usuarioBanco);
+            return new UsuarioResponse(usuarioBanco);
+        } else {
+            try{
+                Usuario usuarioBanco = usuarioRepository.findById(id).orElse(null);
+                if(usuarioBanco != null) {
+                    usuarioBanco.setNome(usuario.nome());
+                    usuarioBanco.setCpf(new CPF(usuario.cpf()));
+                    usuarioBanco.setEmail(usuario.email());
+                    usuarioBanco.setSenha(usuario.senha());
+                    usuarioRepository.save(usuarioBanco);
+                    return new UsuarioResponse(usuarioBanco);
+                }
+
+            }catch (RuntimeException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        return null;
+
+    }
+
+    public UsuarioResponse buscarPorId(Long id) {
+        var usuario = usuarioRepository.findById(id).orElse(null);
+
+        if(usuario == null) {
+            return null;
+        }
+        return new UsuarioResponse(usuario);
+    }
+
+    public boolean atualizarStatus(EnumStatusUsuario status, Long id) {
+
+        Usuario usuarioBanco = usuarioRepository.findById(id).orElse(null);
+        if(usuarioBanco != null) {
+            usuarioBanco.setStatus(status);
+            usuarioRepository.save(usuarioBanco);
+            return true;
+        }
+        return false;
+
     }
 }

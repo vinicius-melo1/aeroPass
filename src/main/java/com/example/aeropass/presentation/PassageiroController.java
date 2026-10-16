@@ -1,7 +1,7 @@
 package com.example.aeropass.presentation;
 
 import com.example.aeropass.application.DTOs.AtualizarStatusPassageiroRequest;
-import com.example.aeropass.domain.entities.EnumStatusPassageiro;
+import com.example.aeropass.application.DTOs.EnumStatusPassageiro;
 import com.example.aeropass.domain.entities.Passageiro;
 import com.example.aeropass.domain.entities.Passagem;
 import com.example.aeropass.domain.repository.PassageiroRepository;

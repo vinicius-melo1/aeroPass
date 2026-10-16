@@ -1,4 +1,4 @@
-package com.example.aeropass.domain.entities;
+package com.example.aeropass.application.DTOs;
 
 public enum EnumStatusAviao {
     ATIVO,

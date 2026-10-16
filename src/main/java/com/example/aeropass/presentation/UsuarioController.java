@@ -2,10 +2,8 @@ package com.example.aeropass.presentation;
 
 import com.example.aeropass.application.DTOs.*;
 import com.example.aeropass.application.services.UsuarioService;
-import com.example.aeropass.domain.entities.EnumStatusUsuario;
-import com.example.aeropass.domain.entities.Usuario;
+
 import com.example.aeropass.domain.repository.UsuarioRepository;
-import com.example.aeropass.domain.valueObject.CPF;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,8 +33,8 @@ public class UsuarioController {
 
     @GetMapping("/{id}")
     @Operation(summary = "Método de consulta de usuários por ID.", description = "Método responsável por efetuar a consulta de usuários por ID.")
-    public ResponseEntity<Usuario> buscarPorId(@PathVariable Long id) {
-        Usuario usuarioBanco = usuarioRepository.findById(id).orElse(null);
+    public ResponseEntity<UsuarioResponse> buscarPorId(@PathVariable Long id) {
+        UsuarioResponse usuarioBanco = usuarioService.buscarPorId(id);
         if(usuarioBanco != null) {
             return ResponseEntity.ok(usuarioBanco);
         }
@@ -55,19 +53,23 @@ public class UsuarioController {
 
     @PostMapping("/cadastro")
     @ResponseStatus(HttpStatus.CREATED)
-    @Operation(summary = "Método de criação de usuários pelo administrador.", description = "Método responsável por efetuar a criação de novos usuários pelo administrador.")
-    public ResponseEntity<Usuario> criar(@RequestBody Usuario usuario){
-        var usuarioBanco = usuarioRepository.save(usuario);
-        return ResponseEntity.ok(usuarioBanco);
+    @Operation(summary = "Método de criação de usuários.", description = "Método responsável por efetuar a criação de novos usuários.")
+    public ResponseEntity<?> criar(@RequestBody UsuarioRequest usuario){
+
+        try {
+            UsuarioResponse usuarioBanco = usuarioService.salvarUsuario(usuario, 0L);
+            return ResponseEntity.ok(usuarioBanco);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @PatchMapping("/{id}/status")
-    @Operation(summary = "Método de atualização de status de usuários através do ID pelo administrador.", description = "Método responsável por efetuar a atualização de status de usuários através do ID pelo administrador.")
+    @Operation(summary = "Método de atualização de status de usuários através do ID.", description = "Método responsável por efetuar a atualização de status de usuários através do ID.")
     public ResponseEntity<Void> atualizarStatus(@PathVariable Long id, @RequestBody AtualizarStatusRequest statusRequest) {
-        Usuario usuarioBanco = usuarioRepository.findById(id).orElse(null);
-        if(usuarioBanco != null) {
-            usuarioBanco.setStatus(statusRequest.status());
-            usuarioRepository.save(usuarioBanco);
+        var atualizarUsuario = usuarioService.atualizarStatus(statusRequest.status(),id);
+
+        if(atualizarUsuario){
             return ResponseEntity.ok().build();
         }
         return ResponseEntity.notFound().build();
@@ -75,51 +77,41 @@ public class UsuarioController {
 
     @PutMapping("/{id}")
     @Operation(summary = "Método de atualização de atributos de usuários através do ID pelo administrador.", description = "Método responsável por efetuar a atualização de atributos de usuários através do ID pelo administrador.")
-    public ResponseEntity<Usuario> atualizar(@PathVariable Long id, @RequestBody Usuario usuario) {
-        try{
-            Usuario usuarioBanco = usuarioRepository.findById(id).orElse(null);
-            if(usuarioBanco != null) {
-                usuarioBanco.setStatus(usuario.getStatus());
-                usuarioBanco.setNome(usuario.getNome());
-                usuarioBanco.setCpf(usuario.getCpf());
-                usuarioBanco.setEmail(usuario.getEmail());
-                usuarioBanco.setSenha(usuario.getSenha());
-                usuarioRepository.save(usuarioBanco);
-                return ResponseEntity.ok().build();
-            }
-            return ResponseEntity.notFound().build();
-
-        }catch (RuntimeException e) {
-            throw new RuntimeException(e);
+    public ResponseEntity<?> atualizar(@PathVariable Long id, @RequestBody UsuarioRequest usuario) {
+        try {
+            UsuarioResponse usuarioBanco = usuarioService.salvarUsuario(usuario,id);
+            return ResponseEntity.ok(usuarioBanco);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
-    @PostMapping("/cadastrar-se")
-    @ResponseStatus(HttpStatus.CREATED)
-    @Operation(summary = "Método de cadastro de novos usuários.", description = "Método responsável por efetuar o cadastro de novos usuários.")
-    public ResponseEntity<Usuario> criar(@RequestBody CadastroRequest cadastroRequest){
-
-        Usuario usuario = new Usuario();
-        usuario.setNome(cadastroRequest.nome());
-        usuario.setCpf(new CPF(cadastroRequest.cpf()));
-        usuario.setEmail(cadastroRequest.email());
-        usuario.setSenha(cadastroRequest.senha());
-
-        var usuarioBanco = usuarioRepository.save(usuario);
-        return ResponseEntity.ok(usuarioBanco);
-    }
+//    @PostMapping("/cadastrar-se")
+//    @ResponseStatus(HttpStatus.CREATED)
+//    @Operation(summary = "Método de cadastro de novos usuários.", description = "Método responsável por efetuar o cadastro de novos usuários.")
+//    public ResponseEntity<Usuario> criar(@RequestBody CadastroRequest cadastroRequest){
+//
+//        Usuario usuario = new Usuario();
+//        usuario.setNome(cadastroRequest.nome());
+//        usuario.setCpf(cadastroRequest.cpf()));
+//        usuario.setEmail(cadastroRequest.email());
+//        usuario.setSenha(cadastroRequest.senha());
+//
+//        var usuarioBanco = usuarioRepository.save(usuario);
+//        return ResponseEntity.ok(usuarioBanco);
+//    }
 
     @DeleteMapping("/{id}/excluir")
     @Operation(summary = "Método de exclusão (atualização de status para excluído) de usuários através do ID pelo administrador.", description = "Método de exclusão (atualização de status para excluído) de usuários através do ID pelo administrador.")
     public ResponseEntity<Void> excluir(@PathVariable Long id) {
 //        usuarioRepository.deleteById(id);
 //        return ResponseEntity.ok().build();
-        Usuario usuarioBanco = usuarioRepository.findById(id).orElse(null);
-        if(usuarioBanco != null) {
-            usuarioBanco.setStatus(EnumStatusUsuario.EXCLUIDO);
-            usuarioRepository.save(usuarioBanco);
+        var atualizarUsuario = usuarioService.atualizarStatus(EnumStatusUsuario.EXCLUIDO,id);
+
+        if(atualizarUsuario){
             return ResponseEntity.ok().build();
         }
+
         return ResponseEntity.notFound().build();
     }
 }

@@ -2,7 +2,7 @@ package com.example.aeropass.presentation;
 
 import com.example.aeropass.application.DTOs.AtualizarStatusAviaoRequest;
 import com.example.aeropass.domain.entities.Aviao;
-import com.example.aeropass.domain.entities.EnumStatusAviao;
+import com.example.aeropass.application.DTOs.EnumStatusAviao;
 import com.example.aeropass.domain.repository.AviaoRepository;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;

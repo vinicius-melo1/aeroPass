@@ -1,6 +1,7 @@
 package com.example.aeropass.domain.entities;
 
 import com.example.aeropass.application.DTOs.CriarFormaPagamentoRequest;
+import com.example.aeropass.application.DTOs.EnumStatusFormaPagamento;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;

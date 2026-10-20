@@ -1,6 +1,7 @@
 package com.example.aeropass.domain.entities;
 
 import com.example.aeropass.application.DTOs.EnumStatusVoo;
+import com.example.aeropass.application.DTOs.VooRequest;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -38,4 +39,14 @@ public class Voo {
     public LocalDateTime dataHoraChegada;
 
     private EnumStatusVoo status = EnumStatusVoo.ATIVO;
+
+    public Voo(VooRequest voo) {
+        this.setCodigoVoo(voo.codigoVoo());
+        this.setCapacidade(voo.capacidade());
+        this.setAssentosDisponiveis(voo.assentosDisponiveis());
+        this.setCidadeOrigem(voo.cidadeOrigem());
+        this.setCidadeDestino(voo.cidadeDestino());
+        this.setDataHoraSaida(voo.dataHoraSaida());
+        this.setDataHoraChegada(voo.dataHoraChegada());
+    }
 }

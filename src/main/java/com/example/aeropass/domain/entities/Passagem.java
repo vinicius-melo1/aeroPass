@@ -1,6 +1,8 @@
 package com.example.aeropass.domain.entities;
 
 import com.example.aeropass.application.DTOs.EnumStatusPassagem;
+import com.example.aeropass.application.DTOs.PassageiroRequest;
+import com.example.aeropass.application.DTOs.PassagemRequest;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -21,9 +23,9 @@ public class Passagem {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Long id;
 
-    public Long idVoo;
-
-    public Long idPassageiro;
+//    public Long idVoo;
+//
+//    public Long idPassageiro;
 
     public String codigoAssento;
 
@@ -34,4 +36,11 @@ public class Passagem {
     public String formaPagamento;
 
     private EnumStatusPassagem status = EnumStatusPassagem.ATIVO;
+
+    public Passagem(PassagemRequest passagem) {
+        this.setCodigoAssento(passagem.codigoAssento());
+        this.setDataCompra(passagem.dataCompra());
+        this.setValor(passagem.valor());
+        this.setFormaPagamento(passagem.formaPagamento());
+    }
 }

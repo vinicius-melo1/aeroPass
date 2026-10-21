@@ -1,6 +1,8 @@
 package com.example.aeropass.domain.entities;
 
+import com.example.aeropass.application.DTOs.AviaoRequest;
 import com.example.aeropass.application.DTOs.EnumStatusAviao;
+import com.example.aeropass.application.DTOs.VooRequest;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -26,4 +28,10 @@ public class Aviao {
     public String numeroSerie;
 
     private EnumStatusAviao status = EnumStatusAviao.ATIVO;
+
+    public Aviao(AviaoRequest aviao) {
+        this.setModelo(aviao.modelo());
+        this.setFabricante(aviao.fabricante());
+        this.setNumeroSerie(aviao.numeroSerie());
+    }
 }

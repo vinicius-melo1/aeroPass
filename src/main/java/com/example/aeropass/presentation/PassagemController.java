@@ -1,7 +1,7 @@
 package com.example.aeropass.presentation;
 
-import com.example.aeropass.application.DTOs.AtualizarStatusPassagemRequest;
-import com.example.aeropass.application.DTOs.EnumStatusPassagem;
+import com.example.aeropass.application.DTOs.*;
+import com.example.aeropass.application.services.PassagemService;
 import com.example.aeropass.domain.entities.Passagem;
 import com.example.aeropass.domain.repository.PassagemRepository;
 import io.swagger.v3.oas.annotations.Operation;
@@ -11,24 +11,27 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/passagens")
 @Tag(name = "Passagens", description = "Grupo de API responsável por controlar a estrutura de criação e consulta de passagens do sistema!")
 public class PassagemController {
     @Autowired
     private PassagemRepository passagemRepository;
+    @Autowired
+    private PassagemService passagemService;
 
     @GetMapping("/listar")
     @Operation(summary = "Método de consulta de lista de passagens.", description = "Método responsável em efetuar a consulta de todos as passagens, sem filtro.")
-    public ResponseEntity<?> listarTodos(){
-
-        return  ResponseEntity.ok(passagemRepository.findAll());
+    public ResponseEntity<List<PassagemResponse>> listarTodos(){
+        return  ResponseEntity.ok(passagemService.listarTodasPassagensTable());
     }
 
     @GetMapping("/{id}")
     @Operation(summary = "Método de consulta de uma passagem pelo id.", description = "Método responsável em efetuar a consulta uma passagem, com filtro pelo id.")
-    public ResponseEntity<Passagem> buscarPorId(@PathVariable Long id) {
-        Passagem passagemBanco = passagemRepository.findById(id).orElse(null);
+    public ResponseEntity<PassagemResponse> buscarPorId(@PathVariable Long id) {
+        PassagemResponse passagemBanco =  passagemService.buscarPorId(id);
         if(passagemBanco != null) {
             return ResponseEntity.ok(passagemBanco);
         }
@@ -38,19 +41,22 @@ public class PassagemController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "Método de criação para gerar passagens.", description = "Método responsável por gerar novas passagens.")
-    public ResponseEntity<Passagem> criar(@RequestBody Passagem passagem){
+    public ResponseEntity<?> criar(@RequestBody PassagemRequest passagem){
 
-        var passagemBanco = passagemRepository.save(passagem);
-        return ResponseEntity.ok(passagemBanco);
+        try {
+            PassagemResponse passagemBanco = passagemService.salvarPassagem(passagem, 0L);
+            return ResponseEntity.ok(passagemBanco);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @PatchMapping("/{id}/status")
     @Operation(summary = "Método de atualização de status de passagens através do ID pelo administrador.", description = "Método responsável por efetuar a atualização de status de passagens através do ID pelo administrador.")
     public ResponseEntity<Void> atualizarStatus(@PathVariable Long id, @RequestBody AtualizarStatusPassagemRequest statusRequest) {
-        Passagem passagemBanco = passagemRepository.findById(id).orElse(null);
-        if(passagemBanco != null) {
-            passagemBanco.setStatus(statusRequest.status());
-            passagemRepository.save(passagemBanco);
+        var atualizarPassagem = passagemService.atualizarStatus(statusRequest.status(),id);
+
+        if(atualizarPassagem){
             return ResponseEntity.ok().build();
         }
         return ResponseEntity.notFound().build();
@@ -58,32 +64,23 @@ public class PassagemController {
 
     @PutMapping("/{id}")
     @Operation(summary = "Método de atualização de atributos de passagens através do ID pelo administrador.", description = "Método responsável por efetuar a atualização de atributos de passagens através do ID pelo administrador.")
-    public ResponseEntity<Passagem> atualizar(@PathVariable Long id, @RequestBody Passagem passagem) {
-        try{
-            Passagem passagemBanco = passagemRepository.findById(id).orElse(null);
-            if(passagemBanco != null) {
-                passagemBanco.setStatus(passagem.getStatus());
-                passagemBanco.setCodigoAssento(passagem.getCodigoAssento());
-                passagemBanco.setValor(passagem.getValor());
-                passagemBanco.setFormaPagamento(passagem.getFormaPagamento());
-                passagemRepository.save(passagemBanco);
-                return ResponseEntity.ok().build();
-            }
-            return ResponseEntity.notFound().build();
-
-        }catch (RuntimeException e) {
-            throw new RuntimeException(e);
+    public ResponseEntity<?> atualizar(@PathVariable Long id, @RequestBody PassagemRequest passagem) {
+        try {
+            PassagemResponse passagemBanco = passagemService.salvarPassagem(passagem,id);
+            return ResponseEntity.ok(passagemBanco);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
     @DeleteMapping("/{id}/excluir")
     @Operation(summary = "Método de exclusão (atualização de status para excluído) de passagens através do ID pelo administrador.", description = "Método de exclusão (atualização de status para excluído) de passagens através do ID pelo administrador.")
     public ResponseEntity<Void> excluir(@PathVariable Long id) {
-        Passagem passagemBanco = passagemRepository.findById(id).orElse(null);
-        if(passagemBanco != null) {
-            passagemBanco.setStatus(EnumStatusPassagem.EXCLUIDO);
-            passagemRepository.save(passagemBanco);
+        var atualizarPassagem = passagemService.atualizarStatus(EnumStatusPassagem.EXCLUIDO,id);
+
+        if(atualizarPassagem){
             return ResponseEntity.ok().build();
         }
+
         return ResponseEntity.notFound().build();
     }
 }

@@ -1,7 +1,7 @@
 package com.example.aeropass.presentation;
 
-import com.example.aeropass.application.DTOs.AtualizarStatusVooRequest;
-import com.example.aeropass.application.DTOs.EnumStatusVoo;
+import com.example.aeropass.application.DTOs.*;
+import com.example.aeropass.application.services.VooService;
 import com.example.aeropass.domain.entities.Voo;
 import com.example.aeropass.domain.repository.VooRepository;
 import io.swagger.v3.oas.annotations.Operation;
@@ -11,24 +11,28 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/voos")
 @Tag(name = "Vôos", description = "Grupo de API responsável por controlar a estrutura de criação e consulta de vôos do sistema.")
 public class VooController {
     @Autowired
     private VooRepository vooRepository;
+    @Autowired
+    private VooService vooService;
 
     @GetMapping("/listar")
     @Operation(summary = "Método de consulta de lista de vôos.", description = "Método responsável em efetuar a consulta de todos os vôos, sem filtro.")
-    public ResponseEntity<?> listarTodos(){
+    public ResponseEntity<List<VooResponse>> listarTodos(){
 
-        return  ResponseEntity.ok(vooRepository.findAll());
+        return  ResponseEntity.ok(vooService.listarTodosVoosTable());
     }
 
     @GetMapping("/{id}")
     @Operation(summary = "Método de consulta de vôo por ID.", description = "Método responsável por efetuar a consulta de vôo por ID.")
-    public ResponseEntity<Voo> buscarPorId(@PathVariable Long id) {
-        Voo vooBanco = vooRepository.findById(id).orElse(null);
+    public ResponseEntity<VooResponse> buscarPorId(@PathVariable Long id) {
+        VooResponse vooBanco =  vooService.buscarPorId(id);
         if(vooBanco != null) {
             return ResponseEntity.ok(vooBanco);
         }
@@ -38,20 +42,22 @@ public class VooController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "Método de criação de vôos no sistema.", description = "Método responsável em efetuar a criação de vôos.")
-    public ResponseEntity<Voo> criar(@RequestBody Voo voo){
+    public ResponseEntity<?> criar(@RequestBody VooRequest voo){
 
-        var vooBanco = vooRepository.save(voo);
-        return ResponseEntity.ok(vooBanco);
-
+        try {
+            VooResponse vooBanco = vooService.salvarVoo(voo, 0L);
+            return ResponseEntity.ok(vooBanco);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @PatchMapping("/{id}/status")
     @Operation(summary = "Método de atualização de status de um vôo através do ID pelo administrador.", description = "Método responsável por efetuar a atualização de status de um vôo através do ID pelo administrador.")
     public ResponseEntity<Void> atualizarStatus(@PathVariable Long id, @RequestBody AtualizarStatusVooRequest statusRequest) {
-        Voo vooBanco = vooRepository.findById(id).orElse(null);
-        if(vooBanco != null) {
-            vooBanco.setStatus(statusRequest.status());
-            vooRepository.save(vooBanco);
+        var atualizarVoo = vooService.atualizarStatus(statusRequest.status(),id);
+
+        if(atualizarVoo){
             return ResponseEntity.ok().build();
         }
         return ResponseEntity.notFound().build();
@@ -59,39 +65,23 @@ public class VooController {
 
     @PutMapping("/{id}")
     @Operation(summary = "Método de atualização de atributos de vôos através do ID pelo administrador.", description = "Método responsável por efetuar a atualização de atributos de vôos através do ID pelo administrador.")
-    public ResponseEntity<Voo> atualizar(@PathVariable Long id, @RequestBody Voo voo) {
-        try{
-            Voo vooBanco = vooRepository.findById(id).orElse(null);
-            if(vooBanco != null) {
-
-                vooBanco.setStatus(voo.getStatus());
-                vooBanco.setCodigoVoo(voo.getCodigoVoo());
-                vooBanco.setCapacidade(voo.getCapacidade());
-                vooBanco.setAssentosDisponiveis(voo.getAssentosDisponiveis());
-                vooBanco.setCidadeOrigem(voo.getCidadeOrigem());
-                vooBanco.setCidadeOrigem(voo.getCidadeDestino());
-                vooBanco.setDataHoraSaida(voo.getDataHoraSaida());
-                vooBanco.setDataHoraChegada(voo.getDataHoraChegada());
-
-
-                vooRepository.save(vooBanco);
-                return ResponseEntity.ok().build();
-            }
-            return ResponseEntity.notFound().build();
-
-        }catch (RuntimeException e) {
-            throw new RuntimeException(e);
+    public ResponseEntity<?> atualizar(@PathVariable Long id, @RequestBody VooRequest voo) {
+        try {
+            VooResponse vooBanco = vooService.salvarVoo(voo,id);
+            return ResponseEntity.ok(vooBanco);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
     @DeleteMapping("/{id}/excluir")
     @Operation(summary = "Método de exclusão (atualização de status para excluído) de vôos através do ID pelo administrador.", description = "Método de exclusão (atualização de status para excluído) de vôos através do ID pelo administrador.")
     public ResponseEntity<Void> excluir(@PathVariable Long id) {
-        Voo vooBanco = vooRepository.findById(id).orElse(null);
-        if(vooBanco != null) {
-            vooBanco.setStatus(EnumStatusVoo.EXCLUIDO);
-            vooRepository.save(vooBanco);
+        var atualizarVoo = vooService.atualizarStatus(EnumStatusVoo.EXCLUIDO,id);
+
+        if(atualizarVoo){
             return ResponseEntity.ok().build();
         }
+
         return ResponseEntity.notFound().build();
     }
 }

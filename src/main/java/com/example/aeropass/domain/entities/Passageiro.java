@@ -1,6 +1,8 @@
 package com.example.aeropass.domain.entities;
 
+import com.example.aeropass.application.DTOs.AviaoRequest;
 import com.example.aeropass.application.DTOs.EnumStatusPassageiro;
+import com.example.aeropass.application.DTOs.PassageiroRequest;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -30,4 +32,12 @@ public class Passageiro {
     public String email;
 
     private EnumStatusPassageiro status = EnumStatusPassageiro.ATIVO;
+
+    public Passageiro(PassageiroRequest passageiro) {
+        this.setNome(passageiro.nome());
+        this.setCpf(passageiro.cpf());
+        this.setPassaporte(passageiro.passaporte());
+        this.setTelefone(passageiro.telefone());
+        this.setEmail(passageiro.email());
+    }
 }

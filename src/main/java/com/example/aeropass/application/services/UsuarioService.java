@@ -23,9 +23,9 @@ public class UsuarioService {
     @Value("${spring.secret}")
     private String secret;
 
-    public LoginResponse validarUsuarioAutenticadoRetornaToken(LoginRequest loginRequest){
-        if(usuarioRepository.existsUsuarioByEmailAndSenha(loginRequest.email(), loginRequest.senha())) {
-            var token = tokenService.gerarToken(loginRequest.email());
+    public LoginResponse validarUsuarioAutenticadoRetornaToken(LoginRequest request){
+        if(usuarioRepository.existsUsuarioByEmailAndSenha(request.email(), request.senha())) {
+            var token = tokenService.gerarToken(request);
             return new LoginResponse(token);
         }
         return null;

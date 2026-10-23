@@ -2,18 +2,27 @@ package com.example.aeropass.domain.entities;
 
 import com.example.aeropass.application.DTOs.CriarAdminRequest;
 import com.example.aeropass.application.DTOs.EnumStatusUsuario;
+import com.example.aeropass.application.DTOs.UsuarioLogado;
 import com.example.aeropass.application.DTOs.UsuarioRequest;
 import com.example.aeropass.domain.valueObject.CPF;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.jspecify.annotations.Nullable;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import java.util.Collection;
+import java.util.List;
 
 @Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Usuario {
+public class Usuario implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -52,5 +61,24 @@ public class Usuario {
         this.setSenha(usuario.senha());
         this.setEmail(usuario.email());
         this.setRole("ROLE_USER");
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(new SimpleGrantedAuthority(this.role));
+    }
+
+    @Override
+    public @Nullable String getPassword() {
+        return "";
+    }
+
+    @Override
+    public String getUsername() {
+        return "";
+    }
+
+    public UsuarioLogado getUsuarioLogado(){
+        return (UsuarioLogado) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     }
 }

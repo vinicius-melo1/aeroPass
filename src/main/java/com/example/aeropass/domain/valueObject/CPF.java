@@ -1,6 +1,7 @@
 package com.example.aeropass.domain.valueObject;
 
 public class CPF {
+    // DDD = Domain Drive Design (aplicação de regras de negócio na dominio)
 
     private String cpf;
 

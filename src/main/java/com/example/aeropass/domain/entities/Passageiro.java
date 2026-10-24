@@ -19,17 +19,17 @@ public class Passageiro {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public Long id;
+    private Long id;
 
-    public String nome;
+    private String nome;
 
-    public String cpf;
+    private String cpf;
 
-    public String passaporte;
+    private String passaporte;
 
-    public String telefone;
+    private String telefone;
 
-    public String email;
+    private String email;
 
     private EnumStatusPassageiro status = EnumStatusPassageiro.ATIVO;
 

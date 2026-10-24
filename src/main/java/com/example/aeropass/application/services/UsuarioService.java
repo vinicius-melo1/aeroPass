@@ -7,6 +7,7 @@ import com.example.aeropass.domain.repository.UsuarioRepository;
 import com.example.aeropass.domain.valueObject.CPF;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,6 +24,10 @@ public class UsuarioService {
     @Value("${spring.secret}")
     private String secret;
 
+    public UsuarioLogado getUsuarioLogado(){
+        return (UsuarioLogado) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    }
+
     public LoginResponse validarUsuarioAutenticadoRetornaToken(LoginRequest request){
         if(usuarioRepository.existsUsuarioByEmailAndSenha(request.email(), request.senha())) {
             var token = tokenService.gerarToken(request);
@@ -33,7 +38,15 @@ public class UsuarioService {
 
     public List<UsuarioResponse> listarTodosUsuariosTable(){
 
-        return usuarioRepository.findAll()
+        var  usuarioLogado = getUsuarioLogado();
+
+        if(usuarioLogado.empresa_id() == null) {
+            return usuarioRepository.findAll()
+                    .stream()
+                    .map(UsuarioResponse::new)
+                    .toList();
+        }
+        return usuarioRepository.getUsuariosByEmpresa_Id(usuarioLogado.empresa_id())
                 .stream()
                 .map(UsuarioResponse::new)
                 .toList();

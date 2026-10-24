@@ -17,9 +17,9 @@ import lombok.NoArgsConstructor;
 public class FormaPagamento {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public Long id;
+    private Long id;
 
-    public String tipoPagamento;
+    private String tipoPagamento;
 
     private EnumStatusFormaPagamento status = EnumStatusFormaPagamento.ATIVO;
 

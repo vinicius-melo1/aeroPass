@@ -20,23 +20,23 @@ public class Voo {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public Long id;
+    private Long id;
 
     // public Long idAviao;
 
-    public String codigoVoo;
+    private String codigoVoo;
 
-    public Long capacidade;
+    private Long capacidade;
 
-    public Long assentosDisponiveis;
+    private Long assentosDisponiveis;
 
-    public String cidadeOrigem;
+    private String cidadeOrigem;
 
-    public String cidadeDestino;
+    private String cidadeDestino;
 
-    public LocalDateTime dataHoraSaida;
+    private LocalDateTime dataHoraSaida;
 
-    public LocalDateTime dataHoraChegada;
+    private LocalDateTime dataHoraChegada;
 
     private EnumStatusVoo status = EnumStatusVoo.ATIVO;
 

@@ -21,19 +21,19 @@ public class Passagem {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public Long id;
+    private Long id;
 
 //    public Long idVoo;
 //
 //    public Long idPassageiro;
 
-    public String codigoAssento;
+    private String codigoAssento;
 
-    public LocalDateTime dataCompra;
+    private LocalDateTime dataCompra;
 
-    public Double valor;
+    private Double valor;
 
-    public String formaPagamento;
+    private String formaPagamento;
 
     private EnumStatusPassagem status = EnumStatusPassagem.ATIVO;
 

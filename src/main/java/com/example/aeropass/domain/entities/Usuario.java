@@ -16,7 +16,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Data
@@ -38,6 +40,12 @@ public class Usuario implements UserDetails {
     private String email;
 
     private String role = "ROLE_USER";
+
+    // FetchTypeEager = carrega a próxima tabela junto no select
+    // FetchTypeLazy = carrega as tabelas no select conforme a necessidade
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "empresa_id",referencedColumnName = "id")
+    private Empresa empresa;
 
     private EnumStatusUsuario status = EnumStatusUsuario.ATIVO;
 
@@ -76,9 +84,5 @@ public class Usuario implements UserDetails {
     @Override
     public String getUsername() {
         return "";
-    }
-
-    public UsuarioLogado getUsuarioLogado(){
-        return (UsuarioLogado) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     }
 }

@@ -2,13 +2,13 @@ package com.example.aeropass.domain.entities;
 
 import com.example.aeropass.application.DTOs.CriarFormaPagamentoRequest;
 import com.example.aeropass.application.DTOs.EnumStatusFormaPagamento;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Data
@@ -22,6 +22,9 @@ public class FormaPagamento {
     private String tipoPagamento;
 
     private EnumStatusFormaPagamento status = EnumStatusFormaPagamento.ATIVO;
+
+    @ManyToMany(mappedBy = "formaPagamento")
+    private Set<FormaPagamento> formaPagamentos = new HashSet<>();
 
     public FormaPagamento(CriarFormaPagamentoRequest criarFormaPagamentoRequest) {
         this.setTipoPagamento(criarFormaPagamentoRequest.tipoPagamento());

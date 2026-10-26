@@ -2,15 +2,15 @@ package com.example.aeropass.domain.entities;
 
 import com.example.aeropass.application.DTOs.EnumStatusVoo;
 import com.example.aeropass.application.DTOs.VooRequest;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @Entity
 @Data
@@ -22,7 +22,9 @@ public class Voo {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // public Long idAviao;
+    @ManyToOne
+    @JoinColumn(name = "aviao_id",referencedColumnName = "id")
+    public Aviao aviao;
 
     private String codigoVoo;
 
@@ -37,6 +39,17 @@ public class Voo {
     private LocalDateTime dataHoraSaida;
 
     private LocalDateTime dataHoraChegada;
+
+    @OneToMany(mappedBy = "voo")
+    private List<Passagem> passagens;
+
+    @ManyToMany
+    @JoinTable(
+            name = "tb_piloto_voo",
+            joinColumns = @JoinColumn(name = "voo_id"),
+            inverseJoinColumns = @JoinColumn(name = "piloto_id")
+    )
+    private Set<Piloto> pilotos = new HashSet<>();
 
     private EnumStatusVoo status = EnumStatusVoo.ATIVO;
 

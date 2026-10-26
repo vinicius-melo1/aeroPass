@@ -3,13 +3,12 @@ package com.example.aeropass.domain.entities;
 import com.example.aeropass.application.DTOs.AviaoRequest;
 import com.example.aeropass.application.DTOs.EnumStatusPassageiro;
 import com.example.aeropass.application.DTOs.PassageiroRequest;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 @Entity
 @Data
@@ -30,6 +29,9 @@ public class Passageiro {
     private String telefone;
 
     private String email;
+
+    @OneToMany(mappedBy = "passageiro")
+    private List<Passagem> passagens;
 
     private EnumStatusPassageiro status = EnumStatusPassageiro.ATIVO;
 

@@ -1,7 +1,7 @@
 "use client"
 
+import { atualizarVoo, salvarVoo } from "@/app/services/vooService";
 import { Voo, VooFormProps } from "@/app/types/voo";
-import axios from "axios";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -32,20 +32,20 @@ export default function VooForm({vooExistente}:VooFormProps){
 
     const handlerSalvar = async (formData : FormData) =>{
         if(vooExistente) {
-            var dadosRetorno = await axios.put<number>('http://localhost:8080/voos/'+voo.id,voo);
+            var dadosRetorno = await atualizarVoo(voo);
 
-            if(dadosRetorno.status == 200) {
+            if(dadosRetorno) {
                 alert("Vôo foi salvo com sucesso!");
             } else {
-                alert(dadosRetorno.data);
+                alert("Erro ao salvar vôo");
             }
         } else {
-            var dadosRetorno = await axios.post<number>('http://localhost:8080/voos',voo);
+            var dadosRetorno = await salvarVoo(voo);
 
-            if(dadosRetorno.status == 200) {
+            if(dadosRetorno) {
                 alert("Vôo foi salvo com sucesso!");
             } else {
-                alert(dadosRetorno.data);
+                alert("Erro ao salvar vôo");
             }
         }
 

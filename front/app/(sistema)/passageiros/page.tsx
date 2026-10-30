@@ -1,7 +1,7 @@
 "use client"
 
+import { atualizarStatusPassageiro, buscarListaPassageiros, deletarPassageiro } from "@/app/services/passageiroService";
 import { Passageiro } from "@/app/types/passageiro";
-import axios from "axios";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
@@ -13,20 +13,20 @@ export default function passageiros() {
 
     const carregarDados = async () => {
         try {
-            const dados = await axios.get<Passageiro[]>("http://localhost:8080/passageiros/listar");
-            setPassageiros(dados.data);
+            const dados = await buscarListaPassageiros();
+            setPassageiros(dados);
         } catch {
             alert("Erro ao carregar dados");
         }
     }
 
     const handlerDeletarPassageiro = async(passageiro:Passageiro) => {
-        var dadosRetorno = await axios.delete<number>('http://localhost:8080/passageiros/'+passageiro.id+'/excluir');
-
-        if(dadosRetorno.status == 200) {
+        var dadosRetorno = await deletarPassageiro(passageiro.id||0);
+        
+        if(dadosRetorno == 200) {
             alert("Passageiro foi deletado com sucesso!");
         } else {
-            alert(dadosRetorno.data);
+            alert(dadosRetorno);
             return;
         }
 
@@ -34,22 +34,8 @@ export default function passageiros() {
     }
 
     const handlerAlterarPassageiro = async(passageiro:Passageiro) => {
-        var novoStatus = {};
-        if(passageiro.status === "ATIVO") {
-            novoStatus = {status:"BLOQUEADO"}
-        } else {
-            novoStatus = {status:"ATIVO"}
-        }
-
-        var dadosRetorno = await axios.patch<number>('http://localhost:8080/passageiros/'+passageiro.id+'/status',novoStatus);
-
-        if(dadosRetorno.status == 200) {
-            alert("Status foi atualizado com sucesso!");
-        } else {
-            alert(dadosRetorno.data);
-            return;
-        }
-
+        await atualizarStatusPassageiro(passageiro);        
+        
         carregarDados();
     }
 

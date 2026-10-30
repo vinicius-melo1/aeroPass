@@ -1,7 +1,7 @@
 "use client"
 
+import { atualizarStatusPassagem, buscarListaPassagens, deletarPassagem } from "@/app/services/passagenService";
 import { Passagem } from "@/app/types/passagem";
-import axios from "axios";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
@@ -13,20 +13,20 @@ export default function passagens() {
 
     const carregarDados = async () => {
         try {
-            const dados = await axios.get<Passagem[]>("http://localhost:8080/passagens/listar");
-            setPassagens(dados.data);
+            const dados = await buscarListaPassagens();
+            setPassagens(dados);
         } catch {
             alert("Erro ao carregar dados");
         }
     }
 
     const handlerDeletarPassagem = async(passagem:Passagem) => {
-        var dadosRetorno = await axios.delete<number>('http://localhost:8080/passagens/'+passagem.id+'/excluir');
+        var dadosRetorno = await deletarPassagem(passagem.id||0);
 
-        if(dadosRetorno.status == 200) {
+        if(dadosRetorno) {
             alert("A passagem foi deletada com sucesso!");
         } else {
-            alert(dadosRetorno.data);
+            alert(dadosRetorno);
             return;
         }
 
@@ -34,22 +34,7 @@ export default function passagens() {
     }
 
     const handlerAlterarPassagem = async(passagem:Passagem) => {
-        var novoStatus = {};
-        if(passagem.status === "ATIVO") {
-            novoStatus = {status:"BLOQUEADO"}
-        } else {
-            novoStatus = {status:"ATIVO"}
-        }
-
-        var dadosRetorno = await axios.patch<number>('http://localhost:8080/passagens/'+passagem.id+'/status',novoStatus);
-
-        if(dadosRetorno.status == 200) {
-            alert("Status foi atualizado com sucesso!");
-        } else {
-            alert(dadosRetorno.data);
-            return;
-        }
-
+        await atualizarStatusPassagem(passagem);
         carregarDados();
     }
 

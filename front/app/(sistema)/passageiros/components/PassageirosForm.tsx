@@ -1,7 +1,7 @@
 "use client"
 
+import { atualizarPassageiro, salvarPassageiro } from "@/app/services/passageiroService";
 import { Passageiro, PassageiroFormProps } from "@/app/types/passageiro";
-import axios from "axios";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -31,20 +31,20 @@ export default function PassageirosForm({passageiroExistente}:PassageiroFormProp
     const handlerSalvar = async (formData : FormData) =>{
 
         if(passageiroExistente) {
-            var dadosRetorno = await axios.put<number>('http://localhost:8080/passageiros/'+passageiro.id,passageiro);
+            var dadosRetorno = await atualizarPassageiro(passageiro);
 
-            if(dadosRetorno.status == 200) {
+            if(dadosRetorno) {
                 alert("Passageiro foi salvo com sucesso!");
             } else {
-                alert(dadosRetorno.data);
+                alert("Erro ao salvar passageiro");
             }
         } else {
-            var dadosRetorno = await axios.post<number>('http://localhost:8080/passageiros',passageiro);
+            var dadosRetorno = await salvarPassageiro(passageiro);
 
-            if(dadosRetorno.status == 200) {
+            if(dadosRetorno) {
                 alert("Passageiro foi salvo com sucesso!");
             } else {
-                alert(dadosRetorno.data);
+                alert("Erro ao salvar passageiro");
             }
         }
 

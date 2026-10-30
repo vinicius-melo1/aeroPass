@@ -5,7 +5,7 @@ import { useParams, useRouter } from "next/navigation";
 import VooForm from "../../components/VooForm";
 import { Voo } from "@/app/types/voo";
 import { useEffect, useState } from "react";
-import axios from "axios";
+import { consultaVooPorId } from "@/app/services/vooService";
 
 export default function EditarVoo(){
 
@@ -18,10 +18,10 @@ export default function EditarVoo(){
     },[]);
 
     const buscarDados = async() => {
-        const valorVooBack = await axios.get<Voo>('http://localhost:8080/voos/'+codigo);
+        const valorVooBack = await consultaVooPorId(codigo);
 
-        if(valorVooBack.status == 200){
-            setVoo(valorVooBack.data);
+        if(valorVooBack){
+            setVoo(valorVooBack);
         } else {
             router.push("/voos");
             return

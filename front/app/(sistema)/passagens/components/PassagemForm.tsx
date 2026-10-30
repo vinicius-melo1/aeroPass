@@ -1,7 +1,7 @@
 "use client"
 
+import { atualizarPassagem, salvarPassagem } from "@/app/services/passagenService";
 import { Passagem, PassagemFormProps } from "@/app/types/passagem";
-import axios from "axios";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
@@ -31,20 +31,20 @@ export default function PassagemForm({passagemExistente}:PassagemFormProps){
     const handlerSalvar = async (formData : FormData) =>{
 
         if(passagemExistente) {
-            var dadosRetorno = await axios.put<number>('http://localhost:8080/passagens/'+passagem.id,passagem);
+            var dadosRetorno = await atualizarPassagem(passagem);
 
-            if(dadosRetorno.status == 200) {
+            if(dadosRetorno) {
                 alert("Passagem foi salva com sucesso!");
             } else {
-                alert(dadosRetorno.data);
+                alert("Erro ao salvar passagem");
             }
         } else {
-            var dadosRetorno = await axios.post<number>('http://localhost:8080/passagens',passagem);
+            var dadosRetorno = await salvarPassagem(passagem);
 
-            if(dadosRetorno.status == 200) {
+            if(dadosRetorno) {
                 alert("Passagem foi salva com sucesso!");
             } else {
-                alert(dadosRetorno.data);
+                alert("Erro ao salvar passagem");
             }
         }
 

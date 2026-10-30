@@ -2,7 +2,6 @@
 
 import { atualizarStatusAviao, buscarListaAvioes, deletarAviao } from "@/app/services/aviaoService";
 import { Aviao } from "@/app/types/aviao";
-import axios from "axios";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 

@@ -1,7 +1,7 @@
 "use client"
 
+import { atualizarStatusVoo, buscarListaVoos, deletarVoo } from "@/app/services/vooService";
 import { Voo } from "@/app/types/voo";
-import axios from "axios";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
@@ -13,20 +13,20 @@ export default function Voos() {
 
     const carregarDados = async () => {
         try {
-            const dados = await axios.get<Voo[]>("http://localhost:8080/voos/listar");
-            setVoos(dados.data);
+            const dados = await buscarListaVoos();
+            setVoos(dados);
         } catch {
             alert("Erro ao carregar dados");
         }
     }
 
     const handlerDeletarVoo = async(voo:Voo) => {
-        var dadosRetorno = await axios.delete<number>('http://localhost:8080/voos/'+voo.id+'/excluir');
+        var dadosRetorno = await deletarVoo(voo.id||0);
 
-        if(dadosRetorno.status == 200) {
+        if(dadosRetorno) {
             alert("Vôo foi deletado com sucesso!");
         } else {
-            alert(dadosRetorno.data);
+            alert(dadosRetorno);
             return;
         }
 
@@ -34,21 +34,7 @@ export default function Voos() {
     }
 
     const handlerAlterarVoo = async(voo:Voo) => {
-        var novoStatus = {};
-        if(voo.status === "ATIVO") {
-            novoStatus = {status:"BLOQUEADO"}
-        } else {
-            novoStatus = {status:"ATIVO"}
-        }
-
-        var dadosRetorno = await axios.patch<number>('http://localhost:8080/voos/'+voo.id+'/status',novoStatus);
-
-        if(dadosRetorno.status == 200) {
-            alert("Status foi atualizado com sucesso!");
-        } else {
-            alert(dadosRetorno.data);
-            return;
-        }
+        await atualizarStatusVoo(voo);
 
         carregarDados();
     }

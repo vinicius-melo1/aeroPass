@@ -5,7 +5,7 @@ import { useParams, useRouter } from "next/navigation";
 import PassageirosForm from "../../components/PassageirosForm";
 import { Passageiro } from "@/app/types/passageiro";
 import { useEffect, useState } from "react";
-import axios from "axios";
+import { consultaPassageiroPorId } from "@/app/services/passageiroService";
 
 export default function EditarPassagem(){
 
@@ -18,10 +18,10 @@ export default function EditarPassagem(){
     },[]);
 
     const buscarDados = async() => {
-        const valorPassageiroBack = await axios.get<Passageiro>('http://localhost:8080/passageiros/'+codigo);
+        const valorPassageiroBack = await consultaPassageiroPorId(codigo);
 
-        if(valorPassageiroBack.status == 200){
-            setPassageiro(valorPassageiroBack.data);
+        if(valorPassageiroBack){
+            setPassageiro(valorPassageiroBack);
         } else {
             router.push("/passageiros");
             return

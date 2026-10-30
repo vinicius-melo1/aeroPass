@@ -5,7 +5,6 @@ import { useParams, useRouter } from "next/navigation";
 import AvioesForm from "../../components/AvioesForm";
 import { Aviao } from "@/app/types/aviao";
 import { useEffect, useState } from "react";
-import axios from "axios";
 import { consultaAviaoPorId } from "@/app/services/aviaoService";
 
 export default function EditarAviao(){

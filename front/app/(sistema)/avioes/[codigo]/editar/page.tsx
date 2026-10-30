@@ -6,6 +6,7 @@ import AvioesForm from "../../components/AvioesForm";
 import { Aviao } from "@/app/types/aviao";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { consultaAviaoPorId } from "@/app/services/aviaoService";
 
 export default function EditarAviao(){
 
@@ -18,10 +19,10 @@ export default function EditarAviao(){
     },[]);
 
     const buscarDados = async() => {
-        const valorAviaoBack = await axios.get<Aviao>('http://localhost:8080/avioes/'+codigo);
-
-        if(valorAviaoBack.status == 200){
-            setAviao(valorAviaoBack.data);
+        const valorAviaoBack = await consultaAviaoPorId(codigo);
+    
+        if(valorAviaoBack){
+            setAviao(valorAviaoBack);
         } else {
             router.push("/avioes");
             return

@@ -1,7 +1,7 @@
 "use client"
 
+import { atualizarAviao } from "@/app/services/aviaoService";
 import { Aviao, AviaoFormProps } from "@/app/types/aviao";
-import axios from "axios";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -29,20 +29,19 @@ export default function AvioesForm({aviaoExistente}:AviaoFormProps){
     const handlerSalvar = async (formData : FormData) =>{
 
         if(aviaoExistente) {
-            var dadosRetorno = await axios.put<number>('http://localhost:8080/avioes/'+aviao.id,aviao);
-
-            if(dadosRetorno.status == 200) {
+            var dadosRetorno = await atualizarAviao(aviao);
+            if(dadosRetorno) {
                 alert("Avião foi salvo com sucesso!");
             } else {
-                alert(dadosRetorno.data);
+                alert("Erro ao salvar avião");
             }
         } else {
-            var dadosRetorno = await axios.post<number>('http://localhost:8080/avioes',aviao);
+            var dadosRetorno = await atualizarAviao(aviao);
 
-            if(dadosRetorno.status == 200) {
-                alert("Avião foi salvo com sucesso!");
+            if(dadosRetorno) {
+                alert("avião foi salvo com sucesso!");
             } else {
-                alert(dadosRetorno.data);
+                alert("Erro ao salvar avião");
             }
         }
 

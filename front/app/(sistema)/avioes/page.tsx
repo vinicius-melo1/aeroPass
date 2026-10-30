@@ -1,5 +1,6 @@
 "use client"
 
+import { atualizarStatusAviao, buscarListaAvioes, deletarAviao } from "@/app/services/aviaoService";
 import { Aviao } from "@/app/types/aviao";
 import axios from "axios";
 import Link from "next/link";
@@ -13,20 +14,20 @@ export default function avioes() {
 
     const carregarDados = async () => {
         try {
-            const dados = await axios.get<Aviao[]>("http://localhost:8080/avioes/listar");
-            setAvioes(dados.data);
+            const dados = await buscarListaAvioes();
+            setAvioes(dados);
         } catch {
             alert("Erro ao carregar dados");
         }
     }
 
     const handlerDeletarAviao = async(aviao:Aviao) => {
-        var dadosRetorno = await axios.delete<number>('http://localhost:8080/avioes/'+aviao.id+'/excluir');
+        var dadosRetorno = await deletarAviao(aviao.id||0);
 
-        if(dadosRetorno.status == 200) {
+        if(dadosRetorno == 200) {
             alert("Avião foi deletado com sucesso!");
         } else {
-            alert(dadosRetorno.data);
+            alert(dadosRetorno);
             return;
         }
 
@@ -34,22 +35,7 @@ export default function avioes() {
     }
 
     const handlerAlterarAviao = async(aviao:Aviao) => {
-        var novoStatus = {};
-        if(aviao.status === "ATIVO") {
-            novoStatus = {status:"BLOQUEADO"}
-        } else {
-            novoStatus = {status:"ATIVO"}
-        }
-
-        var dadosRetorno = await axios.patch<number>('http://localhost:8080/avioes/'+aviao.id+'/status',novoStatus);
-
-        if(dadosRetorno.status == 200) {
-            alert("Status foi atualizado com sucesso!");
-        } else {
-            alert(dadosRetorno.data);
-            return;
-        }
-
+        await atualizarStatusAviao(aviao);
         carregarDados();
     }
 

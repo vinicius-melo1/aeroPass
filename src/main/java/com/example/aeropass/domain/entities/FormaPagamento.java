@@ -23,8 +23,9 @@ public class FormaPagamento {
 
     private EnumStatusFormaPagamento status = EnumStatusFormaPagamento.ATIVO;
 
-    @ManyToMany(mappedBy = "formaPagamento")
-    private Set<FormaPagamento> formaPagamentos = new HashSet<>();
+    // Corrigido: aponta para o campo 'formaPagamentos' definido na classe Passagem
+    @ManyToMany(mappedBy = "formaPagamentos")
+    private Set<Passagem> passagens = new HashSet<>();
 
     public FormaPagamento(CriarFormaPagamentoRequest criarFormaPagamentoRequest) {
         this.setTipoPagamento(criarFormaPagamentoRequest.tipoPagamento());

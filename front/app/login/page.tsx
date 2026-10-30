@@ -3,6 +3,7 @@
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { LoginResponse } from "../types/auth";
+import Cookies from "js-cookie";
 
 export default function Login(){
     const router = useRouter();
@@ -15,6 +16,7 @@ export default function Login(){
             router.push("/home")
 
             if(loginResposta.status == 200) {
+                Cookies.set('token',loginResposta.data.token,{secure: true, expires: 7});
                 loginResposta.data.token
             } else {
                 alert("Login ou senha Inválidos");

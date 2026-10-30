@@ -36,7 +36,7 @@ public class PassagemService {
                     passagemBanco.setCodigoAssento(passagem.codigoAssento());
                     passagemBanco.setDataCompra(passagem.dataCompra());
                     passagemBanco.setValor(passagem.valor());
-                    passagemBanco.setFormaPagamento(passagem.formaPagamento());
+//                    passagemBanco.setFormaPagamento(passagem.formaPagamento());
                     return new PassagemResponse(passagemBanco);
                 }
 

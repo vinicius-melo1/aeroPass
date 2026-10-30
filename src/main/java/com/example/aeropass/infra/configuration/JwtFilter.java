@@ -20,7 +20,6 @@ public class JwtFilter extends OncePerRequestFilter {
 
     @Autowired
     private TokenService tokenService;
-    private Filter filter;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {

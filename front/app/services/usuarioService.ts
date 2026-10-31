@@ -43,7 +43,7 @@ export async function atualizarUsuario(usuario:Usuario) : Promise<number> {
 }
 
 export async function salvarUsuario(usuario:Usuario) : Promise<number> {
-    var dadosRetorno = await api.post<number>('/usuarios/'+usuario,usuario);
+    var dadosRetorno = await api.post<number>('/usuarios/cadastro/'+usuario,usuario);
     return dadosRetorno.data;
 }
 

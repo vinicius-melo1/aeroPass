@@ -2,7 +2,6 @@ package com.example.aeropass.presentation;
 
 import com.example.aeropass.application.DTOs.*;
 import com.example.aeropass.application.services.VooService;
-import com.example.aeropass.domain.entities.Voo;
 import com.example.aeropass.domain.repository.VooRepository;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;

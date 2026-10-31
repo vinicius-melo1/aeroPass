@@ -13,18 +13,12 @@ import java.net.HttpURLConnection;
 @RestController
 @RequestMapping("/auth")
 @Tag(description = "Controller de autenticação!", name="Autenticação")
-public class AuthController {
+public class    AuthController {
     @Autowired
     private UsuarioService usuarioService;
 
-//    @PostMapping("/cadastrar")
-//    @Operation(summary = "Cadastro de usuários", description =  "Método de cadastro de novos usuários no sistema")
-//    public ResponseEntity<?> registrar(@RequestBody CadastroRequest cadastroRequest) {
-//
-//    }
-
     @PostMapping("/login")
-    @Operation(summary = "Autenticação de usuários", description = "Método de login")
+    @Operation(summary = "Autenticação de usuários", description = "Método responsavel por efetuar o login do usuário")
     public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest){
         var resultadoAutenticadoRetornoToken = usuarioService.validarUsuarioAutenticadoRetornaToken(loginRequest);
         if(resultadoAutenticadoRetornoToken != null) {

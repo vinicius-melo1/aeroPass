@@ -24,9 +24,7 @@ public class UsuarioService {
     @Value("${spring.secret}")
     private String secret;
 
-    public UsuarioLogado getUsuarioLogado(){
-        return (UsuarioLogado) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-    }
+
 
     public LoginResponse validarUsuarioAutenticadoRetornaToken(LoginRequest request){
         if(usuarioRepository.existsUsuarioByEmailAndSenha(request.email(), request.senha())) {
@@ -34,6 +32,10 @@ public class UsuarioService {
             return new LoginResponse(token);
         }
         return null;
+    }
+
+    public UsuarioLogado getUsuarioLogado(){
+        return (UsuarioLogado) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     }
 
     public List<UsuarioResponse> listarTodosUsuariosTable(){

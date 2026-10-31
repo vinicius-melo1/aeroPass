@@ -1,88 +1,88 @@
-package com.example.aeropass.domain.entities;
+    package com.example.aeropass.domain.entities;
 
-import com.example.aeropass.application.DTOs.CriarAdminRequest;
-import com.example.aeropass.application.DTOs.EnumStatusUsuario;
-import com.example.aeropass.application.DTOs.UsuarioLogado;
-import com.example.aeropass.application.DTOs.UsuarioRequest;
-import com.example.aeropass.domain.valueObject.CPF;
-import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.jspecify.annotations.Nullable;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
+    import com.example.aeropass.application.DTOs.CriarAdminRequest;
+    import com.example.aeropass.application.DTOs.EnumStatusUsuario;
+    import com.example.aeropass.application.DTOs.UsuarioLogado;
+    import com.example.aeropass.application.DTOs.UsuarioRequest;
+    import com.example.aeropass.domain.valueObject.CPF;
+    import jakarta.persistence.*;
+    import lombok.AllArgsConstructor;
+    import lombok.Data;
+    import lombok.NoArgsConstructor;
+    import org.jspecify.annotations.Nullable;
+    import org.springframework.security.core.GrantedAuthority;
+    import org.springframework.security.core.authority.SimpleGrantedAuthority;
+    import org.springframework.security.core.context.SecurityContextHolder;
+    import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+    import java.util.Collection;
+    import java.util.HashSet;
+    import java.util.List;
+    import java.util.Set;
 
-@Entity
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-public class Usuario implements UserDetails {
+    @Entity
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public class Usuario implements UserDetails {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+        @Id
+        @GeneratedValue(strategy = GenerationType.IDENTITY)
+        private Long id;
 
-    private String nome;
+        private String nome;
 
-    @Embedded
-    private CPF cpf;
+        @Embedded
+        private CPF cpf;
 
-    private String senha;
+        private String senha;
 
-    private String email;
+        private String email;
 
-    private String role = "ROLE_USER";
+        private String role = "ROLE_USER";
 
-    // FetchTypeEager = carrega a próxima tabela junto no select
-    // FetchTypeLazy = carrega as tabelas no select conforme a necessidade
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "empresa_id",referencedColumnName = "id")
-    private Empresa empresa;
+        // FetchTypeEager = carrega a próxima tabela junto no select
+        // FetchTypeLazy = carrega as tabelas no select conforme a necessidade
+        @ManyToOne(fetch = FetchType.EAGER)
+        @JoinColumn(name = "empresa_id",referencedColumnName = "id")
+        private Empresa empresa;
 
-    private EnumStatusUsuario status = EnumStatusUsuario.ATIVO;
+        private EnumStatusUsuario status = EnumStatusUsuario.ATIVO;
 
-    public void setEmail(String email) {
-        if(!email.isEmpty() && !email.contains("@")) {
-            throw new IllegalArgumentException("Email inválido!");
+        public void setEmail(String email) {
+            if(!email.isEmpty() && !email.contains("@")) {
+                throw new IllegalArgumentException("Email inválido!");
+            }
+            this.email = email;
         }
-        this.email = email;
-    }
-    public Usuario(CriarAdminRequest criarAdminRequest) {
-        this.setCpf(new CPF(criarAdminRequest.cpf()));
-        this.setNome(criarAdminRequest.nome());
-        this.setSenha(criarAdminRequest.senha());
-        this.setEmail(criarAdminRequest.email());
-        this.setRole("ROLE_ADMIN");
-    }
+        public Usuario(CriarAdminRequest criarAdminRequest) {
+            this.setCpf(new CPF(criarAdminRequest.cpf()));
+            this.setNome(criarAdminRequest.nome());
+            this.setSenha(criarAdminRequest.senha());
+            this.setEmail(criarAdminRequest.email());
+            this.setRole("ROLE_ADMIN");
+        }
 
-    public Usuario(UsuarioRequest usuario) {
-        this.setCpf(new CPF(usuario.cpf()));
-        this.setNome(usuario.nome());
-        this.setSenha(usuario.senha());
-        this.setEmail(usuario.email());
-        this.setRole("ROLE_USER");
-    }
+        public Usuario(UsuarioRequest usuario) {
+            this.setCpf(new CPF(usuario.cpf()));
+            this.setNome(usuario.nome());
+            this.setSenha(usuario.senha());
+            this.setEmail(usuario.email());
+            this.setRole("ROLE_USER");
+        }
 
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(this.role));
-    }
+        @Override
+        public Collection<? extends GrantedAuthority> getAuthorities() {
+            return List.of(new SimpleGrantedAuthority(this.role));
+        }
 
-    @Override
-    public @Nullable String getPassword() {
-        return "";
-    }
+        @Override
+        public @Nullable String getPassword() {
+            return "";
+        }
 
-    @Override
-    public String getUsername() {
-        return "";
+        @Override
+        public String getUsername() {
+            return "";
+        }
     }
-}

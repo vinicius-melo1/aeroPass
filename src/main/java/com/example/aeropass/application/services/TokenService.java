@@ -37,29 +37,23 @@ public class TokenService {
     private TokenRepository tokenRepository;
 
     public String gerarToken(LoginRequest loginRequestDto) {
-        try {
-            Algorithm algorithm = Algorithm.HMAC256(secret);
+        Algorithm algorithm = Algorithm.HMAC256(secret);
 
-            var usuario = usuarioRepository.findAll()
-                    .stream()
-                    .filter(u-> u.getEmail().equals(loginRequestDto.email()))
-                    .findFirst()
-                    .orElse(null);
+        var usuario = usuarioRepository.findAll()
+                .stream()
+                .filter(u-> u.getEmail().equals(loginRequestDto.email()))
+                .findFirst()
+                .orElse(null);
 
-            String token = com.auth0.jwt.JWT.create()
-                    .withIssuer(emissor)
-                    .withSubject(loginRequestDto.email())
-                    .withExpiresAt(getDataExpiracao())
-                    .sign(algorithm);
-
-
-            tokenRepository.save(new Token(token,usuario));
-            return token;
-        } catch (RuntimeException e) {
-            throw new RuntimeException(e);
-        }
+        String token =  JWT.create()
+                .withIssuer(emissor)
+                .withSubject(loginRequestDto.email())
+                .withExpiresAt(this.gerarDataExpiracao())
+                .sign(algorithm);
 
 
+        tokenRepository.save(new Token(token,usuario));
+        return token;
     }
 
     public UsuarioLogado verificarToken(String token) throws JWTVerificationException {
@@ -78,14 +72,14 @@ public class TokenService {
         return new UsuarioLogado(tokenBanco.getUsuario());
     }
 
-    private Instant getDataExpiracao() {
+    private Instant gerarDataExpiracao() {
 
         // Pegar data atual
         var dataAtual = LocalDateTime.now();
 
         // Adicionar ou diminuir tempo da data atual
-        var dataFutura = dataAtual.plusMinutes(expiracao);
+        dataAtual = dataAtual.plusMinutes(expiracao);
 
-        return dataFutura.toInstant(ZoneOffset.of("-03:00"));
+        return dataAtual.toInstant(ZoneOffset.of("-03:00"));
     }
 }

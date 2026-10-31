@@ -7,31 +7,33 @@ import Cookies from "js-cookie";
 import { useDispatch } from "react-redux";
 import { login } from "../redux/slices/authSlice";
 import { buscarUsuarioLogado } from "../services/usuarioService";
+import { loginBack } from "../services/authService";
 
 export default function Login(){
     const router = useRouter();
-    const dispatch = useDispatch();
+    const dispatch = useDispatch(); 
 
     const handlerLogin = async(formData:FormData) => {
         try {
             debugger
             const emailTela = formData.get("email")?.toString() ?? "";
             const senhaTela = formData.get("senha")?.toString() ?? "";
-            var loginResposta = await axios.post<LoginResponse>("http://localhost:8080/auth/login",{email:emailTela, senha:senhaTela});
+
+            var loginResposta = await loginBack(emailTela,senhaTela);
             router.push("/home")
 
-            if(loginResposta.status == 200) {
-                Cookies.set('token',loginResposta.data.token,{secure: true, expires: 7});
+            if(loginResposta != null) {
+                Cookies.set('token',loginResposta.token,{secure: true, expires: 7});
                 var usuarioLogado = await buscarUsuarioLogado();
                 
                 dispatch(login({
-                        token:loginResposta.data.token,
+                        token:loginResposta.token,
                         usuario:{...usuarioLogado}
                     }
-                ));                
-                loginResposta.data.token
+                ));    
+                router.push("/home")            
             } else {
-                alert("Login ou senha Inválidos");
+                alert("Login ou senha Invalido!")
             }
         } catch (error) {
             alert("Login ou senha Inválidos");

@@ -12,7 +12,7 @@ public record PassagemResponse(Long id, String codigoAssento, LocalDateTime data
                 passagemEntidade.getCodigoAssento(),
                 passagemEntidade.getDataCompra(),
                 passagemEntidade.getValor(),
-//                passagemEntidade.getFormaPagamentos().toString(),
+//                passagemEntidade.getFormaPagamento().toString(),
                 passagemEntidade.getStatus()
         );
     }

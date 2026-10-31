@@ -3,7 +3,7 @@ import api from "./api";
 
 
 export async function buscarListaPassageiros() : Promise<Passageiro[]> {
-    const dados = await api.get<Passageiro[]>("http://localhost:8080/passageiros/listar");
+    const dados = await api.get<Passageiro[]>("/passageiros/listar");
     if(dados.status == 200) {
         return dados.data;
     }
@@ -11,7 +11,7 @@ export async function buscarListaPassageiros() : Promise<Passageiro[]> {
 }
 
 export async function deletarPassageiro(id:number) : Promise<number>{
-    var dados = await api.delete<number>('http://localhost:8080/passageiros/'+id+'/excluir');
+    var dados = await api.delete<number>('/passageiros/'+id+'/excluir');
     return dados.status;
 }
 
@@ -23,7 +23,7 @@ export async function atualizarStatusPassageiro(passageiro:Passageiro) : Promise
         novoStatus = {status:"ATIVO"}
     }
 
-    var dadosRetorno = await api.patch<number>('http://localhost:8080/passageiros/'+passageiro.id+'/status',novoStatus);
+    var dadosRetorno = await api.patch<number>('/passageiros/'+passageiro.id+'/status',novoStatus);
 
     if(dadosRetorno.status == 200) {
         alert("Status foi atualizado com sucesso!");
@@ -35,16 +35,16 @@ export async function atualizarStatusPassageiro(passageiro:Passageiro) : Promise
 }
 
 export async function consultaPassageiroPorId(id:number) : Promise<Passageiro> {
-    const valorPassageiroBack = await api.get<Passageiro>('http://localhost:8080/passageiros/'+id);
+    const valorPassageiroBack = await api.get<Passageiro>('/passageiros/'+id);
     return valorPassageiroBack.data;
 }
 
 export async function atualizarPassageiro(passageiro:Passageiro) : Promise<number> {
-    var dadosRetorno = await api.put<number>('http://localhost:8080/passageiros/'+passageiro.id,passageiro);
+    var dadosRetorno = await api.put<number>('/passageiros/'+passageiro.id,passageiro);
     return dadosRetorno.data;
 }
 
 export async function salvarPassageiro(passageiro:Passageiro) : Promise<number> {
-    var dadosRetorno = await api.post<number>('http://localhost:8080/passageiros/'+passageiro.id,passageiro);
+    var dadosRetorno = await api.post<number>('/passageiros/'+passageiro.id,passageiro);
     return dadosRetorno.data;
 }

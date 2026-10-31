@@ -3,7 +3,7 @@ import api from "./api";
 
 
 export async function buscarListaVoos() : Promise<Voo[]> {
-    const dados = await api.get<Voo[]>("http://localhost:8080/voos/listar");
+    const dados = await api.get<Voo[]>("/voos/listar");
     if(dados.status == 200) {
         return dados.data;
     }
@@ -11,7 +11,7 @@ export async function buscarListaVoos() : Promise<Voo[]> {
 }
 
 export async function deletarVoo(id:number) : Promise<number> {
-    var dadosRetorno = await api.delete<number>('http://localhost:8080/voos/'+id+'/excluir');
+    var dadosRetorno = await api.delete<number>('/voos/'+id+'/excluir');
     return dadosRetorno.status;
 }
 export async function atualizarStatusVoo(voo:Voo) : Promise<void> {
@@ -22,7 +22,7 @@ export async function atualizarStatusVoo(voo:Voo) : Promise<void> {
         novoStatus = {status:"ATIVO"}
     }
 
-    var dadosRetorno = await api.patch<number>('http://localhost:8080/voos/'+voo.id+'/status',novoStatus);
+    var dadosRetorno = await api.patch<number>('/voos/'+voo.id+'/status',novoStatus);
 
     if(dadosRetorno.status == 200) {
         alert("Status foi atualizado com sucesso!");
@@ -33,16 +33,16 @@ export async function atualizarStatusVoo(voo:Voo) : Promise<void> {
 }
 
 export async function consultaVooPorId(id:number) : Promise<Voo> {
-    const valorVooBack = await api.get<Voo>('http://localhost:8080/voos/'+id);
+    const valorVooBack = await api.get<Voo>('/voos/'+id);
     return valorVooBack.data;
 
 }
 export async function atualizarVoo(voo:Voo) : Promise<number> {
-    var dadosRetorno = await api.put<number>('http://localhost:8080/voos/'+voo.id,voo);
+    var dadosRetorno = await api.put<number>('/voos/'+voo.id,voo);
     return dadosRetorno.data;
 }
 
 export async function salvarVoo(voo:Voo) : Promise<number> {
-    var dadosRetorno = await api.post<number>('http://localhost:8080/voos/'+voo.id,voo);
+    var dadosRetorno = await api.post<number>('/voos/'+voo.id,voo);
     return dadosRetorno.data;
 }

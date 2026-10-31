@@ -3,7 +3,7 @@ import api from "./api";
 
 
 export async function buscarListaPassagens() : Promise<Passagem[]> {
-    const dados = await api.get<Passagem[]>("http://localhost:8080/passagens/listar");
+    const dados = await api.get<Passagem[]>("/passagens/listar");
     if(dados.status == 200) {
         return dados.data;
     }
@@ -12,7 +12,7 @@ export async function buscarListaPassagens() : Promise<Passagem[]> {
 
 
 export async function deletarPassagem(id:number) : Promise<number>{
-    var dados = await api.delete<number>('http://localhost:8080/passagens/'+id+'/excluir');
+    var dados = await api.delete<number>('/passagens/'+id+'/excluir');
     return dados.status;
 }
 
@@ -24,7 +24,7 @@ export async function atualizarStatusPassagem(passagem:Passagem) : Promise<void>
         novoStatus = {status:"ATIVO"}
     }
 
-    var dadosRetorno = await api.patch<number>('http://localhost:8080/passagens/'+passagem.id+'/status',novoStatus);
+    var dadosRetorno = await api.patch<number>('/passagens/'+passagem.id+'/status',novoStatus);
 
     if(dadosRetorno.status == 200) {
         alert("Status foi atualizado com sucesso!");
@@ -35,15 +35,15 @@ export async function atualizarStatusPassagem(passagem:Passagem) : Promise<void>
 }
 
 export async function consultaPassagemPorId(id:number) : Promise<Passagem> {
-    const valorPassagemBack = await api.get<Passagem>('http://localhost:8080/passagens/'+id);
+    const valorPassagemBack = await api.get<Passagem>('/passagens/'+id);
     return valorPassagemBack.data;
 }
 export async function atualizarPassagem(passagem:Passagem) : Promise<number> {
-    var dadosRetorno = await api.put<number>('http://localhost:8080/passagens/'+passagem.id,passagem);
+    var dadosRetorno = await api.put<number>('/passagens/'+passagem.id,passagem);
     return dadosRetorno.data
 }
 
 export async function salvarPassagem(passagem:Passagem) : Promise<number> {
-    var dadosRetorno = await api.post<number>('http://localhost:8080/passagens/'+passagem.id,passagem);
+    var dadosRetorno = await api.post<number>('/passagens/'+passagem.id,passagem);
     return dadosRetorno.data
 }

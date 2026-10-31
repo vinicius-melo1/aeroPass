@@ -40,8 +40,8 @@ public class Voo {
 
     private LocalDateTime dataHoraChegada;
 
-    @OneToMany(mappedBy = "voo")
-    private List<Passagem> passagens;
+//    @OneToMany(mappedBy = "voo")
+//    private List<Passagem> passagens;
 
     @ManyToMany
     @JoinTable(

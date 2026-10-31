@@ -1,6 +1,14 @@
+'use client'
+
+import { useDispatch } from "react-redux";
+import { store } from "../redux/store";
+import { logout } from "../redux/slices/authSlice";
 
 
 export default function Header(){
+
+    const usuario = store.getState().auth.usuario;
+    const dispatch = useDispatch();
 
     return(
         <header className="w-full bg-white border-b border-blue-100 shadow-sm">
@@ -11,9 +19,11 @@ export default function Header(){
                             <path d="M21 16v-2l-8-5V3.5a1.5 1.5 0 0 0-3 0V9l-8 5v2l8-2.5V19l-2.5 1.8V22l3.5-1 3.5 1v-1.2L12 19v-5.5Z"/>
                         </svg>
                     </div>
-                    <span className="text-sm font-medium text-blue-900">Usuário Vinícius N. de Melo</span>
+                    <span className="text-sm font-medium text-blue-900">{usuario?.nome.toLocaleUpperCase()|| "Usuário não identificado"}</span>
                 </div>
-                <button className="text-sm font-semibold text-blue-600 hover:text-blue-800 hover:bg-blue-50 px-3 py-1.5 rounded-lg transition-colors">Sair</button>
+                <button onClick={() => {
+                    dispatch(logout());
+                }} className="text-sm font-semibold text-blue-600 hover:text-blue-800 hover:bg-blue-50 px-3 py-1.5 rounded-lg transition-colors">Sair</button>
             </div>
         </header>
     );

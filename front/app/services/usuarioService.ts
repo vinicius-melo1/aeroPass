@@ -2,7 +2,7 @@ import { Usuario } from "../types/usuario";
 import api from "./api";
 
 export async function buscarListaUsuarios() : Promise<Usuario[]> {
-    const dados = await api.get<Usuario[]>("http://localhost:8080/usuarios/listar");
+    const dados = await api.get<Usuario[]>("/usuarios/listar");
     if(dados.status == 200) {
         return dados.data;
     }
@@ -10,7 +10,7 @@ export async function buscarListaUsuarios() : Promise<Usuario[]> {
 }
 
 export async function deletarUsuario(id:number) : Promise<number>{
-    var dados = await api.delete<number>('http://localhost:8080/usuarios/'+id+'/excluir');
+    var dados = await api.delete<number>('/usuarios/'+id+'/excluir');
     return dados.status;
 }
 
@@ -22,7 +22,7 @@ export async function atualizarStatusUsuario(usuario:Usuario) : Promise<void> {
             novoStatus = {status:"ATIVO"}
         }
 
-        var dadosRetorno = await api.patch<number>('http://localhost:8080/usuarios/'+usuario.id+'/status',novoStatus);
+        var dadosRetorno = await api.patch<number>('/usuarios/'+usuario.id+'/status',novoStatus);
 
         if(dadosRetorno.status == 200) {
             alert("Status foi atualizado com sucesso!");
@@ -33,16 +33,20 @@ export async function atualizarStatusUsuario(usuario:Usuario) : Promise<void> {
 }
 
 export async function consultaUsuarioPorId(id:number) : Promise<Usuario> {
-    const valorUsuarioBack = await api.get<Usuario>('http://localhost:8080/usuarios/'+id);
+    const valorUsuarioBack = await api.get<Usuario>('/usuarios/'+id);
     return valorUsuarioBack.data;
 }
 
 export async function atualizarUsuario(usuario:Usuario) : Promise<number> {
-    var dadosRetorno = await api.put<number>('http://localhost:8080/usuarios/'+usuario.id,usuario);
+    var dadosRetorno = await api.put<number>('/usuarios/'+usuario.id,usuario);
     return dadosRetorno.data
 }
 
 export async function salvarUsuario(usuario:Usuario) : Promise<number> {
-    var dadosRetorno = await api.post<number>('http://localhost:8080/usuarios'+usuario,usuario);
+    var dadosRetorno = await api.post<number>('/usuarios/'+usuario,usuario);
     return dadosRetorno.data;
+}
+
+export async function buscarUsuarioLogado() : Promise <Usuario> {
+    return (await api.get<Usuario>("/usuarios/buscarusuariologado")).data;
 }

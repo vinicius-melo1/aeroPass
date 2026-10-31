@@ -1,6 +1,6 @@
 "use client"
 
-import { atualizarAviao } from "@/app/services/aviaoService";
+import { atualizarAviao, salvarAviao } from "@/app/services/aviaoService";
 import { Aviao, AviaoFormProps } from "@/app/types/aviao";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -29,7 +29,7 @@ export default function AvioesForm({aviaoExistente}:AviaoFormProps){
     const handlerSalvar = async (formData : FormData) =>{
 
         if(aviaoExistente) {
-            var dadosRetorno = await atualizarAviao(aviao);
+            var dadosRetorno = await salvarAviao(aviao);
             if(dadosRetorno) {
                 alert("Avião foi salvo com sucesso!");
             } else {

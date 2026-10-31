@@ -102,7 +102,7 @@ public class UsuarioController {
 //    }
 
     @DeleteMapping("/{id}/excluir")
-    @Operation(summary = "Método de exclusão (atualização de status para excluído) de usuários através do ID pelo administrador.", description = "Método de exclusão (atualização de status para excluído) de usuários através do ID pelo administrador.")
+    @Operation(summary = "Método de exclusão de usuários.", description = "Método de exclusão (atualização de status para excluído) de usuários através do ID pelo administrador.")
     public ResponseEntity<Void> excluir(@PathVariable Long id) {
 //        usuarioRepository.deleteById(id);
 //        return ResponseEntity.ok().build();
@@ -113,5 +113,11 @@ public class UsuarioController {
         }
 
         return ResponseEntity.notFound().build();
+    }
+
+    @GetMapping("/buscarusuariologado")
+    @Operation(summary = "Usuário logado", description = "Método de busca de usuário logado")
+    public ResponseEntity<UsuarioResponse> buscarUsuarioLogado() {
+        return ResponseEntity.ok(usuarioService.BuscarUsuarioLogado());
     }
 }

@@ -44,6 +44,6 @@ export async function atualizarAviao(aviao:Aviao) : Promise<number> {
 }
 
 export async function salvarAviao(aviao:Aviao) : Promise<number> {
-    var dadosRetorno = await api.post<number>('/avioes'+aviao,aviao);
+    var dadosRetorno = await api.post<number>('/avioes',aviao);
     return dadosRetorno.data;
 }

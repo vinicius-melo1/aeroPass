@@ -29,14 +29,14 @@ export default function AvioesForm({aviaoExistente}:AviaoFormProps){
     const handlerSalvar = async (formData : FormData) =>{
 
         if(aviaoExistente) {
-            var dadosRetorno = await salvarAviao(aviao);
+            var dadosRetorno = await atualizarAviao(aviao);
             if(dadosRetorno) {
                 alert("Avião foi salvo com sucesso!");
             } else {
                 alert("Erro ao salvar avião");
             }
         } else {
-            var dadosRetorno = await atualizarAviao(aviao);
+            var dadosRetorno = await salvarAviao(aviao);
 
             if(dadosRetorno) {
                 alert("avião foi salvo com sucesso!");

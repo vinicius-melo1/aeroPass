@@ -44,6 +44,6 @@ export async function atualizarPassagem(passagem:Passagem) : Promise<number> {
 }
 
 export async function salvarPassagem(passagem:Passagem) : Promise<number> {
-    var dadosRetorno = await api.post<number>('/passagens/'+passagem.id,passagem);
+    var dadosRetorno = await api.post<number>('/passagens/',passagem);
     return dadosRetorno.data
 }

@@ -45,6 +45,6 @@ export async function atualizarPassageiro(passageiro:Passageiro) : Promise<numbe
 }
 
 export async function salvarPassageiro(passageiro:Passageiro) : Promise<number> {
-    var dadosRetorno = await api.post<number>('/passageiros/'+passageiro.id,passageiro);
+    var dadosRetorno = await api.post<number>('/passageiros/',passageiro);
     return dadosRetorno.data;
 }

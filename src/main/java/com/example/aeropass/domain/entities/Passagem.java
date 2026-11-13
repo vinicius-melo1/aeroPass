@@ -51,4 +51,15 @@ public class Passagem {
         this.setDataCompra(passagem.dataCompra());
         this.setValor(passagem.valor());
     }
+
+    public Passagem(PassagemRequest passagem, Voo voo) {
+        if (voo == null) {
+            throw new IllegalArgumentException("A passagem deve estar associada a um voo!");
+        }
+        voo.reservarAssento();
+        this.setVoo(voo);
+        this.setCodigoAssento(passagem.codigoAssento());
+        this.setDataCompra(passagem.dataCompra());
+        this.setValor(passagem.valor());
+    }
 }

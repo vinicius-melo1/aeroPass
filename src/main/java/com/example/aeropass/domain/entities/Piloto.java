@@ -27,6 +27,10 @@ public class Piloto {
 
     private String tipoPiloto;
 
+    @ManyToOne
+    @JoinColumn(name = "empresa_id",referencedColumnName = "id")
+    private Empresa empresa;
+
     @ManyToMany(mappedBy = "pilotos")
     private Set<Voo> voos = new HashSet<>();
 

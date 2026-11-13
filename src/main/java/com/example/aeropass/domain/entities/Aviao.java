@@ -29,6 +29,10 @@ public class Aviao {
     @OneToMany(mappedBy =  "aviao")
     private List<Voo> voos;
 
+    @ManyToOne
+    @JoinColumn(name = "empresa_id",referencedColumnName = "id")
+    private Empresa empresa;
+
     private EnumStatusAviao status = EnumStatusAviao.ATIVO;
 
     public Aviao(AviaoRequest aviao) {

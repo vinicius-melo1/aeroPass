@@ -14,7 +14,16 @@ public class PassagemService {
     @Autowired
     private PassagemRepository passagemRepository;
 
+    @Autowired
+    private UsuarioService usuarioService;
+
     public List<PassagemResponse> listarTodasPassagensTable(){
+
+
+        var usuarioLogado = usuarioService.getUsuarioLogado();
+
+        usuarioLogado.authorities();
+
 
         return passagemRepository.findAll()
                 .stream()
@@ -36,7 +45,7 @@ public class PassagemService {
                     passagemBanco.setCodigoAssento(passagem.codigoAssento());
                     passagemBanco.setDataCompra(passagem.dataCompra());
                     passagemBanco.setValor(passagem.valor());
-//                    passagemBanco.setFormaPagamento(passagem.formaPagamento());
+//                  passagemBanco.setFormaPagamento(passagem.formaPagamento());
                     return new PassagemResponse(passagemBanco);
                 }
 

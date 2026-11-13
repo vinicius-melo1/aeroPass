@@ -51,6 +51,10 @@ public class Voo {
     )
     private Set<Piloto> pilotos = new HashSet<>();
 
+    @ManyToOne
+    @JoinColumn(name = "empresa_id",referencedColumnName = "id")
+    private Empresa empresa;
+
     private EnumStatusVoo status = EnumStatusVoo.ATIVO;
 
     public Voo(VooRequest voo) {
@@ -62,4 +66,41 @@ public class Voo {
         this.setDataHoraSaida(voo.dataHoraSaida());
         this.setDataHoraChegada(voo.dataHoraChegada());
     }
+
+    public void setAviao(Aviao aviao) {
+        if (aviao == null) {
+            throw new IllegalArgumentException("O vôo deve estar associado a um avião!");
+        }
+        this.aviao = aviao;
+    }
+
+    public void setCapacidade(Long capacidade) {
+        if (capacidade == null || capacidade <= 0) {
+            throw new IllegalArgumentException("A capacidade do voo deve ser maior que zero!");
+        }
+        if (assentosDisponiveis != null && assentosDisponiveis > capacidade) {
+            throw new IllegalArgumentException("A capacidade não pode ser menor que os assentos disponíveis!");
+        }
+        this.capacidade = capacidade;
+    }
+
+    public void setAssentosDisponiveis(Long assentosDisponiveis) {
+        if (assentosDisponiveis == null || assentosDisponiveis < 0) {
+            throw new IllegalArgumentException("Assentos disponíveis não podem ser negativos!");
+        }
+        if (capacidade != null && assentosDisponiveis > capacidade) {
+            throw new IllegalArgumentException("Assentos disponíveis não podem ser maiores que a capacidade do voo!");
+        }
+        this.assentosDisponiveis = assentosDisponiveis;
+    }
+
+    public void reservarAssento() {
+        if (assentosDisponiveis == null || assentosDisponiveis <= 0) {
+            throw new IllegalArgumentException("Não há assentos disponíveis neste voo!");
+        }
+        this.assentosDisponiveis--;
+    }
+
+
+
 }

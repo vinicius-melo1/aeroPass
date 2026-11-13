@@ -43,6 +43,6 @@ export async function atualizarVoo(voo:Voo) : Promise<number> {
 }
 
 export async function salvarVoo(voo:Voo) : Promise<number> {
-    var dadosRetorno = await api.post<number>('/voos/',voo);
+    var dadosRetorno = await api.post<number>('/voos',voo);
     return dadosRetorno.data;
 }

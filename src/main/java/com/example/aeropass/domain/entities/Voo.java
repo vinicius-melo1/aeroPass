@@ -101,6 +101,18 @@ public class Voo {
         this.assentosDisponiveis--;
     }
 
+    public void setDataHoraSaida(LocalDateTime dataHoraSaida) {
+        if (dataHoraChegada != null && dataHoraChegada.isBefore(dataHoraSaida)) {
+            throw new IllegalArgumentException("A data de saída não pode ser posterior à data de chegada!");
+        }
+        this.dataHoraSaida = dataHoraSaida;
+    }
 
+    public void setDataHoraChegada(LocalDateTime dataHoraChegada) {
+        if (dataHoraSaida != null && dataHoraChegada.isBefore(dataHoraSaida)) {
+            throw new IllegalArgumentException("A data de chegada não pode ser anterior à data de saída!");
+        }
+        this.dataHoraChegada = dataHoraChegada;
+    }
 
 }

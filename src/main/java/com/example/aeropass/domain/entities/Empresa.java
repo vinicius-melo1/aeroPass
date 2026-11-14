@@ -1,5 +1,6 @@
 package com.example.aeropass.domain.entities;
 
+import com.example.aeropass.domain.valueObject.CNPJ;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -19,7 +20,8 @@ public class Empresa {
 
     private String razaoSocial;
 
-    private String cnpj;
+    @Embedded
+    private CNPJ cnpj;
 
     private String nomeFantasia;
 

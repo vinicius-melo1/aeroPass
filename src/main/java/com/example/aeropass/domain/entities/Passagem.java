@@ -62,4 +62,18 @@ public class Passagem {
         this.setDataCompra(passagem.dataCompra());
         this.setValor(passagem.valor());
     }
+
+    public void setDataCompra(LocalDateTime dataCompra) {
+        if (dataCompra.isBefore(LocalDateTime.now())) {
+            throw new IllegalArgumentException("A data de compra não pode ser anterior à data atual!");
+        }
+        this.dataCompra = dataCompra;
+    }
+
+    public void setValor(Double valor) {
+        if (valor == null || valor <= 0) {
+            throw new IllegalArgumentException("O valor da passagem deve ser maior que zero!");
+        }
+        this.valor = valor;
+    }
 }

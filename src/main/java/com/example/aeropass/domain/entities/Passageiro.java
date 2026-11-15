@@ -1,8 +1,12 @@
 package com.example.aeropass.domain.entities;
 
 import com.example.aeropass.application.DTOs.AviaoRequest;
+import com.example.aeropass.application.DTOs.CadastroRequest;
 import com.example.aeropass.application.DTOs.EnumStatusPassageiro;
 import com.example.aeropass.application.DTOs.PassageiroRequest;
+import com.example.aeropass.domain.valueObject.CPF;
+import com.example.aeropass.domain.valueObject.Passaporte;
+import com.example.aeropass.domain.valueObject.Telefone;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -22,11 +26,14 @@ public class Passageiro {
 
     private String nome;
 
-    private String cpf;
+    @Embedded
+    private CPF cpf;
 
-    private String passaporte;
+    @Embedded
+    private Passaporte passaporte;
 
-    private String telefone;
+    @Embedded
+    private Telefone telefone;
 
     private String email;
 
@@ -41,9 +48,18 @@ public class Passageiro {
 
     public Passageiro(PassageiroRequest passageiro) {
         this.setNome(passageiro.nome());
-        this.setCpf(passageiro.cpf());
-        this.setPassaporte(passageiro.passaporte());
-        this.setTelefone(passageiro.telefone());
+        this.setCpf(new CPF(passageiro.cpf()));
+        this.setPassaporte(new Passaporte(passageiro.passaporte()));
+        this.setTelefone(new Telefone(passageiro.telefone()));
         this.setEmail(passageiro.email());
+    }
+
+    public Passageiro(CadastroRequest request, Usuario usuario) {
+        this.setNome(request.nome());
+        this.setCpf(new CPF(request.cpf()   ));
+        this.setPassaporte(new Passaporte(request.passaporte()));
+        this.setTelefone(new Telefone(request.telefone()));
+        this.setEmail(request.email());
+        this.setUsuario(usuario);
     }
 }

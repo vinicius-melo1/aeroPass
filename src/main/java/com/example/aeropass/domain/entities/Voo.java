@@ -38,6 +38,8 @@ public class Voo {
 
     private LocalDateTime dataHoraSaida;
 
+    private LocalDateTime dataHoraChegadaPrevista;
+
     private LocalDateTime dataHoraChegada;
 
 //    @OneToMany(mappedBy = "voo")
@@ -57,13 +59,14 @@ public class Voo {
 
     private EnumStatusVoo status = EnumStatusVoo.ATIVO;
 
-    public Voo(VooRequest voo) {
+    public Voo(VooRequest voo, Aviao aviao, Set<Piloto> pilotos) {
         this.setCodigoVoo(voo.codigoVoo());
         this.setCapacidade(voo.capacidade());
         this.setAssentosDisponiveis(voo.assentosDisponiveis());
         this.setCidadeOrigem(voo.cidadeOrigem());
         this.setCidadeDestino(voo.cidadeDestino());
         this.setDataHoraSaida(voo.dataHoraSaida());
+        this.setDataHoraChegadaPrevista(voo.dataHoraChegadaPrevista());
         this.setDataHoraChegada(voo.dataHoraChegada());
     }
 
@@ -72,6 +75,13 @@ public class Voo {
             throw new IllegalArgumentException("O vôo deve estar associado a um avião!");
         }
         this.aviao = aviao;
+    }
+
+    public void setPilotos(Set<Piloto> pilotos) {
+        if (pilotos == null || pilotos.isEmpty()) {
+            throw new IllegalArgumentException("O vôo deve ter pelo menos um piloto!");
+        }
+        this.pilotos = new HashSet<>(pilotos);
     }
 
     public void setCapacidade(Long capacidade) {
@@ -101,18 +111,41 @@ public class Voo {
         this.assentosDisponiveis--;
     }
 
+    public void liberarAssento() {
+        if (capacidade != null && assentosDisponiveis != null && assentosDisponiveis >= capacidade) {
+            throw new IllegalArgumentException("Todos os assentos deste voo já estão disponíveis!");
+        }
+        this.assentosDisponiveis++;
+    }
+
     public void setDataHoraSaida(LocalDateTime dataHoraSaida) {
+        if (dataHoraSaida == null) {
+            throw new IllegalArgumentException("A data e hora de saída são obrigatórias!");
+        }
         if (dataHoraChegada != null && dataHoraChegada.isBefore(dataHoraSaida)) {
             throw new IllegalArgumentException("A data de saída não pode ser posterior à data de chegada!");
+        }
+        if (dataHoraChegadaPrevista != null && dataHoraChegadaPrevista.isBefore(dataHoraSaida)) {
+            throw new IllegalArgumentException("A data de saída não pode ser posterior à data de chegada prevista!");
         }
         this.dataHoraSaida = dataHoraSaida;
     }
 
+
     public void setDataHoraChegada(LocalDateTime dataHoraChegada) {
-        if (dataHoraSaida != null && dataHoraChegada.isBefore(dataHoraSaida)) {
+        if (dataHoraChegada != null && dataHoraSaida != null && dataHoraChegada.isBefore(dataHoraSaida)) {
             throw new IllegalArgumentException("A data de chegada não pode ser anterior à data de saída!");
         }
         this.dataHoraChegada = dataHoraChegada;
     }
 
+    public void setDataHoraChegadaPrevista(LocalDateTime dataHoraChegadaPrevista) {
+        if (dataHoraChegadaPrevista == null) {
+            throw new IllegalArgumentException("A data e hora de chegada prevista são obrigatórias!");
+        }
+        if (dataHoraSaida != null && dataHoraChegadaPrevista.isBefore(dataHoraSaida)) {
+            throw new IllegalArgumentException("A data de chegada prevista não pode ser anterior à data de saída!");
+        }
+        this.dataHoraChegadaPrevista = dataHoraChegadaPrevista;
+    }
 }

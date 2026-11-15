@@ -4,9 +4,7 @@ import com.example.aeropass.application.DTOs.EnumStatusPassagem;
 import com.example.aeropass.application.DTOs.PassageiroRequest;
 import com.example.aeropass.application.DTOs.PassagemRequest;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
@@ -42,9 +40,12 @@ public class Passagem {
             joinColumns = @JoinColumn(name = "passagem_id"),
             inverseJoinColumns = @JoinColumn(name = "forma_pagamento_id")
     )
+    // Impedir referencias de hash infinitas
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     private Set<FormaPagamento> formaPagamentos = new HashSet<>();
 
-    private EnumStatusPassagem status = EnumStatusPassagem.ATIVO;
+    private EnumStatusPassagem status = EnumStatusPassagem.DISPONIVEL;
 
     public Passagem(PassagemRequest passagem) {
         this.setCodigoAssento(passagem.codigoAssento());
@@ -56,11 +57,38 @@ public class Passagem {
         if (voo == null) {
             throw new IllegalArgumentException("A passagem deve estar associada a um voo!");
         }
-        voo.reservarAssento();
         this.setVoo(voo);
         this.setCodigoAssento(passagem.codigoAssento());
         this.setDataCompra(passagem.dataCompra());
         this.setValor(passagem.valor());
+        this.status = EnumStatusPassagem.DISPONIVEL;
+    }
+
+    public void reservar(Passageiro passageiro, Set<FormaPagamento> formas) {
+        if (status != EnumStatusPassagem.DISPONIVEL) {
+            throw new IllegalArgumentException("Esta passagem não está disponível para reserva!");
+        }
+        if (passageiro == null) {
+            throw new IllegalArgumentException("A passagem deve estar associada a um passageiro!");
+        }
+        if (formas == null || formas.isEmpty()) {
+            throw new IllegalArgumentException("Informe ao menos uma forma de pagamento!");
+        }
+
+        voo.reservarAssento();                 // -1 assento (regra do Voo)
+        this.passageiro = passageiro;          // associa o passageiro
+        this.formaPagamentos.addAll(formas);   // grava em tb_pagamento
+        this.dataCompra = LocalDateTime.now(); // data de compra
+        this.status = EnumStatusPassagem.VENDIDO;
+    }
+
+    public void cancelar() {
+        if (status != EnumStatusPassagem.VENDIDO) {
+            throw new IllegalArgumentException("Somente passagens vendidas podem ser canceladas!");
+        }
+
+        voo.liberarAssento();
+        this.status = EnumStatusPassagem.CANCELADO;
     }
 
     public void setDataCompra(LocalDateTime dataCompra) {

@@ -23,13 +23,14 @@ public class SecurityConfiguration {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth.requestMatchers(
                         "/auth/login",
+                        "/auth/cadastre-se",
                         "/swagger-ui/**",
                         "/webjars/**",
                         "/swagger-resources/**",
                         "/v3/api-docs/**"
                 ).permitAll()
                 // Exemplo de filtro por role
-                //.requestMatchers("/usuarios/**").hasRole("ADMIN")
+                .requestMatchers("/usuarios/criarPrimeiroUsuarioEmpresa").hasRole("ADMIN")
                 .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)

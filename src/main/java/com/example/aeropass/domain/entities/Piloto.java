@@ -1,5 +1,6 @@
 package com.example.aeropass.domain.entities;
 
+import com.example.aeropass.application.DTOs.EnumStatusPiloto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -34,4 +35,5 @@ public class Piloto {
     @ManyToMany(mappedBy = "pilotos")
     private Set<Voo> voos = new HashSet<>();
 
+    private EnumStatusPiloto status = EnumStatusPiloto.ATIVO;
 }

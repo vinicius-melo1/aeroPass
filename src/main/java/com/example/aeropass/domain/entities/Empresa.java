@@ -1,5 +1,7 @@
 package com.example.aeropass.domain.entities;
 
+import com.example.aeropass.application.DTOs.EmpresaRequest;
+import com.example.aeropass.application.DTOs.EnumStatusEmpresa;
 import com.example.aeropass.domain.valueObject.CNPJ;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -27,4 +29,12 @@ public class Empresa {
 
     @OneToMany(mappedBy =  "empresa")
     private List<Usuario> usuarios;
+
+    private EnumStatusEmpresa status = EnumStatusEmpresa.ATIVO;
+
+    public Empresa(EmpresaRequest empresa) {
+        this.setCnpj(new CNPJ(empresa.cnpj()));
+        this.setRazaoSocial(empresa.razaoSocial());
+        this.setNomeFantasia(empresa.nomeFantasia());
+    }
 }

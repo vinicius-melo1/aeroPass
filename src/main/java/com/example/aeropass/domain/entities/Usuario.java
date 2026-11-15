@@ -1,13 +1,11 @@
     package com.example.aeropass.domain.entities;
 
-    import com.example.aeropass.application.DTOs.CriarAdminRequest;
-    import com.example.aeropass.application.DTOs.EnumStatusUsuario;
-    import com.example.aeropass.application.DTOs.UsuarioLogado;
-    import com.example.aeropass.application.DTOs.UsuarioRequest;
+    import com.example.aeropass.application.DTOs.*;
     import com.example.aeropass.domain.valueObject.CPF;
     import jakarta.persistence.*;
     import lombok.AllArgsConstructor;
     import lombok.Data;
+    import lombok.EqualsAndHashCode;
     import lombok.NoArgsConstructor;
     import org.jspecify.annotations.Nullable;
     import org.springframework.security.core.GrantedAuthority;
@@ -24,6 +22,7 @@
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
+    @EqualsAndHashCode(onlyExplicitlyIncluded = true)
     public class Usuario implements UserDetails {
 
         @Id
@@ -69,6 +68,13 @@
             this.setSenha(usuario.senha());
             this.setEmail(usuario.email());
             this.setRole("ROLE_USER");
+        }
+        public Usuario(CadastroRequest request) {
+            this.setCpf(new CPF(request.cpf()));
+            this.setNome(request.nome());
+            this.setSenha(request.senha());
+            this.setEmail(request.email());
+            this.setRole("ROLE_CLIENTE");
         }
 
         @Override

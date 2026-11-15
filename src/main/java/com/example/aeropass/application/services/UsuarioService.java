@@ -2,13 +2,18 @@ package com.example.aeropass.application.services;
 
 import com.example.aeropass.application.DTOs.*;
 import com.example.aeropass.application.DTOs.EnumStatusUsuario;
+import com.example.aeropass.domain.entities.Empresa;
+import com.example.aeropass.domain.entities.Passageiro;
 import com.example.aeropass.domain.entities.Usuario;
+import com.example.aeropass.domain.repository.EmpresaRepository;
+import com.example.aeropass.domain.repository.PassageiroRepository;
 import com.example.aeropass.domain.repository.UsuarioRepository;
 import com.example.aeropass.domain.valueObject.CPF;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -19,7 +24,13 @@ public class UsuarioService {
     private UsuarioRepository usuarioRepository;
 
     @Autowired
+    private PassageiroRepository passageiroRepository;
+
+    @Autowired
     private TokenService tokenService;
+
+    @Autowired
+    private EmpresaRepository empresaRepository;
 
     @Value("${spring.secret}")
     private String secret;
@@ -64,6 +75,35 @@ public class UsuarioService {
         usuarioRepository.save(usuarioAdminSalvar);
 
         return new CriarAdminResponse(usuarioAdminSalvar.getId(), "Usuário salvo com sucesso");
+    }
+
+    public UsuarioResponse criarPrimeiroUsuarioEmpresa(UsuarioRequest usuario, Long empresaId) {
+
+        Empresa empresa = empresaRepository.findById(empresaId).orElse(null);
+        if (empresa == null) {
+            return null;
+        }
+
+        Usuario usuarioBanco = new Usuario(usuario);
+        usuarioBanco.setEmpresa(empresa);
+        usuarioRepository.save(usuarioBanco);
+        return new UsuarioResponse(usuarioBanco);
+    }
+
+    @Transactional
+    public UsuarioResponse cadastrar(CadastroRequest request) {
+
+        if (usuarioRepository.existsByEmail(request.email())) {
+            throw new IllegalArgumentException("Email já cadastrado!");
+        }
+
+        Usuario usuario = new Usuario(request);
+        usuarioRepository.save(usuario);
+
+        Passageiro passageiro = new Passageiro(request, usuario);
+        passageiroRepository.save(passageiro);
+
+        return new UsuarioResponse(usuario);
     }
 
     public UsuarioResponse salvarUsuario(UsuarioRequest usuario, Long id) {

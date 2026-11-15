@@ -2,7 +2,6 @@ package com.example.aeropass.presentation;
 
 import com.example.aeropass.application.DTOs.*;
 import com.example.aeropass.application.services.PassagemService;
-import com.example.aeropass.domain.entities.Passagem;
 import com.example.aeropass.domain.repository.PassagemRepository;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -38,10 +37,10 @@ public class PassagemController {
         return ResponseEntity.notFound().build();
     }
 
-    @PostMapping
+    @PostMapping("/{vooId}")
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "Método de criação para gerar passagens.", description = "Método responsável por gerar novas passagens.")
-    public ResponseEntity<?> criar(@RequestBody PassagemRequest passagem){
+    public ResponseEntity<?> criar(@PathVariable Long vooId, @RequestBody PassagemRequest passagem){
 
         try {
             PassagemResponse passagemBanco = passagemService.salvarPassagem(passagem, 0L);
@@ -62,11 +61,38 @@ public class PassagemController {
         return ResponseEntity.notFound().build();
     }
 
+    @PostMapping("/{id}/reservar")
+    @Operation(summary = "Reserva uma passagem.", description = "Método responsável por efetuar a reserva de passagens por passageiros. Associa o passageiro, formas de pagamento. Reduz o número de assentos disponíveis do voo e marca a passagem como vendida.")
+    public ResponseEntity<?> reservar(@PathVariable Long id, @RequestBody ReservarPassagemRequest request) {
+        try {
+            return ResponseEntity.ok(passagemService.reservarPassagem(id, request));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @PostMapping("/{id}/cancelar")
+    @Operation(summary = "Cancela uma passagem.", description = "Método responsável por cancelar a passagem reservada. Libera o assento do voo e altera o status de vendido para cancelado.")
+    public ResponseEntity<?> cancelar(@PathVariable Long id) {
+        try {
+            PassagemResponse passagem = passagemService.cancelarPassagem(id);
+            if (passagem == null) {
+                return ResponseEntity.notFound().build();
+            }
+            return ResponseEntity.ok(passagem);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
     @PutMapping("/{id}")
-    @Operation(summary = "Método de atualização de atributos de passagens através do ID pelo administrador.", description = "Método responsável por efetuar a atualização de atributos de passagens através do ID pelo administrador.")
+    @Operation(summary = "Método de atualização de status de passagens.", description = "Método responsável por efetuar a atualização de status de passagens através do ID.")
     public ResponseEntity<?> atualizar(@PathVariable Long id, @RequestBody PassagemRequest passagem) {
         try {
-            PassagemResponse passagemBanco = passagemService.salvarPassagem(passagem,id);
+            PassagemResponse passagemBanco = passagemService.atualizarPassagem(passagem,id);
+            if (passagemBanco == null) {
+                return ResponseEntity.notFound().build();
+            }
             return ResponseEntity.ok(passagemBanco);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());

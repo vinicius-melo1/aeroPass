@@ -5,5 +5,6 @@ public enum EnumStatusPassagem {
     DISPONIVEL,
     VENDIDO,
     BLOQUEADO,
-    EXCLUIDO
+    EXCLUIDO,
+    CANCELADO
 }

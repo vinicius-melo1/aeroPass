@@ -1,7 +1,6 @@
 package com.example.aeropass.domain.valueObject;
 
-public class CNPJ
-{
+public class CNPJ {
     private String cnpj;
 
     public CNPJ() {

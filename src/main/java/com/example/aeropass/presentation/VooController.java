@@ -44,7 +44,7 @@ public class VooController {
     public ResponseEntity<?> criar(@RequestBody VooRequest voo){
 
         try {
-            VooResponse vooBanco = vooService.salvarVoo(voo, 0L);
+            VooResponse vooBanco = vooService.salvarVoo(voo);
             return ResponseEntity.ok(vooBanco);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -66,14 +66,17 @@ public class VooController {
     @Operation(summary = "Método de atualização de atributos de vôos através do ID pelo administrador.", description = "Método responsável por efetuar a atualização de atributos de vôos através do ID pelo administrador.")
     public ResponseEntity<?> atualizar(@PathVariable Long id, @RequestBody VooRequest voo) {
         try {
-            VooResponse vooBanco = vooService.salvarVoo(voo,id);
+            VooResponse vooBanco = vooService.atualizarVoo(id, voo);
+            if (vooBanco == null) {
+                return ResponseEntity.notFound().build();
+            }
             return ResponseEntity.ok(vooBanco);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
     @DeleteMapping("/{id}/excluir")
-    @Operation(summary = "Método de exclusão (atualização de status para excluído) de vôos através do ID pelo administrador.", description = "Método de exclusão (atualização de status para excluído) de vôos através do ID pelo administrador.")
+    @Operation(summary = "Método de exclusão de vôos.", description = "Método de exclusão (atualização de status para excluído) de vôos através do ID.")
     public ResponseEntity<Void> excluir(@PathVariable Long id) {
         var atualizarVoo = vooService.atualizarStatus(EnumStatusVoo.EXCLUIDO,id);
 

@@ -3,9 +3,7 @@ package com.example.aeropass.domain.entities;
 import com.example.aeropass.application.DTOs.CriarFormaPagamentoRequest;
 import com.example.aeropass.application.DTOs.EnumStatusFormaPagamento;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -25,6 +23,8 @@ public class FormaPagamento {
 
     // Corrigido: aponta para o campo 'formaPagamentos' definido na classe Passagem
     @ManyToMany(mappedBy = "formaPagamentos")
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     private Set<Passagem> passagens = new HashSet<>();
 
     public FormaPagamento(CriarFormaPagamentoRequest criarFormaPagamentoRequest) {

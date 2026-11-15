@@ -9,11 +9,11 @@
       <TextField fx:id="txtNome" layoutX="89.0" layoutY="57.0" />
       <TextField fx:id="txtEmail" layoutX="88.0" layoutY="104.0" />
       <TextField fx:id="txtCpf" layoutX="89.0" layoutY="153.0" />
+      <PasswordField fx:id="txtSenha" layoutX="89.0" layoutY="200.0" />
       <Label layoutX="39.0" layoutY="61.0" text="Nome:" />
       <Label layoutX="40.0" layoutY="108.0" text="E-mail" />
       <Label layoutX="40.0" layoutY="157.0" text="CPF" />
       <Label layoutX="41.0" layoutY="204.0" text="Senha:" />
       <Button layoutX="137.0" layoutY="255.0" mnemonicParsing="false" onAction="#salvarUsuario" text="Salvar" />
-      <PasswordField fx:id="txtSenha" layoutX="89.0" layoutY="200.0" />
    </children>
 </AnchorPane>

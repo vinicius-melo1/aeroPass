@@ -5,6 +5,9 @@ import com.example.aeropass.application.DTOs.AviaoResponse;
 import com.example.aeropass.application.DTOs.PassageiroResponse;
 import com.example.aeropass.domain.entities.Passageiro;
 import com.example.aeropass.domain.repository.PassageiroRepository;
+import com.example.aeropass.domain.valueObject.CPF;
+import com.example.aeropass.domain.valueObject.Passaporte;
+import com.example.aeropass.domain.valueObject.Telefone;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -37,9 +40,9 @@ public class PassageiroService {
                 Passageiro passageiroBanco = passageiroRepository.findById(id).orElse(null);
                 if(passageiroBanco != null) {
                     passageiroBanco.setNome(passageiro.nome());
-                    passageiroBanco.setCpf(passageiro.cpf());
-                    passageiroBanco.setPassaporte(passageiro.passaporte());
-                    passageiroBanco.setTelefone(passageiro.telefone());
+                    passageiroBanco.setCpf(new CPF(passageiro.cpf()));
+                    passageiroBanco.setPassaporte(new Passaporte(passageiro.passaporte()));
+                    passageiroBanco.setTelefone(new Telefone(passageiro.telefone()));
                     passageiroBanco.setEmail(passageiro.email());
                     passageiroRepository.save(passageiroBanco);
                     return new PassageiroResponse(passageiroBanco);
@@ -71,6 +74,5 @@ public class PassageiroService {
             return true;
         }
         return false;
-
     }
 }

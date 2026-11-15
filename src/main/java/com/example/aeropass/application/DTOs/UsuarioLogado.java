@@ -1,6 +1,5 @@
 package com.example.aeropass.application.DTOs;
 
-import com.example.aeropass.domain.entities.Empresa;
 import com.example.aeropass.domain.entities.Usuario;
 import com.example.aeropass.domain.valueObject.CPF;
 

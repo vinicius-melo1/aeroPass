@@ -49,6 +49,10 @@ public class AviaoService {
 
     }
 
+    public Aviao buscarEntidadePorId(Long id) {
+        return aviaoRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Avião não encontrado!"));
+    }
+
     public AviaoResponse buscarPorId(Long id) {
         var aviao = aviaoRepository.findById(id).orElse(null);
 

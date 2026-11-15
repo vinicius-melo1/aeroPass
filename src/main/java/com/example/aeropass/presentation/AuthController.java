@@ -1,10 +1,13 @@
 package com.example.aeropass.presentation;
 
+import com.example.aeropass.application.DTOs.CadastroRequest;
 import com.example.aeropass.application.DTOs.LoginRequest;
+import com.example.aeropass.application.DTOs.UsuarioResponse;
 import com.example.aeropass.application.services.UsuarioService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,6 +29,18 @@ public class    AuthController {
 
         }
         return ResponseEntity.badRequest().body("Usuário ou senha Inválido");
+    }
+
+    @PostMapping("/cadastre-se")
+    @Operation(summary = "Método para clientes se cadastrarem.", description = "Método responsável por efetuar o cadastro de um novo cliente, criando o usuário e o passageiro vinculado.")
+    public ResponseEntity<?> cadastrar(@RequestBody CadastroRequest cadastro){
+
+        try {
+            UsuarioResponse usuarioBanco = usuarioService.cadastrar(cadastro);
+            return ResponseEntity.status(HttpStatus.CREATED).body(usuarioBanco);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
 }

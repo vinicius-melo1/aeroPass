@@ -66,7 +66,7 @@ export default function avioes() {
                                     <td className="px-6 py-3 text-blue-800">{aviao.modelo}</td>
                                     <td className="px-6 py-3 text-blue-800">{aviao.fabricante}</td>
                                     <td className="px-6 py-3 text-blue-800">{aviao.numeroSerie}</td>
-                                    <td className="px-6 py-3 text-blue-800">{aviao.status }</td>
+                                    <td className="px-6 py-3 text-blue-800">{aviao.status}</td>
                                     <td className="flex gap-4 px-6 py-3 text-blue-800">
                                         <Link href={`/avioes/${aviao.id}/editar`} className="text-gray-50 font-semibold bg-yellow-500 p-2 rounded-sm fs-12px">Editar</Link>
                                         <button onClick= {()=> handlerDeletarAviao(aviao)} className="text-gray-50 font-semibold bg-red-500 hover:bg-red-600 transition-color p-2 rounded-sm fs-12px">DELETAR</button>    

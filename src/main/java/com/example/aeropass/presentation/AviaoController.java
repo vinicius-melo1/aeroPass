@@ -48,7 +48,7 @@ public class AviaoController {
     }
 
     @PatchMapping("/{id}/status")
-    @Operation(summary = "Método de atualização de status de aviões através do ID pelo administrador.", description = "Método responsável por efetuar a atualização de status de aviões através do ID pelo administrador.")
+    @Operation(summary = "Método de atualização de status de aviões através do ID.", description = "Método responsável por efetuar a atualização de status de aviões através do ID.")
     public ResponseEntity<Void> atualizarStatus(@PathVariable Long id, @RequestBody AtualizarStatusAviaoRequest statusRequest) {
         var atualizarAviao = aviaoService.atualizarStatus(statusRequest.status(),id);
 
@@ -59,7 +59,7 @@ public class AviaoController {
     }
 
     @PutMapping("/{id}")
-    @Operation(summary = "Método de atualização de atributos de aviões através do ID pelo administrador.", description = "Método responsável por efetuar a atualização de atributos de aviões através do ID pelo administrador.")
+    @Operation(summary = "Método de atualização de atributos de aviões através do ID.", description = "Método responsável por efetuar a atualização de atributos de aviões através do ID.")
     public ResponseEntity<?> atualizar(@PathVariable Long id, @RequestBody AviaoRequest aviao) {
         try {
             AviaoResponse aviaoBanco = aviaoService.salvarAviao(aviao,id);
@@ -70,7 +70,7 @@ public class AviaoController {
     }
 
     @DeleteMapping("/{id}/excluir")
-    @Operation(summary = "Método de exclusão (atualização de status para excluído) de aviões através do ID pelo administrador.", description = "Método de exclusão (atualização de status para excluído) de aviões através do ID pelo administrador.")
+    @Operation(summary = "Método de exclusão (atualização de status para excluído) de aviões através do ID.", description = "Método de exclusão (atualização de status para excluído) de aviões através do ID.")
     public ResponseEntity<Void> excluir(@PathVariable Long id) {
         var atualizarAviao = aviaoService.atualizarStatus(EnumStatusAviao.EXCLUIDO,id);
 

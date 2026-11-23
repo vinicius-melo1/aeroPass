@@ -40,10 +40,11 @@ public class Passageiro {
     @OneToMany(mappedBy = "passageiro")
     private List<Passagem> passagens;
 
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "usuario_id", referencedColumnName = "id")
     private Usuario usuario;
 
+    @Enumerated(EnumType.STRING)
     private EnumStatusPassageiro status = EnumStatusPassageiro.ATIVO;
 
     public Passageiro(PassageiroRequest passageiro) {

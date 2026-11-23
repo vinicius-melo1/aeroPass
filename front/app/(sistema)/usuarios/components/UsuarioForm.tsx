@@ -1,13 +1,13 @@
 "use client"
 
-import { atualizarUsuario, salvarUsuario } from "@/app/services/usuarioService";
+import { atualizarUsuario, criarPrimeiroUsuarioEmpresa, salvarUsuario } from "@/app/services/usuarioService";
 import { Usuario, UsuarioFormProps } from "@/app/types/usuario";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 
-export default function UsuarioForm({usuarioExistente}:UsuarioFormProps){ 
+export default function UsuarioForm({usuarioExistente, empresaId}:UsuarioFormProps){ 
     const router = useRouter();
 
     const [usuario,setUsuario ] = useState<Usuario>
@@ -29,6 +29,23 @@ export default function UsuarioForm({usuarioExistente}:UsuarioFormProps){
 
     const handlerSalvar = async (formData : FormData) =>{
 
+        if(empresaId) {
+            try {
+                var resultado = await criarPrimeiroUsuarioEmpresa(usuario, empresaId);
+
+                if(!resultado) {
+                    alert("Empresa não encontrada");
+                    return;
+                }
+
+                alert("Usuário da empresa foi criado com sucesso!");
+                router.push("/empresas");
+            } catch (error) {
+                alert("Erro ao criar usuário");
+            }
+            return;
+        }
+    
         if(usuarioExistente) {
             var dadosRetorno = await atualizarUsuario(usuario);
             if(dadosRetorno) {

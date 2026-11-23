@@ -4,14 +4,18 @@ import com.example.aeropass.application.DTOs.*;
 import com.example.aeropass.application.DTOs.AviaoResponse;
 import com.example.aeropass.application.DTOs.PassageiroResponse;
 import com.example.aeropass.domain.entities.Passageiro;
+import com.example.aeropass.domain.entities.Passagem;
 import com.example.aeropass.domain.repository.PassageiroRepository;
+import com.example.aeropass.domain.repository.PassagemRepository;
 import com.example.aeropass.domain.valueObject.CPF;
 import com.example.aeropass.domain.valueObject.Passaporte;
 import com.example.aeropass.domain.valueObject.Telefone;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class PassageiroService {
@@ -19,7 +23,31 @@ public class PassageiroService {
     @Autowired
     private PassageiroRepository passageiroRepository;
 
+    @Autowired
+    private UsuarioService usuarioService;
+
+    @Autowired
+    private PassagemRepository passagemRepository;
+
     public List<PassageiroResponse> listarTodosPassageirosTable(){
+
+        var usuarioLogado = usuarioService.getUsuarioLogado();
+
+        if (usuarioLogado.empresa_id() != null) {
+            return passagemRepository.findByVoo_Empresa_Id(usuarioLogado.empresa_id())
+                    .stream()
+                    .map(Passagem::getPassageiro)
+                    .filter(Objects::nonNull)   // passagens ainda DISPONIVEL não têm passageiro
+                    .distinct()                 // mesmo passageiro com várias passagens
+                    .map(PassageiroResponse::new)
+                    .toList();
+        }
+
+        if (usuarioLogado.authorities().contains(new SimpleGrantedAuthority("ROLE_CLIENTE"))) {
+            return passageiroRepository.findByUsuarioId(usuarioLogado.id())
+                    .map(passageiro -> List.of(new PassageiroResponse(passageiro)))
+                    .orElse(List.of());
+        }
 
         return passageiroRepository.findAll()
                 .stream()

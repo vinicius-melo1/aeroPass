@@ -39,7 +39,7 @@ export default function AvioesForm({aviaoExistente}:AviaoFormProps){
             var dadosRetorno = await salvarAviao(aviao);
 
             if(dadosRetorno) {
-                alert("avião foi salvo com sucesso!");
+                alert("Avião foi salvo com sucesso!");
             } else {
                 alert("Erro ao salvar avião");
             }

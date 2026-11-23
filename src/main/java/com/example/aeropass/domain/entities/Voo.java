@@ -5,6 +5,7 @@ import com.example.aeropass.application.DTOs.VooRequest;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
@@ -16,10 +17,12 @@ import java.util.Set;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Voo {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @EqualsAndHashCode.Include
     private Long id;
 
     @ManyToOne
@@ -57,9 +60,11 @@ public class Voo {
     @JoinColumn(name = "empresa_id",referencedColumnName = "id")
     private Empresa empresa;
 
+    @Enumerated(EnumType.STRING)
     private EnumStatusVoo status = EnumStatusVoo.ATIVO;
 
-    public Voo(VooRequest voo, Aviao aviao, Set<Piloto> pilotos) {
+    public Voo(VooRequest voo, Aviao aviao, Set<Piloto> pilotos, Empresa empresa) {
+        this.setEmpresa(empresa);
         this.setCodigoVoo(voo.codigoVoo());
         this.setCapacidade(voo.capacidade());
         this.setAssentosDisponiveis(voo.assentosDisponiveis());
@@ -67,12 +72,23 @@ public class Voo {
         this.setCidadeDestino(voo.cidadeDestino());
         this.setDataHoraSaida(voo.dataHoraSaida());
         this.setDataHoraChegadaPrevista(voo.dataHoraChegadaPrevista());
-        this.setDataHoraChegada(voo.dataHoraChegada());
+        this.setAviao(aviao);
+        this.setPilotos(pilotos);
+    }
+
+    public void setEmpresa(Empresa empresa) {
+        if (empresa == null) {
+            throw new IllegalArgumentException("O vôo deve estar associado a uma empresa!");
+        }
+        this.empresa = empresa;
     }
 
     public void setAviao(Aviao aviao) {
         if (aviao == null) {
             throw new IllegalArgumentException("O vôo deve estar associado a um avião!");
+        }
+        if (empresa != null && !empresa.getId().equals(aviao.getEmpresa().getId())) {
+            throw new IllegalArgumentException("O avião deve pertencer à mesma empresa do vôo!");
         }
         this.aviao = aviao;
     }
@@ -80,6 +96,9 @@ public class Voo {
     public void setPilotos(Set<Piloto> pilotos) {
         if (pilotos == null || pilotos.isEmpty()) {
             throw new IllegalArgumentException("O vôo deve ter pelo menos um piloto!");
+        }
+        if (empresa != null && pilotos.stream().anyMatch(p -> !empresa.getId().equals(p.getEmpresa().getId()))) {
+            throw new IllegalArgumentException("Todos os pilotos devem pertencer à mesma empresa do vôo!");
         }
         this.pilotos = new HashSet<>(pilotos);
     }
@@ -148,4 +167,14 @@ public class Voo {
         }
         this.dataHoraChegadaPrevista = dataHoraChegadaPrevista;
     }
+    public void validarCriacaoDePassagem(Long empresaIdUsuario) {
+        if (empresaIdUsuario != null) {
+            if (this.empresa == null || !this.empresa.getId().equals(empresaIdUsuario)) {
+                throw new IllegalArgumentException("O vôo não pertence à sua empresa!");
+            }
+            return;
+        }
+
+    }
+
 }

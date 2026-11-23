@@ -27,6 +27,7 @@
 
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
+        @EqualsAndHashCode.Include
         private Long id;
 
         private String nome;
@@ -46,6 +47,7 @@
         @JoinColumn(name = "empresa_id",referencedColumnName = "id")
         private Empresa empresa;
 
+        @Enumerated(EnumType.STRING)
         private EnumStatusUsuario status = EnumStatusUsuario.ATIVO;
 
         public void setEmail(String email) {
@@ -62,7 +64,8 @@
             this.setRole("ROLE_ADMIN");
         }
 
-        public Usuario(UsuarioRequest usuario) {
+        public Usuario(UsuarioRequest usuario, Empresa empresa) {
+            this.setEmpresa(empresa);
             this.setCpf(new CPF(usuario.cpf()));
             this.setNome(usuario.nome());
             this.setSenha(usuario.senha());

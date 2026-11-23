@@ -5,7 +5,7 @@ import { useParams, useRouter } from "next/navigation";
 import PassagemForm from "../../components/PassagemForm";
 import { Passagem } from "@/app/types/passagem";
 import { useEffect, useState } from "react";
-import { consultaPassagemPorId } from "@/app/services/passagenService";
+import { consultaPassagemPorId } from "@/app/services/passagemService";
 
 export default function EditarPassagem(){
 

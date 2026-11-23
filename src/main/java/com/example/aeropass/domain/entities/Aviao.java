@@ -33,11 +33,20 @@ public class Aviao {
     @JoinColumn(name = "empresa_id",referencedColumnName = "id")
     private Empresa empresa;
 
+    @Enumerated(EnumType.STRING)
     private EnumStatusAviao status = EnumStatusAviao.ATIVO;
 
-    public Aviao(AviaoRequest aviao) {
+    public Aviao(AviaoRequest aviao, Empresa empresa) {
         this.setModelo(aviao.modelo());
         this.setFabricante(aviao.fabricante());
         this.setNumeroSerie(aviao.numeroSerie());
+        this.setEmpresa(empresa);
+    }
+
+    public void setEmpresa(Empresa empresa) {
+        if (empresa == null) {
+            throw new IllegalArgumentException("O avião deve estar associado a uma empresa!");
+        }
+        this.empresa = empresa;
     }
 }

@@ -1,6 +1,4 @@
 package com.example.aeropass.application.DTOs;
 
-import java.time.LocalDateTime;
-
-public record PassagemRequest(String codigoAssento, LocalDateTime dataCompra, Double valor) {
+public record PassagemRequest(Long vooId, String codigoAssento, Double valor) {
 }

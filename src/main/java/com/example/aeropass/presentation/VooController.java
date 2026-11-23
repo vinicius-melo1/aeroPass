@@ -64,7 +64,7 @@ public class VooController {
 
     @PutMapping("/{id}")
     @Operation(summary = "Método de atualização de atributos de vôos através do ID pelo administrador.", description = "Método responsável por efetuar a atualização de atributos de vôos através do ID pelo administrador.")
-    public ResponseEntity<?> atualizar(@PathVariable Long id, @RequestBody VooRequest voo) {
+    public ResponseEntity<?> atualizar(@PathVariable Long id, @RequestBody VooUpdateRequest voo) {
         try {
             VooResponse vooBanco = vooService.atualizarVoo(id, voo);
             if (vooBanco == null) {

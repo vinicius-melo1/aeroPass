@@ -30,7 +30,8 @@ public class SecurityConfiguration {
                         "/v3/api-docs/**"
                 ).permitAll()
                 // Exemplo de filtro por role
-                .requestMatchers("/usuarios/criarPrimeiroUsuarioEmpresa").hasRole("ADMIN")
+                .requestMatchers("/usuarios/cadastro/empresa/**").hasRole("ADMIN")
+                .requestMatchers("/passagens/criar").hasAnyRole("ADMIN","USER")
                 .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)

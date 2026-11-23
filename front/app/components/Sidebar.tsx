@@ -11,10 +11,14 @@ export default function Sidebar() {
             <nav className="flex flex-col gap-1 px-3 py-4">
                 <Link href="/home" className="px-3 py-2 rounded-lg text-sm font-medium text-blue-800 hover:bg-blue-50 transition-colors">Home</Link>
                 <Link href="/usuarios" className="px-3 py-2 rounded-lg text-sm font-medium text-blue-800 hover:bg-blue-50 transition-colors">Usuários</Link>
-                <Link href="/voos" className="px-3 py-2 rounded-lg text-sm font-medium text-blue-800 hover:bg-blue-50 transition-colors">Vôos</Link>
-                <Link href="/passageiros" className="px-3 py-2 rounded-lg text-sm font-medium text-blue-800 hover:bg-blue-50 transition-colors">Passageiros</Link>
-                <Link href="/passagens" className="px-3 py-2 rounded-lg text-sm font-medium text-blue-800 hover:bg-blue-50 transition-colors">Passagens</Link>
+                <Link href="/empresas" className="px-3 py-2 rounded-lg text-sm font-medium text-blue-800 hover:bg-blue-50 transition-colors">Empresas</Link>
+                <Link href="/pilotos" className="px-3 py-2 rounded-lg text-sm font-medium text-blue-800 hover:bg-blue-50 transition-colors">Pilotos</Link>
                 <Link href="/avioes" className="px-3 py-2 rounded-lg text-sm font-medium text-blue-800 hover:bg-blue-50 transition-colors">Aviões</Link>
+                <Link href="/voos" className="px-3 py-2 rounded-lg text-sm font-medium text-blue-800 hover:bg-blue-50 transition-colors">Vôos</Link>
+                <Link href="/voos/vistos" className="px-3 py-2 rounded-lg text-sm font-medium text-blue-800 hover:bg-blue-50 transition-colors">Ultimos Vôos visualizados</Link>
+                <Link href="/passagens" className="px-3 py-2 rounded-lg text-sm font-medium text-blue-800 hover:bg-blue-50 transition-colors">Passagens</Link>
+                <Link href="/passageiros" className="px-3 py-2 rounded-lg text-sm font-medium text-blue-800 hover:bg-blue-50 transition-colors">Passageiros</Link>
+
             </nav>
         </aside>
     );

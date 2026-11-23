@@ -10,6 +10,7 @@ import com.example.aeropass.domain.repository.PassageiroRepository;
 import com.example.aeropass.domain.repository.PassagemRepository;
 import com.example.aeropass.domain.repository.VooRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,57 +35,77 @@ public class PassagemService {
     private UsuarioService usuarioService;
 
     public List<PassagemResponse> listarTodasPassagensTable(){
-
-
         var usuarioLogado = usuarioService.getUsuarioLogado();
 
-        usuarioLogado.authorities();
+        if (usuarioLogado.empresa_id() != null) {
+            return passagemRepository.findByVoo_Empresa_Id(usuarioLogado.empresa_id())
+                    .stream()
+                    .map(PassagemResponse::new)
+                    .toList();
+        }
 
+        if (usuarioLogado.authorities().contains(new SimpleGrantedAuthority("ROLE_CLIENTE"))) {
+            return passagemRepository.findByPassageiro_Usuario_Id(usuarioLogado.id())
+                    .stream()
+                    .map(PassagemResponse::new)
+                    .toList();
+        }
 
         return passagemRepository.findAll()
                 .stream()
                 .map(PassagemResponse::new)
                 .toList();
     }
+    public List<PassagemResponse> listarPassagensPorVoo(Long vooId) {
+        if (!vooRepository.existsById(vooId)) {
+            return null;
+        }
+
+        return passagemRepository.findByVooId(vooId)
+                .stream()
+                .map(PassagemResponse::new)
+                .toList();
+    }
 
     @Transactional
-    public PassagemResponse salvarPassagem(PassagemRequest passagem, Long vooId) {
-        Voo voo = vooRepository.findById(vooId).orElse(null);
+    public PassagemResponse salvarPassagem(PassagemRequest request) {
+        var usuarioLogado = usuarioService.getUsuarioLogado();
 
-        Passagem passagemBanco = new Passagem(passagem, voo);
+
+        Voo voo = vooRepository.findById(request.vooId()).orElse(null);
+
+        Passagem passagem = new Passagem(request, voo);
+        passagem.getVoo().validarCriacaoDePassagem(usuarioLogado.empresa_id());
+
+        passagemRepository.save(passagem);
+        return new PassagemResponse(passagem);
+    }
+    public PassagemResponse atualizarPassagem(PassagemRequest passagem, Long id) {
+
+        Passagem passagemBanco = passagemRepository.findById(id).orElse(null);
+
+        if (passagemBanco == null) {
+            return null;
+        }
+
+        passagemBanco.atualizar(passagem.codigoAssento(), passagem.valor());
 
         passagemRepository.save(passagemBanco);
         return new PassagemResponse(passagemBanco);
     }
 
-    public PassagemResponse atualizarPassagem(PassagemRequest passagem, Long id) {
-
-        try{
-            Passagem passagemBanco = passagemRepository.findById(id).orElse(null);
-
-            if (passagemBanco != null) {
-                passagemBanco.setCodigoAssento(passagem.codigoAssento());
-    //          passagemBanco.setDataCompra(passagem.dataCompra());
-                passagemBanco.setValor(passagem.valor());
-
-                passagemRepository.save(passagemBanco);
-                return new PassagemResponse(passagemBanco);
-            }
-        }catch (RuntimeException e) {
-            throw new RuntimeException(e);
-        }
-        return null;
-    }
-
     @Transactional
     public PassagemResponse reservarPassagem(Long passagemId, ReservarPassagemRequest request) {
+        var usuarioLogado = usuarioService.getUsuarioLogado();
+
         Passagem passagem = passagemRepository.findById(passagemId).orElse(null);
 
-        Passageiro passageiro = passageiroRepository.findById(request.passageiroId()).orElse(null);
+        Passageiro passageiro = passageiroRepository.findByUsuarioId(usuarioLogado.id()).orElse(null);
 
         List<FormaPagamento> encontradas = formaPagamentoRepository.findAllById(request.formasPagamentoIds());
-        if (encontradas.size() != request.formasPagamentoIds().size()) {
-            throw new IllegalArgumentException("Alguma forma de pagamento informada não existe!");
+
+        if (passagem == null || passageiro == null || encontradas.size() != request.formasPagamentoIds().size()) {
+            return null;
         }
 
         passagem.reservar(passageiro, new HashSet<>(encontradas));
@@ -96,16 +117,19 @@ public class PassagemService {
 
     @Transactional
     public PassagemResponse cancelarPassagem(Long passagemId) {
+        var usuarioLogado = usuarioService.getUsuarioLogado();
+
         Passagem passagem = passagemRepository.findById(passagemId).orElse(null);
 
-        if (passagem != null) {
-            passagem.cancelar();
-
-            passagemRepository.save(passagem);
-            vooRepository.save(passagem.getVoo());
-            return new PassagemResponse(passagem);
+        if (passagem == null || !passagem.pertenceAoUsuario(usuarioLogado.id())) {
+            return null;
         }
-        return null;
+
+        passagem.cancelar();
+
+        passagemRepository.save(passagem);
+        vooRepository.save(passagem.getVoo());
+        return new PassagemResponse(passagem);
     }
 
 

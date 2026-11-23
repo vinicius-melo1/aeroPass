@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 
 export default function passageiros() {
     const [passageiros,setPassageiros] = useState<Passageiro[]>([]);
+    
     useEffect(()=> {
         carregarDados();
     },[]);
@@ -71,7 +72,7 @@ export default function passageiros() {
                                     <td className="px-6 py-3 text-blue-800">{passageiro.passaporte}</td>
                                     <td className="px-6 py-3 text-blue-800">{passageiro.telefone}</td>
                                     <td className="px-6 py-3 text-blue-800">{passageiro.email}</td>
-                                    <td className="px-6 py-3 text-blue-800">{passageiro.status }</td>
+                                    <td className="px-6 py-3 text-blue-800">{passageiro.status}</td>
                                     <td className="flex gap-4 px-6 py-3 text-blue-800">
                                         <Link href={`/passageiros/${passageiro.id}/editar`} className="text-gray-50 font-semibold bg-yellow-500 p-2 rounded-sm fs-12px">Editar</Link>
                                         <button onClick= {()=> handlerDeletarPassageiro(passageiro)} className="text-gray-50 font-semibold bg-red-500 hover:bg-red-600 transition-color p-2 rounded-sm fs-12px">DELETAR</button>    

@@ -3,19 +3,36 @@ package com.example.aeropass.application.services;
 
 import com.example.aeropass.application.DTOs.*;
 import com.example.aeropass.domain.entities.Aviao;
+import com.example.aeropass.domain.entities.Empresa;
 import com.example.aeropass.domain.repository.AviaoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
 public class AviaoService {
-
     @Autowired
     private AviaoRepository aviaoRepository;
 
-    public List<AviaoResponse> listarTodosAvioesTable(){
+    @Autowired
+    private UsuarioService usuarioService;
+
+    public List<AviaoResponse> listarTodosAvioesTable() {
+
+        var usuarioLogado = usuarioService.getUsuarioLogado();
+
+        if (usuarioLogado.empresa_id() != null) {
+            return aviaoRepository.findByEmpresa_Id(usuarioLogado.empresa_id())
+                    .stream()
+                    .map(AviaoResponse::new)
+                    .toList();
+        }
+
+        if (usuarioLogado.authorities().contains(new SimpleGrantedAuthority("ROLE_CLIENTE"))) {
+            return List.of();
+        }
 
         return aviaoRepository.findAll()
                 .stream()
@@ -26,8 +43,8 @@ public class AviaoService {
     public AviaoResponse salvarAviao(AviaoRequest aviao, Long id) {
 
         if (id == 0L) {
-
-            Aviao aviaoBanco = new Aviao(aviao);
+            Empresa empresa = usuarioService.getEmpresaUsuarioLogado();
+            Aviao aviaoBanco = new Aviao(aviao, empresa);
             aviaoRepository.save(aviaoBanco);
             return new AviaoResponse(aviaoBanco);
         } else {

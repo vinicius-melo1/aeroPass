@@ -2,7 +2,6 @@ package com.example.aeropass.presentation;
 
 import com.example.aeropass.application.DTOs.*;
 import com.example.aeropass.application.services.PassagemService;
-import com.example.aeropass.domain.repository.PassagemRepository;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,8 +15,6 @@ import java.util.List;
 @RequestMapping("/passagens")
 @Tag(name = "Passagens", description = "Grupo de API responsável por controlar a estrutura de criação e consulta de passagens do sistema!")
 public class PassagemController {
-    @Autowired
-    private PassagemRepository passagemRepository;
     @Autowired
     private PassagemService passagemService;
 
@@ -37,14 +34,24 @@ public class PassagemController {
         return ResponseEntity.notFound().build();
     }
 
-    @PostMapping("/{vooId}")
+    @GetMapping("/voo/{vooId}")
+    @Operation(summary = "Método de consulta de passagens por voo.", description = "Método responsável em efetuar a consulta de todas as passagens de um voo, com filtro pelo id do voo.")
+    public ResponseEntity<List<PassagemResponse>> listarPorVoo(@PathVariable Long vooId) {
+        List<PassagemResponse> passagens = passagemService.listarPassagensPorVoo(vooId);
+
+        if (passagens != null) {
+            return ResponseEntity.ok(passagens);
+        }
+        return ResponseEntity.notFound().build();
+    }
+
+    @PostMapping("/criar")
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "Método de criação para gerar passagens.", description = "Método responsável por gerar novas passagens.")
-    public ResponseEntity<?> criar(@PathVariable Long vooId, @RequestBody PassagemRequest passagem){
-
+    public ResponseEntity<?> criar(@RequestBody PassagemRequest passagem) {
         try {
-            PassagemResponse passagemBanco = passagemService.salvarPassagem(passagem, 0L);
-            return ResponseEntity.ok(passagemBanco);
+            PassagemResponse resposta = passagemService.salvarPassagem(passagem);
+            return ResponseEntity.status(HttpStatus.CREATED).body(resposta);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }

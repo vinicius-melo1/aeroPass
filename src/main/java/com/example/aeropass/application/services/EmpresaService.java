@@ -1,6 +1,7 @@
 package com.example.aeropass.application.services;
 
 import com.example.aeropass.application.DTOs.*;
+import com.example.aeropass.domain.domainServices.EmpresaDomainService;
 import com.example.aeropass.domain.entities.Empresa;
 import com.example.aeropass.domain.repository.EmpresaRepository;
 import com.example.aeropass.domain.valueObject.CNPJ;
@@ -14,7 +15,22 @@ public class EmpresaService {
     @Autowired
     private EmpresaRepository empresaRepository;
 
-    public List<EmpresaResponse> listarTodasEmpresasTable(){
+    @Autowired
+    private UsuarioService usuarioService;
+
+    @Autowired
+    private EmpresaDomainService empresaDomainService;
+
+    public List<EmpresaResponse> listarTodasEmpresasTable() {
+
+        var usuarioLogado = usuarioService.getUsuarioLogado();
+
+        if (usuarioLogado.empresa_id() != null) {
+            return empresaRepository.findById(usuarioLogado.empresa_id())
+                    .stream()
+                    .map(EmpresaResponse::new)
+                    .toList();
+        }
 
         return empresaRepository.findAll()
                 .stream()
@@ -27,21 +43,21 @@ public class EmpresaService {
         if (id == 0L) {
 
             Empresa empresaBanco = new Empresa(empresa);
+            empresaDomainService.validarUnicidade(empresaBanco);
+
             empresaRepository.save(empresaBanco);
             return new EmpresaResponse(empresaBanco);
         } else {
-            try{
-                Empresa empresaBanco = empresaRepository.findById(id).orElse(null);
-                if(empresaBanco != null) {
-                    empresaBanco.setCnpj(new CNPJ(empresa.cnpj()));
-                    empresaBanco.setRazaoSocial(empresa.razaoSocial());
-                    empresaBanco.setNomeFantasia(empresa.nomeFantasia());
-                    empresaRepository.save(empresaBanco);
-                    return new EmpresaResponse(empresaBanco);
-                }
+            Empresa empresaBanco = empresaRepository.findById(id).orElse(null);
+            if(empresaBanco != null) {
+                CNPJ cnpj = new CNPJ(empresa.cnpj());
+                empresaDomainService.validarUnicidade(id, cnpj);
 
-            }catch (RuntimeException e) {
-                throw new RuntimeException(e);
+                empresaBanco.setCnpj(new CNPJ(empresa.cnpj()));
+                empresaBanco.setRazaoSocial(empresa.razaoSocial());
+                empresaBanco.setNomeFantasia(empresa.nomeFantasia());
+                empresaRepository.save(empresaBanco);
+                return new EmpresaResponse(empresaBanco);
             }
         }
         return null;

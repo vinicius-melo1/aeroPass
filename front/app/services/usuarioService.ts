@@ -50,3 +50,8 @@ export async function salvarUsuario(usuario:Usuario) : Promise<number> {
 export async function buscarUsuarioLogado() : Promise <Usuario> {
     return (await api.get<Usuario>("/usuarios/buscarusuariologado")).data;
 }
+
+export async function criarPrimeiroUsuarioEmpresa(usuario:Usuario, empresaId:number) : Promise<number> {
+    var dadosRetorno = await api.post<number>('/usuarios/cadastro/empresa/' + empresaId, usuario);
+    return dadosRetorno.data;
+}

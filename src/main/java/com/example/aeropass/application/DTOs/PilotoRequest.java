@@ -1,4 +1,4 @@
 package com.example.aeropass.application.DTOs;
 
-public record PilotoRequest(String nome, String canac, String numeroLicenca, String tipoPiloto) {
+public record PilotoRequest(String nome, String canac, String tipoPiloto) {
 }

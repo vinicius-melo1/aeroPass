@@ -1,7 +1,6 @@
 package com.example.aeropass.domain.entities;
 
 import com.example.aeropass.application.DTOs.EnumStatusPassagem;
-import com.example.aeropass.application.DTOs.PassageiroRequest;
 import com.example.aeropass.application.DTOs.PassagemRequest;
 import jakarta.persistence.*;
 import lombok.*;
@@ -14,10 +13,12 @@ import java.util.Set;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Passagem {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @EqualsAndHashCode.Include
     private Long id;
 
     @ManyToOne
@@ -45,23 +46,20 @@ public class Passagem {
     @ToString.Exclude
     private Set<FormaPagamento> formaPagamentos = new HashSet<>();
 
+    @Enumerated(EnumType.STRING)
     private EnumStatusPassagem status = EnumStatusPassagem.DISPONIVEL;
 
-    public Passagem(PassagemRequest passagem) {
+    public Passagem(PassagemRequest passagem, Voo voo) {
+        this.setVoo(voo);
         this.setCodigoAssento(passagem.codigoAssento());
-        this.setDataCompra(passagem.dataCompra());
         this.setValor(passagem.valor());
     }
 
-    public Passagem(PassagemRequest passagem, Voo voo) {
+    public void setVoo(Voo voo) {
         if (voo == null) {
-            throw new IllegalArgumentException("A passagem deve estar associada a um voo!");
+            throw new IllegalArgumentException("A passagem deve estar associada a um vôo!");
         }
-        this.setVoo(voo);
-        this.setCodigoAssento(passagem.codigoAssento());
-        this.setDataCompra(passagem.dataCompra());
-        this.setValor(passagem.valor());
-        this.status = EnumStatusPassagem.DISPONIVEL;
+        this.voo = voo;
     }
 
     public void reservar(Passageiro passageiro, Set<FormaPagamento> formas) {
@@ -90,12 +88,10 @@ public class Passagem {
         voo.liberarAssento();
         this.status = EnumStatusPassagem.CANCELADO;
     }
-
-    public void setDataCompra(LocalDateTime dataCompra) {
-        if (dataCompra.isBefore(LocalDateTime.now())) {
-            throw new IllegalArgumentException("A data de compra não pode ser anterior à data atual!");
-        }
-        this.dataCompra = dataCompra;
+    public boolean pertenceAoUsuario(Long usuarioId) {
+        return passageiro != null
+                && passageiro.getUsuario() != null
+                && passageiro.getUsuario().getId().equals(usuarioId);
     }
 
     public void setValor(Double valor) {
@@ -104,4 +100,14 @@ public class Passagem {
         }
         this.valor = valor;
     }
+
+    public void atualizar(String codigoAssento, Double valor) {
+        if (status != EnumStatusPassagem.DISPONIVEL) {
+            throw new IllegalArgumentException("Somente passagens disponíveis podem ser editadas!");
+        }
+        this.codigoAssento = codigoAssento;
+        setValor(valor);
+    }
+
+
 }

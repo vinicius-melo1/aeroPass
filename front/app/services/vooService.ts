@@ -38,11 +38,14 @@ export async function consultaVooPorId(id:number) : Promise<Voo> {
 
 }
 export async function atualizarVoo(voo:Voo) : Promise<number> {
-    var dadosRetorno = await api.put<number>('/voos/'+voo.id,voo);
+    var dadosRetorno = await api.put<number>('/voos/'+voo.id,
+        { ...voo, dataHoraChegada: voo.dataHoraChegada || null });
     return dadosRetorno.data;
 }
 
 export async function salvarVoo(voo:Voo) : Promise<number> {
-    var dadosRetorno = await api.post<number>('/voos',voo);
+    var dadosRetorno = await api.post<number>('/voos',
+        { ...voo, dataHoraChegada: voo.dataHoraChegada || null });
+
     return dadosRetorno.data;
 }

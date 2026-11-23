@@ -2,6 +2,7 @@ package com.example.aeropass.application.services;
 
 import com.example.aeropass.application.DTOs.*;
 import com.example.aeropass.domain.entities.Aviao;
+import com.example.aeropass.domain.entities.Empresa;
 import com.example.aeropass.domain.entities.Piloto;
 import com.example.aeropass.domain.entities.Voo;
 import com.example.aeropass.domain.repository.AviaoRepository;
@@ -22,9 +23,13 @@ public class VooService {
 
     @Autowired
     private AviaoService aviaoService;
+
     @Autowired
     private PilotoService pilotoService;
+    @Autowired
+    private UsuarioService usuarioService;
 
+    @Transactional(readOnly = true)
     public List<VooResponse> listarTodosVoosTable(){
 
         return vooRepository.findAll()
@@ -35,20 +40,16 @@ public class VooService {
 
     @Transactional
     public VooResponse salvarVoo(VooRequest request) {
-        Aviao aviao = request.aviaoId() == null
-                ? null
-                : aviaoService.buscarEntidadePorId(request.aviaoId());
+        Empresa empresa = usuarioService.getEmpresaUsuarioLogado();
+        Aviao aviao = aviaoService.buscarEntidadePorId(request.aviaoId());
+        Set<Piloto> pilotos = pilotoService.buscarListaEntidadePorId(request.pilotosIds());
+        Voo voo = new Voo(request, aviao, pilotos, empresa);
+        return new VooResponse(vooRepository.save(voo));
 
-        Set<Long> pilotosIds = request.pilotosIds() == null ? Set.of() : request.pilotosIds();
-        Set<Piloto> pilotos = pilotoService.buscarListaEntidadePorId(pilotosIds);
-
-        Voo voo = new Voo(request, aviao, pilotos);
-        vooRepository.save(voo);
-        return new VooResponse(voo);
     }
 
     @Transactional
-    public VooResponse atualizarVoo(Long id, VooRequest request) {
+    public VooResponse atualizarVoo(Long id, VooUpdateRequest request) {
         Voo voo = vooRepository.findById(id).orElse(null);
         if (voo == null) {
             return null;

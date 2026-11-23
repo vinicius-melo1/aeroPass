@@ -30,11 +30,18 @@ public class Empresa {
     @OneToMany(mappedBy =  "empresa")
     private List<Usuario> usuarios;
 
+    @Enumerated(EnumType.STRING)
     private EnumStatusEmpresa status = EnumStatusEmpresa.ATIVO;
 
     public Empresa(EmpresaRequest empresa) {
         this.setCnpj(new CNPJ(empresa.cnpj()));
         this.setRazaoSocial(empresa.razaoSocial());
         this.setNomeFantasia(empresa.nomeFantasia());
+    }
+
+    public void validarCnpjDisponivel(boolean cnpjJaExiste) {
+        if (cnpjJaExiste) {
+            throw new IllegalArgumentException("Já existe uma empresa cadastrada com este CNPJ!");
+        }
     }
 }

@@ -12,13 +12,16 @@ import java.util.Set;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class FormaPagamento {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @EqualsAndHashCode.Include
     private Long id;
 
     private String tipoPagamento;
 
+    @Enumerated(EnumType.STRING)
     private EnumStatusFormaPagamento status = EnumStatusFormaPagamento.ATIVO;
 
     // Corrigido: aponta para o campo 'formaPagamentos' definido na classe Passagem

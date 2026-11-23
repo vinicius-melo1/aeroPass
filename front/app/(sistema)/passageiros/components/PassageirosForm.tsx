@@ -93,6 +93,7 @@ export default function PassageirosForm({passageiroExistente}:PassageiroFormProp
                     <label className="text-sm font-medium text-blue-800">E-mail:</label>
                     <input name="email" 
                         value={passageiro.email}
+                        type="email"
                         onChange={(e)=>handlerChange('email',e.target.value)}
                         placeholder="email@gmail.com"
                         required

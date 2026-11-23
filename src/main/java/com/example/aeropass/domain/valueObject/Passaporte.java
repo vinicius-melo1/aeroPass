@@ -26,7 +26,7 @@ public class Passaporte {
 
 
         // Valida somente passaportes brasileiros
-        if (!valor.matches("[A-Z]{2}\\\\d{6}")) {
+        if (!valor.matches("[A-Z]{2}\\d{6}")) {
             return false;
         }
 

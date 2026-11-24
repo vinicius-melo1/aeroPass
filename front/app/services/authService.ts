@@ -9,3 +9,11 @@ export async function loginBack(email:string, senha:string) : Promise <LoginResp
     }
     return loginResposta.data;
 }
+
+export async function esqueciSenha(email: string): Promise<void> {
+    await api.post("/auth/esqueci-senha", { email });
+}
+
+export async function redefinirSenha(token: string, novaSenha: string): Promise<void> {
+    await api.post("/auth/redefinir-senha", { token, novaSenha });
+}

@@ -144,7 +144,9 @@ public class UsuarioService {
                 usuarioBanco.setNome(usuario.nome());
                 usuarioBanco.setCpf(new CPF(usuario.cpf()));
                 usuarioBanco.setEmail(usuario.email());
-                usuarioBanco.setSenha(usuario.senha());
+                if (usuario.senha() != null && !usuario.senha().isBlank()) {
+                    usuarioBanco.setSenha(usuario.senha());
+                }
                 usuarioRepository.save(usuarioBanco);
                 return new UsuarioResponse(usuarioBanco);
             }

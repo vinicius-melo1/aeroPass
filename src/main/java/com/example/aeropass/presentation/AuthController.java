@@ -1,8 +1,7 @@
 package com.example.aeropass.presentation;
 
-import com.example.aeropass.application.DTOs.CadastroRequest;
-import com.example.aeropass.application.DTOs.LoginRequest;
-import com.example.aeropass.application.DTOs.UsuarioResponse;
+import com.example.aeropass.application.DTOs.*;
+import com.example.aeropass.application.services.RedefinicaoSenhaService;
 import com.example.aeropass.application.services.UsuarioService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -19,6 +18,9 @@ import java.net.HttpURLConnection;
 public class    AuthController {
     @Autowired
     private UsuarioService usuarioService;
+
+    @Autowired
+    private RedefinicaoSenhaService redefinicaoSenhaService;
 
     @PostMapping("/login")
     @Operation(summary = "Autenticação de usuários", description = "Método responsavel por efetuar o login do usuário")
@@ -43,4 +45,20 @@ public class    AuthController {
         }
     }
 
+    @PostMapping("/esqueci-senha")
+    public ResponseEntity<Void> esqueciSenha(@RequestBody EsqueciSenhaRequest request) {
+        // Sempre responde 204, exista o email ou não (não revela quais emails estão cadastrados)
+        redefinicaoSenhaService.solicitarRedefinicao(request.email());
+        return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/redefinir-senha")
+    public ResponseEntity<?> redefinirSenha(@RequestBody RedefinirSenhaRequest request) {
+        try {
+            redefinicaoSenhaService.redefinirSenha(request.token(), request.novaSenha());
+            return ResponseEntity.noContent().build();
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
 }

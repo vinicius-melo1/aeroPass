@@ -14,6 +14,8 @@ export default function UsuarioForm({usuarioExistente, empresaId}:UsuarioFormPro
         (usuarioExistente ||
         new Usuario(null,"","","","ATIVO",""));
 
+    const modoEdicao = !!usuarioExistente;
+
     const handlerChange = (campo: 'nome' | 'email' | 'cpf' | 'senha', valor:string) => {
         setUsuario(valorAnterior => 
             new Usuario(
@@ -101,11 +103,11 @@ export default function UsuarioForm({usuarioExistente, empresaId}:UsuarioFormPro
                 <div className="flex flex-col gap-1">
                     <label className="text-sm font-medium text-blue-800">Senha:</label>
                     <input name="senha" 
-                        value={usuario.senha} 
+                        value={usuario.senha ?? ""} 
                         type="password" 
                         onChange={(e)=>handlerChange('senha',e.target.value)}
-                        placeholder="sua melhor senha"
-                        required
+                        placeholder={modoEdicao ? "Deixe em branco para manter a atual" : "sua melhor senha"}
+                        required={!modoEdicao}
                         className="w-full rounded-lg border border-blue-200 px-4 py-2 text-blue-900 placeholder-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     />
                 </div>

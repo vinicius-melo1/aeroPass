@@ -32,6 +32,8 @@ public class JwtFilter extends OncePerRequestFilter {
           || uri.startsWith("/webjars")
           || uri.startsWith("/auth/login")
           || uri.startsWith("/auth/cadastre-se")
+          || uri.startsWith("/auth/redefinir-senha")
+          || uri.startsWith("/auth/esqueci-senha")
 //          || uri.startsWith("/usuarios/cadastre-se")
         ){
             filterChain.doFilter(request,response);

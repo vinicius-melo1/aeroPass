@@ -80,7 +80,17 @@
             this.setRole("ROLE_CLIENTE");
         }
 
-        @Override
+        public void redefinirSenha(String novaSenha) {
+            if (novaSenha == null || novaSenha.isBlank()) {
+                throw new IllegalArgumentException("Senha é obrigatória!");
+            }
+            if (novaSenha.equalsIgnoreCase(this.email)) {
+                throw new IllegalArgumentException("A senha não pode ser igual ao email!");
+            }
+            this.senha = novaSenha;
+        }
+
+            @Override
         public Collection<? extends GrantedAuthority> getAuthorities() {
             return List.of(new SimpleGrantedAuthority(this.role));
         }

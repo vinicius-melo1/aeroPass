@@ -28,7 +28,7 @@ api.interceptors.response.use(
         if ((status === 401 || status === 403) && !isLoginRequest) {
             Cookies.remove("token");
             Cookies.remove("usuario");
-            window.location.href = "/login";
+            window.location.href = "/auth/login";
         }
 
         return Promise.reject(error);

@@ -1,5 +1,7 @@
 "use client"
 
+import { buscarListaAvioes } from "@/app/services/aviaoService";
+import { buscarListaPilotos } from "@/app/services/pilotoService";
 import { atualizarVoo, salvarVoo } from "@/app/services/vooService";
 import { Aviao } from "@/app/types/aviao";
 import { Piloto } from "@/app/types/piloto";
@@ -7,7 +9,7 @@ import { Voo, VooFormProps } from "@/app/types/voo";
 import { mascararDataHora } from "@/app/utils/mascaras";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 
 export default function VooForm({vooExistente}:VooFormProps){ 
@@ -18,6 +20,23 @@ export default function VooForm({vooExistente}:VooFormProps){
     const [voo,setVoo ] = useState<Voo>
         (vooExistente ||
         new Voo(null,"",0,0,"","","","","","ATIVO"));
+
+    useEffect(() => {
+        const carregarOpcoes = async () => {
+            try {
+                const [listaAvioes, listaPilotos] = await Promise.all([
+                    buscarListaAvioes(),
+                    buscarListaPilotos(),
+                ]);
+                setAvioes(listaAvioes);
+                setPilotos(listaPilotos);
+            } catch {
+                alert("Erro ao carregar aviões e pilotos");
+            }
+        };
+
+    carregarOpcoes();
+}, []);
 
     const handlerChange = (campo: 'codigoVoo' | 'capacidade' | 'assentosDisponiveis' | 'cidadeOrigem' | 'cidadeDestino' | 'dataHoraSaida' | 'dataHoraChegadaPrevista' | 'dataHoraChegada', valor:string) => {
         setVoo(valorAnterior => 

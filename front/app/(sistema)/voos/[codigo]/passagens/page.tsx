@@ -1,5 +1,6 @@
 "use client"
 
+import { useAuth } from "@/app/hooks/useAuth";
 import { registrarVooVisto } from "@/app/redux/slices/voosVistosSlice";
 import { buscarPassagensPorVoo } from "@/app/services/passagemService";
 import { consultaVooPorId } from "@/app/services/vooService";
@@ -12,6 +13,8 @@ import { useDispatch } from "react-redux";
 
 export default function PassagensDoVoo() {
     const { codigo } = useParams<{ codigo: string }>();
+    const { ehCliente } = useAuth();
+    
     const vooId = Number(codigo);
     const dispatch = useDispatch();
     
@@ -63,7 +66,7 @@ export default function PassagensDoVoo() {
                                     <td className="px-6 py-3 text-blue-800">R$ {passagem.valor}</td>
                                     <td className="px-6 py-3 text-blue-800">{passagem.status}</td>
                                     <td className="px-6 py-3">
-                                        {passagem.status === "DISPONIVEL" && (
+                                        {passagem.status === "DISPONIVEL" && ehCliente && (
                                             <Link
                                                 href={`/passagens/${passagem.id}/reservar`}
                                                 className="text-gray-50 font-semibold bg-green-600 hover:bg-green-800 transition-colors p-2 rounded-sm fs-12px">

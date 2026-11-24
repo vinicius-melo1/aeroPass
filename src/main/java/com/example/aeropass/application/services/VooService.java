@@ -32,6 +32,15 @@ public class VooService {
     @Transactional(readOnly = true)
     public List<VooResponse> listarTodosVoosTable(){
 
+        var usuarioLogado = usuarioService.getUsuarioLogado();
+
+        if (usuarioLogado.empresa_id() != null) {
+            return vooRepository.findByAviao_Empresa_Id(usuarioLogado.empresa_id())
+                    .stream()
+                    .map(VooResponse::new)
+                    .toList();
+        }
+
         return vooRepository.findAll()
                 .stream()
                 .map(VooResponse::new)

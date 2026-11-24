@@ -58,7 +58,7 @@ public class PassagemController {
     }
 
     @PatchMapping("/{id}/status")
-    @Operation(summary = "Método de atualização de status de passagens através do ID pelo administrador.", description = "Método responsável por efetuar a atualização de status de passagens através do ID pelo administrador.")
+    @Operation(summary = "Método de atualização de status de passagens através do ID.", description = "Método responsável por efetuar a atualização de status de passagens através do ID.")
     public ResponseEntity<Void> atualizarStatus(@PathVariable Long id, @RequestBody AtualizarStatusPassagemRequest statusRequest) {
         var atualizarPassagem = passagemService.atualizarStatus(statusRequest.status(),id);
 
@@ -78,7 +78,7 @@ public class PassagemController {
         }
     }
 
-    @PostMapping("/{id}/cancelar")
+    @PatchMapping("/{id}/cancelar")
     @Operation(summary = "Cancela uma passagem.", description = "Método responsável por cancelar a passagem reservada. Libera o assento do voo e altera o status de vendido para cancelado.")
     public ResponseEntity<?> cancelar(@PathVariable Long id) {
         try {

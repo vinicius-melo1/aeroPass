@@ -24,10 +24,10 @@ export async function deletarPassagem(id:number) : Promise<number>{
 
 export async function atualizarStatusPassagem(passagem:Passagem) : Promise<void> {
     var novoStatus = {};
-    if(passagem.status === "ATIVO") {
+    if(passagem.status === "DISPONIVEL") {
         novoStatus = {status:"BLOQUEADO"}
     } else {
-        novoStatus = {status:"ATIVO"}
+        novoStatus = {status:"DISPONIVEL"}
     }
 
     var dadosRetorno = await api.patch<number>('/passagens/'+passagem.id+'/status',novoStatus);

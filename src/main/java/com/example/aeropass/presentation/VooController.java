@@ -2,7 +2,6 @@ package com.example.aeropass.presentation;
 
 import com.example.aeropass.application.DTOs.*;
 import com.example.aeropass.application.services.VooService;
-import com.example.aeropass.domain.repository.VooRepository;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,8 +15,6 @@ import java.util.List;
 @RequestMapping("/voos")
 @Tag(name = "Vôos", description = "Grupo de API responsável por controlar a estrutura de criação e consulta de vôos do sistema.")
 public class VooController {
-    @Autowired
-    private VooRepository vooRepository;
     @Autowired
     private VooService vooService;
 

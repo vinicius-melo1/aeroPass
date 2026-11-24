@@ -1,13 +1,12 @@
 'use client'
 
-import axios from "axios";
 import { useRouter } from "next/navigation";
-import { LoginResponse } from "../types/auth";
 import Cookies from "js-cookie";
 import { useDispatch } from "react-redux";
-import { login } from "../redux/slices/authSlice";
-import { buscarUsuarioLogado } from "../services/usuarioService";
-import { loginBack } from "../services/authService";
+import { login } from "../../redux/slices/authSlice";
+import { buscarUsuarioLogado } from "../../services/usuarioService";
+import { loginBack } from "../../services/authService";
+import Link from "next/link";
 
 export default function Login(){
     const router = useRouter();
@@ -15,7 +14,6 @@ export default function Login(){
 
     const handlerLogin = async(formData:FormData) => {
         try {
-            debugger
             const emailTela = formData.get("email")?.toString() ?? "";
             const senhaTela = formData.get("senha")?.toString() ?? "";
 
@@ -55,6 +53,10 @@ export default function Login(){
                         <input name="senha" type="password" className="w-full rounded-lg border border-blue-200 px-4 py-2 text-blue-900 placeholder-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"/>
                     </div>
                     <button type="submit" className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2.5 rounded-lg transition-colors">Entrar</button>
+                    <div className="flex justify-between w-full">
+                        <Link href="/auth/esqueci-senha" className="text-blue-800 hover:text-blue-900">Esqueceu sua senha?</Link>
+                        <Link href="/auth/cadastre-se" className="text-blue-800 hover:text-blue-900">Cadastre-se</Link>
+                    </div>
                 </form>
             </div>
         </div>

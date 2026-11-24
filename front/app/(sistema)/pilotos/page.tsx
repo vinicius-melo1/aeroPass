@@ -51,23 +51,23 @@ export default function Pilotos() {
                     <table className="w-full text-left">
                         <thead className="bg-blue-100">
                             <tr>
-                                <th className="px-6 py-3 text-sm text-nowrap font-semibold text-blue-900">Código</th>
-                                <th className="px-6 py-3 text-sm text-nowrap font-semibold text-blue-900">Nome</th>
-                                <th className="px-6 py-3 text-sm text-nowrap font-semibold text-blue-900">CANAC</th>
-                                <th className="px-6 py-3 text-sm text-nowrap font-semibold text-blue-900">Tipo de piloto</th>
-                                <th className="px-6 py-3 text-sm text-nowrap font-semibold text-blue-900">Status</th>
-                                <th className="px-6 py-3 text-sm text-nowrap font-semibold text-blue-900">Ações</th>
+                                <th className="px-6 py-3 text-sm text-nowrap text-center font-semibold text-blue-900">Código</th>
+                                <th className="px-6 py-3 text-sm text-nowrap text-center font-semibold text-blue-900">Nome</th>
+                                <th className="px-6 py-3 text-sm text-nowrap text-center font-semibold text-blue-900">CANAC</th>
+                                <th className="px-6 py-3 text-sm text-nowrap text-center font-semibold text-blue-900">Tipo de piloto</th>
+                                <th className="px-6 py-3 text-sm text-nowrap text-center font-semibold text-blue-900">Status</th>
+                                <th className="px-6 py-3 text-sm text-nowrap text-center font-semibold text-blue-900">Ações</th>
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-blue-50">
                             {pilotos.map((piloto) => (
                                 <tr key={piloto.id}>
-                                    <td className="px-6 py-3 text-blue-800">{piloto.id}</td>
-                                    <td className="px-6 py-3 text-blue-800">{piloto.nome}</td>
-                                    <td className="px-6 py-3 text-blue-800">{piloto.canac}</td>
-                                    <td className="px-6 py-3 text-blue-800">{piloto.tipoPiloto}</td>
-                                    <td className="px-6 py-3 text-blue-800">{piloto.status}</td>
-                                    <td className="flex gap-4 px-6 py-3 text-blue-800">
+                                    <td className="text-nowrap text-center px-6 py-3 text-blue-800">{piloto.id}</td>
+                                    <td className="text-nowrap text-center px-6 py-3 text-blue-800">{piloto.nome}</td>
+                                    <td className="text-nowrap text-center px-6 py-3 text-blue-800">{piloto.canac}</td>
+                                    <td className="text-nowrap text-center px-6 py-3 text-blue-800">{piloto.tipoPiloto}</td>
+                                    <td className="text-nowrap text-center px-6 py-3 text-blue-800">{piloto.status}</td>
+                                    <td className="flex justify-center gap-4 px-6 py-3 text-blue-800">
                                         <Link href={`/pilotos/${piloto.id}/editar`} className="text-gray-50 font-semibold bg-yellow-500 p-2 rounded-sm fs-12px">Editar</Link>
                                         <button onClick= {()=> handlerDeletarPiloto(piloto)} className="text-gray-50 font-semibold bg-red-500 hover:bg-red-600 transition-color p-2 rounded-sm fs-12px">DELETAR</button>    
                                         <button onClick= {()=> handlerAlterarPiloto(piloto)} 

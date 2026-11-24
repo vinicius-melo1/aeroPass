@@ -1,3 +1,4 @@
+import { Passageiro } from "../types/passageiro";
 import { Usuario } from "../types/usuario";
 import api from "./api";
 
@@ -53,5 +54,10 @@ export async function buscarUsuarioLogado() : Promise <Usuario> {
 
 export async function criarPrimeiroUsuarioEmpresa(usuario:Usuario, empresaId:number) : Promise<number> {
     var dadosRetorno = await api.post<number>('/usuarios/cadastro/empresa/' + empresaId, usuario);
+    return dadosRetorno.data;
+}
+
+export async function cadastreSe(usuario:Usuario, passageiro:Passageiro) : Promise<Usuario> {
+    var dadosRetorno = await api.post<Usuario>('/auth/cadastre-se', {...usuario, ...passageiro});
     return dadosRetorno.data;
 }

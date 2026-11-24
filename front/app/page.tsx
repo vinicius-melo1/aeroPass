@@ -17,7 +17,7 @@ export default function Home() {
         </a>
         
         <div className="flex items-center gap-4">
-          <Link href="/login" className="border-2 border-sky-600 text-sky-600 hover:bg-sky-600 hover:text-white px-6 py-2 rounded-md font-semibold transition-all duration-200 cursor-pointer">Entrar</Link>
+          <Link href="/auth/login" className="border-2 border-sky-600 text-sky-600 hover:bg-sky-600 hover:text-white px-6 py-2 rounded-md font-semibold transition-all duration-200 cursor-pointer">Entrar</Link>
         </div>
       </header>
 

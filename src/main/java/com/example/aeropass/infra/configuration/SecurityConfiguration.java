@@ -24,6 +24,8 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(auth -> auth.requestMatchers(
                         "/auth/login",
                         "/auth/cadastre-se",
+                        "/auth/redefinir-senha",
+                        "/auth/esqueci-senha",
                         "/swagger-ui/**",
                         "/webjars/**",
                         "/swagger-resources/**",

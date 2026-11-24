@@ -1,5 +1,6 @@
 "use client"
 
+import { useAuth } from "@/app/hooks/useAuth";
 import { buscarListaVoos, deletarVoo, atualizarStatusVoo } from "@/app/services/vooService";
 import { Voo } from "@/app/types/voo";
 import Link from "next/link";
@@ -11,6 +12,8 @@ interface VoosTableProps {
 
 export default function VoosTable({ voos: voosRecebidos }: VoosTableProps) {
     const [voos, setVoos] = useState<Voo[]>(voosRecebidos);
+
+    const { ehCliente } = useAuth();
 
     useEffect(() => {
         setVoos(voosRecebidos);
@@ -54,51 +57,59 @@ export default function VoosTable({ voos: voosRecebidos }: VoosTableProps) {
                 <h1 className="text-2xl font-bold text-blue-900">
                     Gestão de vôos
                 </h1>
-                <Link href="/voos/novo" className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2 rounded-lg transition-colors">Novo</Link>
+                {!ehCliente && (
+                    <Link href="/voos/novo" className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2 rounded-lg transition-colors">Novo</Link>
+                )}
             </div>
             <div className="max-w-6xl mx-auto">
                 <div className="bg-white rounded-2xl shadow-lg border border-blue-100 overflow-x-auto">
                     <table className="w-full text-left">
                         <thead className="bg-blue-100">
                             <tr>
-                                <th className="px-6 py-3 text-sm text-nowrap font-semibold text-blue-900">Id</th>
-                                <th className="px-6 py-3 text-sm text-nowrap font-semibold text-blue-900">Código do vôo</th>
-                                <th className="px-6 py-3 text-sm text-nowrap font-semibold text-blue-900">Capacidade</th>
-                                <th className="px-6 py-3 text-sm text-nowrap font-semibold text-blue-900">Assentos Disponíveis</th>
-                                <th className="px-6 py-3 text-sm text-nowrap font-semibold text-blue-900">Cidade de Origem</th>
-                                <th className="px-6 py-3 text-sm text-nowrap font-semibold text-blue-900">Cidade de Destino</th>
-                                <th className="px-6 py-3 text-sm text-nowrap font-semibold text-blue-900">Data e hora de saída</th>
-                                <th className="px-6 py-3 text-sm text-nowrap font-semibold text-blue-900">Data e hora de chegada prevista</th>
-                                <th className="px-6 py-3 text-sm text-nowrap font-semibold text-blue-900">Data e hora de chegada</th>
-                                <th className="px-6 py-3 text-sm text-nowrap font-semibold text-blue-900">Status</th>
-                                <th className="px-6 py-3 text-sm text-nowrap font-semibold text-blue-900">Ações</th>
+                                <th className="px-6 py-3 text-sm text-nowrap text-center font-semibold text-blue-900">Id</th>
+                                <th className="px-6 py-3 text-sm text-nowrap text-center font-semibold text-blue-900">Código do vôo</th>
+                                <th className="px-6 py-3 text-sm text-nowrap text-center font-semibold text-blue-900">Capacidade</th>
+                                <th className="px-6 py-3 text-sm text-nowrap text-center font-semibold text-blue-900">Assentos Disponíveis</th>
+                                <th className="px-6 py-3 text-sm text-nowrap text-center font-semibold text-blue-900">Cidade de Origem</th>
+                                <th className="px-6 py-3 text-sm text-nowrap text-center font-semibold text-blue-900">Cidade de Destino</th>
+                                <th className="px-6 py-3 text-sm text-nowrap text-center font-semibold text-blue-900">Data e hora de saída</th>
+                                <th className="px-6 py-3 text-sm text-nowrap text-center font-semibold text-blue-900">Data e hora de chegada prevista</th>
+                                <th className="px-6 py-3 text-sm text-nowrap text-center font-semibold text-blue-900">Data e hora de chegada</th>
+                                <th className="px-6 py-3 text-sm text-nowrap text-center font-semibold text-blue-900">Status</th>
+                                <th className="px-6 py-3 text-sm text-nowrap text-center font-semibold text-blue-900">Ações</th>
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-blue-50">
                             {voos.map((voo) => (
                                 <tr key={voo.id}>
-                                    <td className="px-6 py-3 text-blue-800">{voo.id}</td>
-                                    <td className="px-6 py-3 text-blue-800">{voo.codigoVoo}</td>
-                                    <td className="px-6 py-3 text-blue-800">{voo.capacidade}</td>
-                                    <td className="px-6 py-3 text-blue-800">{voo.assentosDisponiveis}</td>
-                                    <td className="px-6 py-3 text-blue-800">{voo.cidadeOrigem}</td>
-                                    <td className="px-6 py-3 text-blue-800">{voo.cidadeDestino}</td>
-                                    <td className="px-6 py-3 text-blue-800">{voo.dataHoraSaida}</td>
-                                    <td className="px-6 py-3 text-blue-800">{voo.dataHoraChegadaPrevista}</td>
-                                    <td className="px-6 py-3 text-blue-800">{voo.dataHoraChegada}</td>
-                                    <td className="px-6 py-3 text-blue-800">{voo.status}</td>
-                                    <td className="flex gap-4 px-6 py-3 text-blue-800">
+                                    <td className="text-nowrap text-center px-6 py-3 text-blue-800">{voo.id}</td>
+                                    <td className="text-nowrap text-center px-6 py-3 text-blue-800">{voo.codigoVoo}</td>
+                                    <td className="text-nowrap text-center px-6 py-3 text-blue-800">{voo.capacidade}</td>
+                                    <td className="text-nowrap text-center px-6 py-3 text-blue-800">{voo.assentosDisponiveis}</td>
+                                    <td className="text-nowrap text-center px-6 py-3 text-blue-800">{voo.cidadeOrigem}</td>
+                                    <td className="text-nowrap text-center px-6 py-3 text-blue-800">{voo.cidadeDestino}</td>
+                                    <td className="text-nowrap text-center px-6 py-3 text-blue-800">{voo.dataHoraSaida}</td>
+                                    <td className="text-nowrap text-center px-6 py-3 text-blue-800">{voo.dataHoraChegadaPrevista}</td>
+                                    <td className="text-nowrap text-center px-6 py-3 text-blue-800">{voo.dataHoraChegada}</td>
+                                    <td className="text-nowrap text-center px-6 py-3 text-blue-800">{voo.status}</td>
+                                    <td className="flex flex-center gap-4 px-6 py-3 text-blue-800">
                                         <Link href={`/voos/${voo.id}/passagens`} className="text-gray-50 font-semibold bg-blue-600 hover:bg-blue-700 transition-colors p-2 rounded-sm fs-12px">
                                             Passagens
                                         </Link>
-                                        <Link href={`/voos/${voo.id}/editar`} className="text-gray-50 font-semibold bg-yellow-500 p-2 rounded-sm fs-12px">Editar</Link>
-                                        <button onClick= {()=> handlerDeletarVoo(voo)} className="text-gray-50 font-semibold bg-red-500 hover:bg-red-600 transition-color p-2 rounded-sm fs-12px">DELETAR</button>    
-                                        <button onClick= {()=> handlerAlterarVoo(voo)} 
-                                            className= {`text-gray-50 font-semibold font-semibold transition-colors p-2 rounded-sm fs-12px ${voo.status ==='BLOQUEADO'
-                                            ?'bg-orange-600 hover:bg-orange-800' 
-                                            :' bg-green-600 hover:bg-green-800' }`
-                                            }>{voo.status}
-                                        </button>
+                                        {!ehCliente && (
+                                            <Link href={`/voos/${voo.id}/editar`} className="text-gray-50 font-semibold bg-yellow-500 p-2 rounded-sm fs-12px">Editar</Link>
+                                        )}
+                                        {!ehCliente && (
+                                            <button onClick= {()=> handlerDeletarVoo(voo)} className="text-gray-50 font-semibold bg-red-500 hover:bg-red-600 transition-color p-2 rounded-sm fs-12px">DELETAR</button>    
+                                        )}
+                                        {!ehCliente && (
+                                            <button onClick= {()=> handlerAlterarVoo(voo)} 
+                                                className= {`text-gray-50 font-semibold font-semibold transition-colors p-2 rounded-sm fs-12px ${voo.status ==='BLOQUEADO'
+                                                ?'bg-orange-600 hover:bg-orange-800' 
+                                                :' bg-green-600 hover:bg-green-800' }`
+                                                }>{voo.status}
+                                            </button>
+                                        )}
                                     </td>
                                 </tr>
                             ))}

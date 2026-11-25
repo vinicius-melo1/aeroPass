@@ -65,9 +65,14 @@ public class EmpresaService {
     }
 
     public EmpresaResponse buscarPorId(Long id) {
-        var empresa = empresaRepository.findById(id).orElse(null);
+        var usuarioLogado = usuarioService.getUsuarioLogado();
 
-        if(empresa == null) {
+        if (usuarioLogado.empresa_id() != null && !usuarioLogado.empresa_id().equals(id)) {
+            return null;
+        }
+
+        var empresa = empresaRepository.findById(id).orElse(null);
+        if (empresa == null) {
             return null;
         }
         return new EmpresaResponse(empresa);

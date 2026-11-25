@@ -45,12 +45,11 @@ public class PassagemService {
         }
 
         if (usuarioLogado.authorities().contains(new SimpleGrantedAuthority("ROLE_CLIENTE"))) {
-            return passagemRepository.findByPassageiro_Usuario_Id(usuarioLogado.id())
+            return passagemRepository.findByPassageiro_Usuario_IdAndStatusNot(usuarioLogado.id(), EnumStatusPassagem.EXCLUIDO)
                     .stream()
                     .map(PassagemResponse::new)
                     .toList();
         }
-
         return passagemRepository.findAll()
                 .stream()
                 .map(PassagemResponse::new)
@@ -59,6 +58,17 @@ public class PassagemService {
     public List<PassagemResponse> listarPassagensPorVoo(Long vooId) {
         if (!vooRepository.existsById(vooId)) {
             return null;
+        }
+
+        var usuarioLogado = usuarioService.getUsuarioLogado();
+
+        if (usuarioLogado.authorities().contains(new SimpleGrantedAuthority("ROLE_CLIENTE"))) {
+            return passagemRepository.findByVooIdAndStatusIn(
+                            vooId,
+                            List.of(EnumStatusPassagem.DISPONIVEL, EnumStatusPassagem.VENDIDO))
+                    .stream()
+                    .map(PassagemResponse::new)
+                    .toList();
         }
 
         return passagemRepository.findByVooId(vooId)
@@ -133,39 +143,32 @@ public class PassagemService {
     }
 
 
-//    public PassagemResponse salvarPassagem(PassagemRequest passagem, Long id) {
-//
-//        if (id == 0L) {
-//            Passagem passagemBanco = new Passagem(passagem);
-//
-//            passagemRepository.save(passagemBanco);
-//            return new PassagemResponse(passagemBanco);
-//        } else {
-//            try{
-//                Passagem passagemBanco = passagemRepository.findById(id).orElse(null);
-//                if(passagemBanco != null) {
-//                    passagemBanco.setCodigoAssento(passagem.codigoAssento());
-//                    passagemBanco.setDataCompra(passagem.dataCompra());
-//                    passagemBanco.setValor(passagem.valor());
-////                  passagemBanco.setFormaPagamento(passagem.formaPagamento());
-//                    passagemRepository.save(passagemBanco);
-//                    return new PassagemResponse(passagemBanco);
-//                }
-//
-//            }catch (RuntimeException e) {
-//                throw new RuntimeException(e);
-//            }
-//        }
-//        return null;
-//
-//    }
-
+    @Transactional(readOnly = true)
     public PassagemResponse buscarPorId(Long id) {
-        var passagem = passagemRepository.findById(id).orElse(null);
+        var usuarioLogado = usuarioService.getUsuarioLogado();
 
-        if(passagem == null) {
+        var passagem = passagemRepository.findById(id).orElse(null);
+        if (passagem == null) {
             return null;
         }
+
+        if (usuarioLogado.empresa_id() != null) {
+            var empresa = passagem.getVoo().getEmpresa();
+            if (empresa == null || !usuarioLogado.empresa_id().equals(empresa.getId())) {
+                return null;
+            }
+        } else if (usuarioLogado.authorities().contains(new SimpleGrantedAuthority("ROLE_CLIENTE"))) {
+            boolean disponivel = passagem.getStatus() == EnumStatusPassagem.DISPONIVEL;
+            boolean propria = passagem.getPassageiro() != null
+                    && passagem.getPassageiro().getUsuario() != null
+                    && usuarioLogado.id().equals(passagem.getPassageiro().getUsuario().getId())
+                    && passagem.getStatus() != EnumStatusPassagem.EXCLUIDO;
+
+            if (!disponivel && !propria) {
+                return null;
+            }
+        }
+
         return new PassagemResponse(passagem);
     }
 

@@ -83,7 +83,7 @@ public class UsuarioController {
     }
 
     @PutMapping("/{id}")
-    @Operation(summary = "Método de atualização de atributos de usuários através do ID pelo administrador.", description = "Método responsável por efetuar a atualização de atributos de usuários através do ID pelo administrador.")
+    @Operation(summary = "Método de atualização de atributos de usuários através do ID.", description = "Método responsável por efetuar a atualização de atributos de usuários através do ID.")
     public ResponseEntity<?> atualizar(@PathVariable Long id, @RequestBody UsuarioRequest usuario) {
         try {
             UsuarioResponse usuarioBanco = usuarioService.salvarUsuario(usuario,id);
@@ -95,7 +95,7 @@ public class UsuarioController {
 
 
     @DeleteMapping("/{id}/excluir")
-    @Operation(summary = "Método de exclusão de usuários.", description = "Método de exclusão (atualização de status para excluído) de usuários através do ID pelo administrador.")
+    @Operation(summary = "Método de exclusão de usuários.", description = "Método de exclusão (atualização de status para excluído) de usuários através do ID.")
     public ResponseEntity<Void> excluir(@PathVariable Long id) {
 
         var atualizarUsuario = usuarioService.atualizarStatus(EnumStatusUsuario.EXCLUIDO,id);

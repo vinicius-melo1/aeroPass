@@ -155,12 +155,26 @@ public class UsuarioService {
 
     }
 
+    @Transactional(readOnly = true)
     public UsuarioResponse buscarPorId(Long id) {
-        var usuario = usuarioRepository.findById(id).orElse(null);
+        var usuarioLogado = getUsuarioLogado();
 
-        if(usuario == null) {
+        var usuario = usuarioRepository.findById(id).orElse(null);
+        if (usuario == null) {
             return null;
         }
+
+        if (usuarioLogado.empresa_id() != null) {
+            if (usuario.getEmpresa() == null
+                    || !usuarioLogado.empresa_id().equals(usuario.getEmpresa().getId())) {
+                return null;
+            }
+        } else if (usuarioLogado.authorities().contains(new SimpleGrantedAuthority("ROLE_CLIENTE"))) {
+            if (!usuarioLogado.id().equals(usuario.getId())) {
+                return null;
+            }
+        }
+
         return new UsuarioResponse(usuario);
     }
 

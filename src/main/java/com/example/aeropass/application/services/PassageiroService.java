@@ -85,11 +85,23 @@ public class PassageiroService {
     }
 
     public PassageiroResponse buscarPorId(Long id) {
-        var passageiro = passageiroRepository.findById(id).orElse(null);
+        var usuarioLogado = usuarioService.getUsuarioLogado();
 
-        if(passageiro == null) {
+        var passageiro = passageiroRepository.findById(id).orElse(null);
+        if (passageiro == null) {
             return null;
         }
+
+        if (usuarioLogado.empresa_id() != null) {
+            if (!passagemRepository.existsByPassageiro_IdAndVoo_Empresa_Id(id, usuarioLogado.empresa_id())) {
+                return null;
+            }
+        } else if (usuarioLogado.authorities().contains(new SimpleGrantedAuthority("ROLE_CLIENTE"))) {
+            if (!passageiro.getUsuario().getId().equals(usuarioLogado.id())) {
+                return null;
+            }
+        }
+
         return new PassageiroResponse(passageiro);
     }
 

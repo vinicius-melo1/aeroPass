@@ -22,11 +22,23 @@ public class PilotoService {
     UsuarioService usuarioService;
 
     public PilotoResponse buscarPorId(Long id) {
-        var piloto = pilotoRepository.findById(id).orElse(null);
+        var usuarioLogado = usuarioService.getUsuarioLogado();
 
-        if(piloto == null) {
+        if (usuarioLogado.empresa_id() == null
+                && usuarioLogado.authorities().contains(new SimpleGrantedAuthority("ROLE_CLIENTE"))) {
             return null;
         }
+
+        var piloto = pilotoRepository.findById(id).orElse(null);
+        if (piloto == null) {
+            return null;
+        }
+
+        if (usuarioLogado.empresa_id() != null
+                && !usuarioLogado.empresa_id().equals(piloto.getEmpresa().getId())) {
+            return null;
+        }
+
         return new PilotoResponse(piloto);
     }
 

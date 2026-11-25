@@ -8,5 +8,5 @@ import java.util.List;
 
 @Repository
 public interface VooRepository extends JpaRepository<Voo,Long> {
-    List<Voo> findByAviao_Empresa_Id(Long empresaId);
+    List<Voo> getVoosByEmpresa_Id(Long empresa);
 }

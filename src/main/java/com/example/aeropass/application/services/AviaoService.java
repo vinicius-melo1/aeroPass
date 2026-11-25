@@ -71,11 +71,23 @@ public class AviaoService {
     }
 
     public AviaoResponse buscarPorId(Long id) {
-        var aviao = aviaoRepository.findById(id).orElse(null);
+        var usuarioLogado = usuarioService.getUsuarioLogado();
 
-        if(aviao == null) {
+        if (usuarioLogado.empresa_id() == null
+                && usuarioLogado.authorities().contains(new SimpleGrantedAuthority("ROLE_CLIENTE"))) {
             return null;
         }
+
+        var aviao = aviaoRepository.findById(id).orElse(null);
+        if (aviao == null) {
+            return null;
+        }
+
+        if (usuarioLogado.empresa_id() != null
+                && !usuarioLogado.empresa_id().equals(aviao.getEmpresa().getId())) {
+            return null;
+        }
+
         return new AviaoResponse(aviao);
     }
 

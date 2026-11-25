@@ -9,7 +9,7 @@ import { useEffect, useState } from "react";
 export default function passageiros() {
     const [passageiros,setPassageiros] = useState<Passageiro[]>([]);
     
-    const { ehUser, ehAdmin } = useAuth();
+    const { ehAdmin } = useAuth();
     
     useEffect(()=> {
         carregarDados();
@@ -66,7 +66,7 @@ export default function passageiros() {
                                 <th className="px-6 py-3 text-sm text-nowrap text-center font-semibold text-blue-900">E-mail</th>
                                 <th className="px-6 py-3 text-sm text-nowrap text-center font-semibold text-blue-900">Status</th>
 
-                                {!ehUser && (
+                                {ehAdmin && (
                                     <th className="px-6 py-3 text-sm text-nowrap text-center font-semibold text-blue-900">Ações</th>
                                 )}
                             </tr>
@@ -81,7 +81,7 @@ export default function passageiros() {
                                     <td className="text-nowrap text-center px-6 py-3 text-blue-800">{passageiro.telefone}</td>
                                     <td className="text-nowrap text-center px-6 py-3 text-blue-800">{passageiro.email}</td>
                                     <td className="text-nowrap text-center px-6 py-3 text-blue-800">{passageiro.status}</td>
-                                    {!ehUser && (
+                                    {ehAdmin && (
                                         <td className="flex justify-center gap-4 px-6 py-3 text-blue-800">
                                             <Link href={`/passageiros/${passageiro.id}/editar`} className="text-gray-50 font-semibold bg-yellow-500 p-2 rounded-sm fs-12px">Editar</Link>
                                             <button onClick= {()=> handlerDeletarPassageiro(passageiro)} className="text-gray-50 font-semibold bg-red-500 hover:bg-red-600 transition-color p-2 rounded-sm fs-12px">DELETAR</button>    

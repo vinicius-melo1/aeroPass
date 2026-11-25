@@ -35,7 +35,7 @@ public class VooService {
         var usuarioLogado = usuarioService.getUsuarioLogado();
 
         if (usuarioLogado.empresa_id() != null) {
-            return vooRepository.findByAviao_Empresa_Id(usuarioLogado.empresa_id())
+            return vooRepository.getVoosByEmpresa_Id(usuarioLogado.empresa_id())
                     .stream()
                     .map(VooResponse::new)
                     .toList();
@@ -116,11 +116,18 @@ public class VooService {
 //    }
 
     public VooResponse buscarPorId(Long id) {
-        var voo = vooRepository.findById(id).orElse(null);
+        var usuarioLogado = usuarioService.getUsuarioLogado();
 
-        if(voo == null) {
+        var voo = vooRepository.findById(id).orElse(null);
+        if (voo == null) {
             return null;
         }
+
+        if (usuarioLogado.empresa_id() != null
+                && !usuarioLogado.empresa_id().equals(voo.getEmpresa().getId())) {
+            return null;
+        }
+
         return new VooResponse(voo);
     }
 

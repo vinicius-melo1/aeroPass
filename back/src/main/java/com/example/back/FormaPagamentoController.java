@@ -28,6 +28,7 @@ public class FormaPagamentoController {
                 "}", txtTipoPagamento.getText(), "f9e08ur903werwi9di90za");
 
         int respostaAPI = executaMetodoAPI("http://localhost:8080/forma-pagamento/cadastro", jsonRequest, "POST");
+//        int respostaAPI = executaMetodoAPI("https://aeropass-cqzq.onrender.com/forma-pagamento/cadastro", jsonRequest, "POST");
 
         if(respostaAPI == 200) {
             showMessage(Alert.AlertType.INFORMATION, "Forma de pagamento salva com sucesso");

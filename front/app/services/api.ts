@@ -6,6 +6,7 @@ import Cookies from "js-cookie";
 
 const api = axios.create({
     baseURL:'http://localhost:8080'
+    // baseURL: 'https://aeropass-cqzq.onrender.com/'
 });
 
 api.interceptors.request.use(
